@@ -1,5 +1,5 @@
 {
-  "name": "Weekly Activity Spinner",
-  "description": "An automatic weekly schedule generator for your leisure activities like Webtoons, Games, and Movies.",
+  "name": "Multi-Spinner Decisions",
+  "description": "Weekly activity schedule generator and custom multi-level game spinner with category selectors.",
   "requestFramePermissions": []
 }

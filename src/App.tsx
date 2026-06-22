@@ -1,361 +1,164 @@
-/**
- * @license
- * SPDX-License-Identifier: Apache-2.0
- */
-
-import { useState, useEffect, useCallback, useRef } from 'react';
+import { useState, useEffect, createContext, useContext } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import { domToPng } from 'modern-screenshot';
 import { 
-  BookOpen, 
+  Sparkles, 
+  Calendar, 
   Gamepad2, 
-  Youtube, 
-  Theater, 
-  RotateCcw, 
-  Calendar,
-  Sparkles,
-  CheckCircle2,
-  Download,
-  Loader2
+  Sun,
+  Moon,
+  Activity
 } from 'lucide-react';
+import WeeklySchedule from './components/WeeklySchedule';
+import GameSpinner from './components/GameSpinner';
+import { ErrorBoundary } from './components/ErrorBoundary';
 
-// Activities definition
-const ACTIVITIES = [
-  { 
-    id: 'webtoon', 
-    name: 'Baca Webtoon', 
-    icon: BookOpen, 
-    color: 'bg-emerald-500', 
-    textColor: 'text-emerald-500',
-    borderColor: 'border-emerald-200',
-    shadow: 'shadow-emerald-200'
-  },
-  { 
-    id: 'game', 
-    name: 'Main Game', 
-    icon: Gamepad2, 
-    color: 'bg-indigo-500', 
-    textColor: 'text-indigo-500',
-    borderColor: 'border-indigo-200',
-    shadow: 'shadow-indigo-200'
-  },
-  { 
-    id: 'youtube', 
-    name: 'Nonton Youtube', 
-    icon: Youtube, 
-    color: 'bg-rose-500', 
-    textColor: 'text-rose-500',
-    borderColor: 'border-rose-200',
-    shadow: 'shadow-rose-200'
-  },
-  { 
-    id: 'film', 
-    name: 'Film/Buku', 
-    icon: Theater, 
-    color: 'bg-amber-500', 
-    textColor: 'text-amber-500',
-    borderColor: 'border-amber-200',
-    shadow: 'shadow-amber-200'
-  },
-];
+export const ThemeContext = createContext<{
+  theme: 'light' | 'dark';
+  toggleTheme: () => void;
+}>({
+  theme: 'light',
+  toggleTheme: () => {}
+});
 
-const DAYS = [
-  'Senin',
-  'Selasa',
-  'Rabu',
-  'Kamis',
-  'Jumat',
-  'Sabtu',
-  'Minggu'
-];
+export function useTheme() {
+  return useContext(ThemeContext);
+}
 
 export default function App() {
-  const [schedule, setSchedule] = useState<(any | null)[]>(new Array(7).fill(null));
-  const [isSpinning, setIsSpinning] = useState(false);
-  const [currentSpinningIndex, setCurrentSpinningIndex] = useState(-1);
-  const [spinningActivity, setSpinningActivity] = useState<any | null>(null);
-  const [isDownloading, setIsDownloading] = useState(false);
-  const scheduleRef = useRef<HTMLDivElement>(null);
-
-  const generateSchedule = useCallback(() => {
-    if (isSpinning) return;
-
-    setIsSpinning(true);
-    // 1. Pre-generate final results
-    const finalResults = Array.from({ length: 7 }, () => 
-      ACTIVITIES[Math.floor(Math.random() * ACTIVITIES.length)]
-    );
-    
-    // 2. Pre-generate placeholders so no day is empty from the start
-    const placeholders = Array.from({ length: 7 }, () => 
-      ACTIVITIES[Math.floor(Math.random() * ACTIVITIES.length)]
-    );
-    
-    setSchedule(placeholders);
-    setSpinningActivity(null);
-    
-    let dayIndex = 0;
-
-    const animateDay = () => {
-      if (dayIndex >= 7) {
-        setIsSpinning(false);
-        setCurrentSpinningIndex(-1);
-        setSpinningActivity(null);
-        return;
-      }
-
-      setCurrentSpinningIndex(dayIndex);
-      
-      const spinDuration = 600;
-      const startTime = Date.now();
-      
-      const updateSpin = () => {
-        const now = Date.now();
-        if (now - startTime < spinDuration) {
-          // Visual spinning effect for the active day
-          setSpinningActivity(ACTIVITIES[Math.floor(Math.random() * ACTIVITIES.length)]);
-          requestAnimationFrame(updateSpin);
-        } else {
-          // Settle the day with the final pre-generated activity
-          setSchedule(prev => {
-            const next = [...prev];
-            next[dayIndex] = finalResults[dayIndex];
-            return next;
-          });
-          
-          dayIndex++;
-          setTimeout(animateDay, 50);
-        }
-      };
-      
-      updateSpin();
-    };
-
-    animateDay();
-  }, [isSpinning]);
-
-  const downloadSchedule = async () => {
-    if (!scheduleRef.current) return;
-    
-    setIsDownloading(true);
-    try {
-      // Ensure all images are loaded and animations are done
-      await new Promise(resolve => setTimeout(resolve, 500));
-      
-      const dataUrl = await domToPng(scheduleRef.current, {
-        backgroundColor: '#f8fafc',
-        scale: 2,
-        quality: 1,
-      });
-      
-      const link = document.createElement('a');
-      link.download = `jadwal-mingguan-${new Date().toLocaleDateString('id-ID')}.png`;
-      link.href = dataUrl;
-      link.click();
-    } catch (error) {
-      console.error('Gagal mengunduh jadwal:', error);
-      alert('Maaf, terjadi kesalahan saat mengunduh jadwal. Silakan coba lagi.');
-    } finally {
-      setIsDownloading(false);
+  const [activeTab, setActiveTab] = useState<'schedule' | 'game'>('schedule');
+  const [theme, setTheme] = useState<'light' | 'dark'>(() => {
+    const saved = localStorage.getItem('theme');
+    if (saved === 'light' || saved === 'dark') return saved;
+    if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+      return 'dark';
     }
+    return 'light';
+  });
+
+  const toggleTheme = () => {
+    setTheme(prev => {
+      const next = prev === 'light' ? 'dark' : 'light';
+      localStorage.setItem('theme', next);
+      return next;
+    });
   };
 
-  const isInitialState = schedule.every(s => s === null) && !isSpinning;
+  useEffect(() => {
+    if (theme === 'dark') {
+      document.documentElement.classList.add('dark');
+    } else {
+      document.documentElement.classList.remove('dark');
+    }
+  }, [theme]);
 
   return (
-    <div className="min-h-screen bg-slate-50 font-sans text-slate-900 selection:bg-indigo-100">
-      {/* Header */}
-      <header className="bg-white border-b border-slate-200 sticky top-0 z-20">
-        <div className="max-w-6xl mx-auto px-4 py-6 flex flex-col md:flex-row md:items-center justify-between gap-4">
-          <div className="flex items-center gap-3">
-            <div className="p-2 bg-indigo-600 rounded-xl shadow-lg shadow-indigo-200">
-              <Sparkles className="w-6 h-6 text-white" />
-            </div>
-            <div>
-              <h1 className="text-2xl font-bold tracking-tight text-slate-900">Weekly Activity Spinner</h1>
-              <p className="text-sm text-slate-500 font-medium">Tentukan jadwal hiburanmu secara otomatis!</p>
-            </div>
-          </div>
-          
-          <div className="flex items-center gap-3">
-            {!isInitialState && !isSpinning && (
-              <button
-                onClick={downloadSchedule}
-                disabled={isDownloading}
-                className="flex items-center justify-center gap-2 px-6 py-3 rounded-full font-bold text-slate-700 bg-white border-2 border-slate-200 hover:border-indigo-300 hover:text-indigo-600 transition-all shadow-sm disabled:opacity-50"
-              >
-                {isDownloading ? (
-                  <Loader2 className="w-5 h-5 animate-spin" />
-                ) : (
-                  <Download className="w-5 h-5" />
-                )}
-                Unduh Gambar
-              </button>
-            )}
-            
-            <button
-              onClick={generateSchedule}
-              disabled={isSpinning}
-              className={`
-                flex items-center justify-center gap-2 px-8 py-3 rounded-full font-bold text-lg transition-all
-                ${isSpinning 
-                  ? 'bg-slate-100 text-slate-400 cursor-not-allowed' 
-                  : 'bg-indigo-600 text-white hover:bg-indigo-700 hover:scale-105 active:scale-95 shadow-xl shadow-indigo-200'}
-              `}
-            >
-              {isSpinning ? (
-                <RotateCcw className="w-5 h-5 animate-spin" />
-              ) : (
-                <RotateCcw className="w-5 h-5" />
-              )}
-              {!isInitialState ? 'Spin Ulang' : 'Mulai Spin'}
-            </button>
-          </div>
-        </div>
-      </header>
-
-      <main className="max-w-6xl mx-auto px-4 py-12">
-        {/* Empty State */}
-        {isInitialState && (
-          <motion.div 
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="flex flex-col items-center justify-center py-20 text-center"
-          >
-            <div className="w-24 h-24 bg-indigo-50 rounded-full flex items-center justify-center mb-6">
-              <Calendar className="w-12 h-12 text-indigo-300" />
-            </div>
-            <h2 className="text-xl font-semibold text-slate-800 mb-2">Belum ada jadwal</h2>
-            <p className="text-slate-500 max-w-md">
-              Tekan tombol "Mulai Spin" di atas untuk membuatkanmu jadwal kegiatan hiburan selama seminggu penuh.
-            </p>
-          </motion.div>
-        )}
-
-        {/* Schedule Container for Download */}
-        <div ref={scheduleRef} className="p-4 rounded-[3rem]">
-          {/* Schedule Grid */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-            {DAYS.map((day, index) => {
-              const activity = schedule[index];
-              const isCurrentlySpinning = index === currentSpinningIndex;
-              const displayActivity = isCurrentlySpinning ? spinningActivity : activity;
-              const isSettled = !!activity && !isCurrentlySpinning;
-              const isWaiting = !isInitialState && !displayActivity && !isCurrentlySpinning;
-
-              return (
-                <motion.div
-                  key={day}
-                  initial={{ opacity: 0, scale: 0.9 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  transition={{ delay: index * 0.05 }}
-                  className={`
-                    relative group overflow-hidden rounded-3xl border-2 transition-all duration-500 min-h-[260px] flex flex-col
-                    ${isSettled 
-                      ? `${displayActivity.borderColor} bg-white shadow-xl ${displayActivity.shadow}` 
-                      : 'border-slate-200 bg-slate-50'}
-                    ${isCurrentlySpinning ? 'border-indigo-400 ring-4 ring-indigo-100 bg-white' : ''}
-                    ${isWaiting ? 'opacity-40' : 'opacity-100'}
-                  `}
-                >
-                  {/* Day Label */}
-                  <div className={`
-                    px-6 py-4 border-b font-bold tracking-wider text-xs uppercase
-                    ${isSettled ? 'border-slate-100 text-slate-400' : 'border-slate-200 text-slate-400'}
-                  `}>
-                    {day}
-                  </div>
-
-                  <div className="flex-1 p-8 flex flex-col items-center justify-center">
-                    <AnimatePresence mode="wait">
-                      {displayActivity ? (
-                        <motion.div
-                          key={displayActivity.id + (isCurrentlySpinning ? '-spin' : '-settled')}
-                          initial={{ opacity: 0, y: 10, scale: 0.8 }}
-                          animate={{ opacity: 1, y: 0, scale: 1 }}
-                          exit={{ opacity: 0, y: -10, scale: 0.8 }}
-                          className="flex flex-col items-center text-center"
-                        >
-                          <div className={`
-                            p-5 rounded-2xl mb-4 transition-colors duration-300
-                            ${displayActivity.color} text-white shadow-lg
-                          `}>
-                            <displayActivity.icon className="w-10 h-10" />
-                          </div>
-                          <h3 className={`text-lg font-bold ${displayActivity.textColor}`}>
-                            {displayActivity.name}
-                          </h3>
-                          
-                          {isSettled && (
-                            <motion.div
-                              initial={{ opacity: 0 }}
-                              animate={{ opacity: 1 }}
-                              className="mt-4 flex items-center gap-1 text-xs font-bold text-slate-400"
-                            >
-                              <CheckCircle2 className="w-3 h-3 text-emerald-500" />
-                              SETTLED
-                            </motion.div>
-                          )}
-                        </motion.div>
-                      ) : (
-                        <div className="flex flex-col items-center opacity-10">
-                          <div className="w-16 h-16 bg-slate-300 rounded-2xl mb-4" />
-                          <div className="h-4 w-24 bg-slate-300 rounded-full" />
-                        </div>
-                      )}
-                    </AnimatePresence>
-                  </div>
-
-                  {/* Decorative background element */}
-                  {isSettled && (
-                    <div className={`
-                      absolute -bottom-6 -right-6 w-24 h-24 opacity-5 pointer-events-none
-                      ${displayActivity.textColor}
-                    `}>
-                      <displayActivity.icon className="w-full h-full" />
-                    </div>
-                  )}
-                </motion.div>
-              );
-            })}
-          </div>
-
-          {/* Summary / Stats in Download */}
-          {!isInitialState && !isSpinning && (
-            <motion.section 
-              initial={{ opacity: 0, y: 30 }}
-              animate={{ opacity: 1, y: 0 }}
-              className="mt-12 p-8 bg-white rounded-[2.5rem] border border-slate-200 shadow-sm"
-            >
-              <h2 className="text-xl font-bold text-slate-900 mb-6 flex items-center gap-2">
-                <Sparkles className="w-5 h-5 text-indigo-500" />
-                Ringkasan Mingguan
-              </h2>
-              <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                {ACTIVITIES.map(activity => {
-                  const count = schedule.filter(s => s && s.id === activity.id).length;
-                  if (count === 0) return null;
-                  return (
-                    <div key={activity.id} className="p-4 rounded-2xl bg-slate-50 border border-slate-100 flex items-center gap-4">
-                      <div className={`p-2 rounded-lg ${activity.color} text-white`}>
-                        <activity.icon className="w-5 h-5" />
-                      </div>
-                      <div>
-                        <div className="text-2xl font-black text-slate-900 leading-none">{count}</div>
-                        <div className="text-[10px] font-bold uppercase tracking-wider text-slate-400 mt-1">Hari</div>
-                      </div>
-                    </div>
-                  );
-                })}
+    <ThemeContext.Provider value={{ theme, toggleTheme }}>
+      <div className="min-h-screen bg-slate-50 dark:bg-slate-950 font-sans text-slate-900 dark:text-slate-100 selection:bg-indigo-100 dark:selection:bg-indigo-900/50 pb-16">
+        {/* Central Brand Header */}
+        <header className="bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800 sticky top-0 z-30 shadow-xs">
+          <div className="max-w-6xl mx-auto px-4 py-4 flex flex-col md:flex-row md:items-center justify-between gap-4">
+            <div className="flex items-center gap-3">
+              <div className="p-2 bg-gradient-to-tr from-indigo-600 to-violet-600 rounded-2xl shadow-md shadow-indigo-100 dark:shadow-none">
+                <Sparkles className="w-6 h-6 text-white" />
               </div>
-            </motion.section>
-          )}
-        </div>
-      </main>
+              <div>
+                <h1 className="text-xl md:text-2xl font-black tracking-tight text-slate-900 dark:text-slate-50">Multi-Spinner Hub</h1>
+                <p className="text-xs text-slate-500 dark:text-slate-400 font-medium leading-none mt-0.5">Semua keputusan seru ada disini!</p>
+              </div>
+            </div>
 
-      <footer className="max-w-6xl mx-auto px-4 py-12 text-center text-slate-400 text-sm font-medium">
-        <p>© 2026 Weekly Activity Spinner • Dibuat untuk kesenanganmu</p>
-      </footer>
-    </div>
+            {/* Navigation Tabs bar & Theme Toggle */}
+            <div className="flex items-center gap-3 w-full md:w-auto justify-between md:justify-start">
+              <div className="bg-slate-150 dark:bg-slate-800 p-1 rounded-2xl flex items-center relative gap-1 border border-slate-200/50 dark:border-slate-700/50">
+                {/* Tab: Schedule */}
+                <button
+                  onClick={() => setActiveTab('schedule')}
+                  className={`relative px-4 py-2 rounded-xl font-extrabold text-xs md:text-sm transition-all flex items-center gap-2 z-10 cursor-pointer ${
+                    activeTab === 'schedule' ? 'text-indigo-600 dark:text-indigo-400' : 'text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-slate-200'
+                  }`}
+                >
+                  {activeTab === 'schedule' && (
+                    <motion.div
+                      layoutId="active-tab-indicator"
+                      className="absolute inset-0 bg-white dark:bg-slate-900 rounded-xl shadow-xs border border-slate-200/20 dark:border-slate-705/20"
+                      transition={{ type: 'spring', stiffness: 380, damping: 30 }}
+                    />
+                  )}
+                  <Calendar className="w-4 h-4 relative z-10" />
+                  <span className="relative z-10">Jadwal Mingguan</span>
+                </button>
+
+                {/* Tab: Game Spinner */}
+                <button
+                  onClick={() => setActiveTab('game')}
+                  className={`relative px-4 py-2 rounded-xl font-extrabold text-xs md:text-sm transition-all flex items-center gap-2 z-10 cursor-pointer ${
+                    activeTab === 'game' ? 'text-indigo-600 dark:text-indigo-400' : 'text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-slate-200'
+                  }`}
+                >
+                  {activeTab === 'game' && (
+                    <motion.div
+                      layoutId="active-tab-indicator"
+                      className="absolute inset-0 bg-white dark:bg-slate-900 rounded-xl shadow-xs border border-slate-200/20 dark:border-slate-705/20"
+                      transition={{ type: 'spring', stiffness: 380, damping: 30 }}
+                    />
+                  )}
+                  <Gamepad2 className="w-4 h-4 relative z-10" />
+                  <span className="relative z-10">Game Spinner (Bertingkat)</span>
+                </button>
+              </div>
+
+              {/* Theme Toggle Button */}
+              <button
+                id="theme-toggle"
+                onClick={toggleTheme}
+                className="p-2.5 rounded-2xl bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-600 dark:text-slate-300 transition-all border border-slate-200/40 dark:border-slate-700/40 cursor-pointer flex items-center justify-center self-stretch md:self-auto"
+                aria-label="Toggle Theme"
+                title="Ganti Tema"
+              >
+                {theme === 'light' ? <Moon className="w-5 h-5" /> : <Sun className="w-5 h-5 text-amber-400" />}
+              </button>
+            </div>
+          </div>
+        </header>
+
+        {/* Main Container */}
+        <main className="max-w-6xl mx-auto px-4 mt-8">
+          <ErrorBoundary errorMessage="Gagal memuat konten utama aplikasi Multi-Spinner Hub. Silakan reload atau bersihkan sisa cache data lokal Anda.">
+            <AnimatePresence mode="wait">
+              {activeTab === 'schedule' ? (
+                <motion.div
+                  key="schedule-view"
+                  initial={{ opacity: 0, y: 15 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -15 }}
+                  transition={{ duration: 0.25, ease: 'easeInOut' }}
+                >
+                  <ErrorBoundary errorMessage="Terjadi kesalahan saat memuat modul Jadwal Mingguan kegiatan. Silakan muat ulang halaman.">
+                    <WeeklySchedule />
+                  </ErrorBoundary>
+                </motion.div>
+              ) : (
+                <motion.div
+                  key="game-view"
+                  initial={{ opacity: 0, y: 15 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -15 }}
+                  transition={{ duration: 0.25, ease: 'easeInOut' }}
+                >
+                  <ErrorBoundary errorMessage="Terjadi kesalahan saat memuat modul Game Spinner Bertingkat. Silakan muat ulang halaman atau kosongkan data lokal.">
+                    <GameSpinner />
+                  </ErrorBoundary>
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </ErrorBoundary>
+        </main>
+
+        <footer className="max-w-6xl mx-auto px-4 mt-16 text-center text-slate-400 dark:text-slate-500 text-xs font-semibold">
+          <div className="h-px bg-slate-200 dark:bg-slate-800 mb-6" />
+          <p>© {new Date().getFullYear()} Multi-Spinner Hub • Dibuat dengan presisi untuk kenyamanan bermainmu</p>
+        </footer>
+      </div>
+    </ThemeContext.Provider>
   );
 }
