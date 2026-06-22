@@ -751,23 +751,23 @@ export default function WeeklySchedule() {
           <p className="text-sm text-slate-500 dark:text-slate-400 font-medium">Buat jadwal kegiatan hiburanmu per hari secara adil dan menyenangkan!</p>
         </div>
 
-        <div className="flex items-center gap-3 w-full md:w-auto">
+        <div className="flex items-center gap-2 w-full md:w-auto flex-wrap sm:flex-nowrap">
           {/* Sound toggle button */}
           <button
             onClick={() => setSoundEnabled(!soundEnabled)}
-            className="p-3.5 bg-white dark:bg-slate-900 text-slate-600 dark:text-slate-355 hover:text-slate-900 dark:hover:text-slate-50 border border-slate-200 dark:border-slate-800 rounded-2xl hover:bg-slate-50 dark:hover:bg-slate-850 hover:border-indigo-305 dark:hover:border-indigo-500 transition-all shadow-sm cursor-pointer flex items-center justify-center"
+            className="w-11 h-11 bg-white dark:bg-slate-900 text-slate-600 dark:text-slate-355 hover:text-slate-900 dark:hover:text-slate-50 border border-slate-200 dark:border-slate-800 rounded-2xl hover:bg-slate-50 dark:hover:bg-slate-850 hover:border-indigo-305 dark:hover:border-indigo-500 transition-all shadow-sm cursor-pointer flex items-center justify-center shrink-0"
             title={soundEnabled ? "Matikan Efek Suara" : "Aktifkan Efek Suara"}
           >
-            {soundEnabled ? <Volume2 className="w-5 h-5 text-indigo-500 font-sans" /> : <VolumeX className="w-5 h-5 text-slate-400 font-sans" />}
+            {soundEnabled ? <Volume2 className="w-4 h-4 text-indigo-500" /> : <VolumeX className="w-4 h-4 text-slate-400" />}
           </button>
 
           <button
             onClick={() => setShowManager(true)}
             disabled={isSpinning || isSpinningSingleDay}
-            className="flex-1 md:flex-none flex items-center justify-center gap-2 px-5 py-3.5 rounded-2xl font-bold text-slate-700 dark:text-slate-300 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 hover:border-indigo-300 dark:hover:border-indigo-500 hover:text-indigo-600 dark:hover:text-indigo-400 transition-all shadow-sm cursor-pointer disabled:opacity-50"
+            className="flex-1 md:flex-none flex items-center justify-center gap-1.5 px-4 h-11 rounded-2xl font-bold text-xs sm:text-sm text-slate-700 dark:text-slate-300 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 hover:border-indigo-300 dark:hover:border-indigo-500 hover:text-indigo-600 dark:hover:text-indigo-400 transition-all shadow-sm cursor-pointer disabled:opacity-50 whitespace-nowrap"
             title="Kelola daftar pilihan aktivitas"
           >
-            <Settings className="w-5 h-5 flex-shrink-0" />
+            <Settings className="w-4 h-4 flex-shrink-0" />
             Kelola Aktivitas
           </button>
 
@@ -776,15 +776,15 @@ export default function WeeklySchedule() {
               <button
                 onClick={() => setShowDownloadDropdown(!showDownloadDropdown)}
                 disabled={isDownloading}
-                className="w-full flex items-center justify-center gap-2 px-5 py-3.5 rounded-2xl font-bold bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-slate-700 dark:text-slate-300 hover:text-indigo-600 dark:hover:text-indigo-400 hover:border-indigo-300 dark:hover:border-indigo-550 transition-all shadow-sm cursor-pointer disabled:opacity-50"
+                className="w-full flex items-center justify-center gap-1.5 px-4 h-11 rounded-2xl font-bold text-xs sm:text-sm bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-slate-700 dark:text-slate-300 hover:text-indigo-600 dark:hover:text-indigo-400 hover:border-indigo-300 dark:hover:border-indigo-550 transition-all shadow-sm cursor-pointer disabled:opacity-50 whitespace-nowrap"
               >
                 {isDownloading ? (
-                  <Loader2 className="w-5 h-5 animate-spin text-indigo-600 dark:text-indigo-400" />
+                  <Loader2 className="w-4 h-4 animate-spin text-indigo-600 dark:text-indigo-400" />
                 ) : (
-                  <Download className="w-5 h-5" />
+                  <Download className="w-4 h-4" />
                 )}
                 Ekspor Jadwal
-                <ChevronDown className={`w-4 h-4 transition-transform ${showDownloadDropdown ? 'rotate-180' : ''}`} />
+                <ChevronDown className={`w-3.5 h-3.5 transition-transform ${showDownloadDropdown ? 'rotate-180' : ''}`} />
               </button>
 
               <AnimatePresence>
@@ -837,16 +837,16 @@ export default function WeeklySchedule() {
             disabled={isSpinning || isSpinningSingleDay}
             aria-label={!isInitialState ? 'Putar Ulang' : 'Mulai Atur Jadwal'}
             className={`
-              flex-1 md:flex-none flex items-center justify-center gap-2 px-8 py-3.5 rounded-2xl font-black text-base transition-all
+              flex-1 md:flex-none flex items-center justify-center gap-1.5 px-5 h-11 rounded-2xl font-bold text-xs sm:text-sm transition-all whitespace-nowrap
               ${isSpinning || isSpinningSingleDay 
                 ? 'bg-slate-100 text-slate-400 cursor-not-allowed' 
                 : 'bg-indigo-600 text-white hover:bg-indigo-750 hover:scale-102 active:scale-98 shadow-md shadow-indigo-150'}
             `}
           >
             {isSpinning || isSpinningSingleDay ? (
-              <RotateCcw className="w-5 h-5 animate-spin" />
+              <RotateCcw className="w-4 h-4 animate-spin" />
             ) : (
-              <RotateCcw className="w-5 h-5" />
+              <RotateCcw className="w-4 h-4" />
             )}
             {!isInitialState ? 'Putar Ulang' : 'Mulai Atur Jadwal'}
           </button>
