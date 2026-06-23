@@ -6,10 +6,12 @@ import {
   Gamepad2, 
   Sun,
   Moon,
-  Activity
+  Activity,
+  Clapperboard
 } from 'lucide-react';
 import WeeklySchedule from './components/WeeklySchedule';
 import GameSpinner from './components/GameSpinner';
+import MovieTracker from './components/MovieTracker';
 import { ErrorBoundary } from './components/ErrorBoundary';
 
 export const ThemeContext = createContext<{
@@ -25,7 +27,7 @@ export function useTheme() {
 }
 
 export default function App() {
-  const [activeTab, setActiveTab] = useState<'schedule' | 'game'>('schedule');
+  const [activeTab, setActiveTab] = useState<'schedule' | 'game' | 'movies'>('schedule');
   const [theme, setTheme] = useState<'light' | 'dark'>(() => {
     const saved = localStorage.getItem('theme');
     if (saved === 'light' || saved === 'dark') return saved;
@@ -104,12 +106,30 @@ export default function App() {
                   {activeTab === 'game' && (
                     <motion.div
                       layoutId="active-tab-indicator"
-                      className="absolute inset-0 bg-white dark:bg-[#151221] rounded-xl shadow-xs border border-slate-200/20 dark:border-slate-705/20 dark:shadow-[0_0_10px_rgba(139,92,246,0.15)]"
+                      className="absolute inset-0 bg-white dark:bg-[#151221] rounded-xl shadow-xs border border-slate-200/20 dark:border-slate-750/20 dark:shadow-[0_0_10px_rgba(139,92,246,0.15)]"
                       transition={{ type: 'spring', stiffness: 380, damping: 30 }}
                     />
                   )}
                   <Gamepad2 className="w-4 h-4 relative z-10" />
                   <span className="relative z-10 font-display">Game Spinner</span>
+                </button>
+
+                {/* Tab: Movie Tracker */}
+                <button
+                  onClick={() => setActiveTab('movies')}
+                  className={`relative px-4 py-2 rounded-xl font-bold text-xs md:text-sm transition-all flex items-center gap-2 z-10 cursor-pointer ${
+                    activeTab === 'movies' ? 'text-violet-600 dark:text-[#f0ecf9]' : 'text-slate-500 dark:text-[#7a6f94] hover:text-slate-800 dark:hover:text-[#b8b0cb]'
+                  }`}
+                >
+                  {activeTab === 'movies' && (
+                    <motion.div
+                      layoutId="active-tab-indicator"
+                      className="absolute inset-0 bg-white dark:bg-[#151221] rounded-xl shadow-xs border border-slate-200/20 dark:border-slate-750/20 dark:shadow-[0_0_10px_rgba(139,92,246,0.15)]"
+                      transition={{ type: 'spring', stiffness: 380, damping: 30 }}
+                    />
+                  )}
+                  <Clapperboard className="w-4 h-4 relative z-10" />
+                  <span className="relative z-10 font-display">Daftar Film</span>
                 </button>
               </div>
 
@@ -143,7 +163,7 @@ export default function App() {
                     <WeeklySchedule />
                   </ErrorBoundary>
                 </motion.div>
-              ) : (
+              ) : activeTab === 'game' ? (
                 <motion.div
                   key="game-view"
                   initial={{ opacity: 0, y: 15 }}
@@ -153,6 +173,18 @@ export default function App() {
                 >
                   <ErrorBoundary errorMessage="Terjadi kesalahan saat memuat modul Game Spinner Bertingkat. Silakan muat ulang halaman atau kosongkan data lokal.">
                     <GameSpinner />
+                  </ErrorBoundary>
+                </motion.div>
+              ) : (
+                <motion.div
+                  key="movies-view"
+                  initial={{ opacity: 0, y: 15 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -15 }}
+                  transition={{ duration: 0.25, ease: 'easeInOut' }}
+                >
+                  <ErrorBoundary errorMessage="Terjadi kesalahan saat memuat modul Buku Sinema Pribadi. Silakan muat ulang halaman atau kosongkan data lokal.">
+                    <MovieTracker />
                   </ErrorBoundary>
                 </motion.div>
               )}
