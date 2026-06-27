@@ -745,7 +745,7 @@ export default function WeeklySchedule() {
   return (
     <div className="w-full">
       {/* Control and Actions Bar */}
-      <div className="flex flex-col md:flex-row items-center justify-between gap-4 mb-8 bg-[#fdfaf2] dark:bg-[#2d2820] border border-[#d4c9a8] dark:border-[#4b463e] rounded-[4px] p-6 shadow-tactile relative overflow-hidden card-margin-line">
+      <div className="flex flex-col md:flex-row items-center justify-between gap-4 mb-8 bg-[#fdfaf2] dark:bg-[#2d2820] border border-[#d4c9a8] dark:border-[#4b463e] rounded-[4px] p-6 shadow-tactile relative overflow-visible card-margin-line">
         <div>
           <h2 className="text-lg font-display font-bold text-[#3d3527] dark:text-[#e8dcc4] uppercase tracking-wide">Weekly Activity Planner</h2>
           <p className="text-xs text-slate-500 dark:text-stone-450 mt-1">Buat jadwal kegiatan hiburanmu per hari secara adil dan menyenangkan!</p>
