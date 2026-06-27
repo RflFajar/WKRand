@@ -762,12 +762,11 @@ export default function WeeklySchedule() {
           </button>
 
           <button
+            id="manage-activities-btn"
             onClick={() => setShowManager(true)}
-            disabled={isSpinning || isSpinningSingleDay}
-            className="flex-1 md:flex-none flex items-center justify-center gap-1.5 px-4 h-10 rounded-[4px] font-display font-bold text-xs text-[#3d3527] dark:text-[#e8dcc4] bg-[#f2ede3] dark:bg-[#3d3527] border border-[#d4c9a8] dark:border-[#4b463e] hover:bg-[#d4c9a8]/35 transition-all shadow-sm cursor-pointer disabled:opacity-50 whitespace-nowrap"
+            className="hidden"
             title="Kelola daftar pilihan aktivitas"
           >
-            <Settings className="w-3.5 h-3.5 flex-shrink-0" />
             Kelola Aktivitas
           </button>
 

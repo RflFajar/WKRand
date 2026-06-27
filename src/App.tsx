@@ -13,6 +13,7 @@ import WeeklySchedule from './components/WeeklySchedule';
 import GameSpinner from './components/GameSpinner';
 import MovieTracker from './components/MovieTracker';
 import { ErrorBoundary } from './components/ErrorBoundary';
+import { HelpModal, LicenseModal, ArchiveModal } from './components/FooterModals';
 
 export const ThemeContext = createContext<{
   theme: 'light' | 'dark';
@@ -43,6 +44,10 @@ export default function App() {
     const dateStr = String(now.getDate()).padStart(2, '0');
     return `${monthStr}-${dateStr}`;
   });
+
+  const [isHelpOpen, setIsHelpOpen] = useState(false);
+  const [isLicenseOpen, setIsLicenseOpen] = useState(false);
+  const [isArchiveOpen, setIsArchiveOpen] = useState(false);
 
   const toggleTheme = () => {
     setTheme(prev => {
@@ -155,21 +160,35 @@ export default function App() {
             {/* Vintage Rubber Stamp Button */}
             <button
               onClick={() => {
-                const addBtn = document.getElementById('open-add-dialog') || 
-                               document.querySelector('button[title*="Aktivitas"]') || 
-                               document.querySelector('input[placeholder*="Interstellar"], input[placeholder*="Aktivitas"]');
-                if (addBtn) {
-                  if (addBtn.tagName === 'INPUT') {
-                    (addBtn as HTMLInputElement).focus();
+                let targetEl: HTMLElement | null = null;
+                if (activeTab === 'movies') {
+                  targetEl = document.getElementById('open-add-dialog');
+                } else if (activeTab === 'schedule') {
+                  targetEl = document.getElementById('manage-activities-btn');
+                } else if (activeTab === 'game') {
+                  targetEl = document.getElementById('manage-games-btn');
+                }
+
+                // Fallback search if specific target not found
+                if (!targetEl) {
+                  targetEl = document.getElementById('open-add-dialog') || 
+                             document.getElementById('manage-activities-btn') || 
+                             document.getElementById('manage-games-btn') ||
+                             document.querySelector('input[placeholder*="Interstellar"]');
+                }
+
+                if (targetEl) {
+                  if (targetEl.tagName === 'INPUT') {
+                    (targetEl as HTMLInputElement).focus();
                   } else {
-                    (addBtn as HTMLButtonElement).click();
+                    (targetEl as HTMLButtonElement).click();
                   }
-                  addBtn.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                  targetEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
                 }
               }}
               className="w-full py-2.5 bg-[#a23b2c] hover:bg-[#8f3224] dark:bg-[#ff816c] dark:hover:bg-[#f8654d] text-white dark:text-[#221e18] font-display font-bold text-xs uppercase tracking-widest rounded-[4px] border border-[#a23b2c] dark:border-[#ff816c] shadow-[2px_2px_0px_#3d3527] dark:shadow-[2px_2px_0px_#11100d] transition duration-200 hover:translate-y-0.5 active:translate-y-1 active:shadow-none"
             >
-              TAMBAH KARTU
+              {activeTab === 'schedule' ? 'KELOLA AKTIVITAS' : activeTab === 'game' ? 'KELOLA GAME' : 'TAMBAH KARTU'}
             </button>
           </div>
         </aside>
@@ -241,15 +260,20 @@ export default function App() {
               Dikatalogkan: 2026 • No. Rak: {rackCode} • Dibuat dengan tinta dan kertas
             </p>
             <div className="flex justify-center gap-4 mt-2 font-bold text-slate-400/80 dark:text-stone-500/80 uppercase tracking-widest text-[9px]">
-              <a href="#" className="hover:text-[#a23b2c] dark:hover:text-[#ff816c] transition">Bantuan</a>
+              <a href="#" onClick={(e) => { e.preventDefault(); setIsHelpOpen(true); }} className="hover:text-[#a23b2c] dark:hover:text-[#ff816c] transition">Bantuan</a>
               <span>•</span>
-              <a href="#" className="hover:text-[#a23b2c] dark:hover:text-[#ff816c] transition">Lisensi</a>
+              <a href="#" onClick={(e) => { e.preventDefault(); setIsLicenseOpen(true); }} className="hover:text-[#a23b2c] dark:hover:text-[#ff816c] transition">Lisensi</a>
               <span>•</span>
-              <a href="#" className="hover:text-[#a23b2c] dark:hover:text-[#ff816c] transition">Arsip Digital</a>
+              <a href="#" onClick={(e) => { e.preventDefault(); setIsArchiveOpen(true); }} className="hover:text-[#a23b2c] dark:hover:text-[#ff816c] transition">Arsip Digital</a>
             </div>
           </footer>
         </div>
       </div>
+
+      {/* Retro Document Dialogs */}
+      <HelpModal isOpen={isHelpOpen} onClose={() => setIsHelpOpen(false)} />
+      <LicenseModal isOpen={isLicenseOpen} onClose={() => setIsLicenseOpen(false)} />
+      <ArchiveModal isOpen={isArchiveOpen} onClose={() => setIsArchiveOpen(false)} />
     </ThemeContext.Provider>
   );
 }
