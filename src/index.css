@@ -1,43 +1,44 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400;1,700&family=Source+Serif+4:ital,opsz,wght@0,8..60,200..900;1,8..60,200..900&display=swap');
 @import "tailwindcss";
 
 @theme {
-  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
-  --font-display: "Space Grotesk", ui-sans-serif, system-ui, sans-serif;
-  --font-mono: "JetBrains Mono", ui-monospace, monospace;
+  --font-sans: "Source Serif 4", Georgia, ui-serif, serif;
+  --font-display: "Space Mono", ui-monospace, monospace;
+  --font-mono: "Space Mono", ui-monospace, monospace;
 }
 
 @variant dark (&:where(.dark, .dark *));
 
 :root {
-  --bg-primary: #f8f7fc;
-  --text-primary: #1b1530;
-  --surface: #ffffff;
-  --surface-2: #f0ecf9;
-  --border: #e2dcf0;
+  --bg-primary: #f5f0e6;       /* Manila paper tone */
+  --text-primary: #3d3527;     /* Deep ink-brown */
+  --surface: #fdfaf2;          /* Bright fine-grained paper */
+  --surface-2: #f2ede3;        /* Slightly darker index divider */
+  --surface-container-high: #ede8de;
+  --border: #d4c9a8;           /* Kraft border */
+  --border-focus: #3d3527;
+  --accent: #a23b2c;           /* Stamp-red */
+  --accent-light: #fef1f0;
+  --accent-dim: #ebd8d6;
   
-  --neon-purple: #8b5cf6;
-  --neon-amber: #f59e0b;
-  --neon-pink: #f43f5e;
-  --neon-emerald: #10b981;
-  --neon-blue: #06b6d4;
-  
-  --shadow-neon: 0 4px 12px rgba(139, 92, 246, 0.08);
-  --glow-accent: 0 0 16px rgba(139, 92, 246, 0.15);
+  --shadow-tactile: 1px 1px 0px #d4c9a8, 2px 2px 0px #cec5ba;
+  --glow-accent: 0 0 10px rgba(162, 59, 44, 0.15);
 }
 
 .dark {
-  --bg-primary: #0c0a14;
-  --text-primary: #f0ecf9;
-  --surface: #151221;
-  --surface-2: #1e1a2e;
-  --border: #2a2438;
+  --bg-primary: #221e18;       /* Deep dark leather */
+  --text-primary: #e8dcc4;     /* Aged paper cream */
+  --surface: #2d2820;          /* Weathered dark paper */
+  --surface-2: #32302a;        /* Inner containers */
+  --surface-container-high: #3d3527;
+  --border: #4b463e;           /* Darker kraft border */
+  --border-focus: #e8dcc4;
+  --accent: #ff816c;           /* Bright stamp-red for contrast */
+  --accent-light: #3d221e;
+  --accent-dim: #5c3530;
   
-  --shadow-neon: 0 4px 20px rgba(0, 0, 0, 0.4);
-  --glow-accent: 0 0 20px rgba(139, 92, 246, 0.35);
-  --glow-amber: 0 0 20px rgba(245, 158, 11, 0.35);
-  --glow-pink: 0 0 20px rgba(244, 63, 94, 0.35);
-  --glow-emerald: 0 0 20px rgba(16, 185, 129, 0.35);
+  --shadow-tactile: 1px 1px 0px #1d1c16, 2px 2px 0px #11100d;
+  --glow-accent: 0 0 15px rgba(255, 129, 108, 0.2);
 }
 
 html, body {
@@ -45,6 +46,48 @@ html, body {
   color: var(--text-primary);
   transition: background-color 300ms ease, border-color 300ms ease, color 300ms ease;
   font-family: var(--font-sans);
+  background-image: radial-gradient(var(--border) 1px, transparent 1px);
+  background-size: 20px 20px;
+}
+
+/* Tactile archive decorations */
+.dotted-bg {
+  background-image: radial-gradient(var(--border) 1px, transparent 1px);
+  background-size: 16px 16px;
+}
+
+/* Rubber Stamp Styling */
+.stamp-effect {
+  font-family: var(--font-display);
+  text-transform: uppercase;
+  border: 2px dashed var(--accent);
+  color: var(--accent);
+  padding: 0.25rem 0.5rem;
+  font-weight: 700;
+  transform: rotate(-3deg);
+  display: inline-block;
+  opacity: 0.85;
+  border-radius: 4px;
+}
+
+/* Hole Punch for primary index cards */
+.hole-punch-card::after {
+  content: '';
+  position: absolute;
+  bottom: 12px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 14px;
+  height: 14px;
+  border-radius: 9999px;
+  background-color: var(--bg-primary);
+  border: 1px solid var(--border);
+  box-shadow: inset 0 2px 4px rgba(0,0,0,0.06);
+}
+
+/* Red Marginalia Margin Line */
+.card-margin-line {
+  border-left: 3px solid var(--accent);
 }
 
 header, footer, main, select, input, textarea, button, table, tr, td, th {

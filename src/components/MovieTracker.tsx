@@ -369,18 +369,17 @@ export default function MovieTracker() {
     <div id="movie-tracker-container" className="space-y-8">
       
       {/* Top Banner & Stats Overview */}
-      <div className="bg-white dark:bg-[#151221] border border-slate-150 dark:border-[#2a2438] rounded-3xl p-6 shadow-sm relative overflow-hidden">
-        <div className="absolute top-0 right-0 w-32 h-32 bg-indigo-500/5 dark:bg-violet-500/10 rounded-full blur-3xl pointer-events-none" />
+      <div className="bg-[#fdfaf2] dark:bg-[#2d2820] border border-[#d4c9a8] dark:border-[#4b463e] rounded-[4px] p-6 shadow-tactile relative overflow-hidden card-margin-line">
         
         <div className="flex flex-col md:flex-row gap-6 justify-between items-start md:items-center">
           <div>
             <div className="flex items-center gap-3">
-              <div className="p-3 bg-indigo-50 dark:bg-indigo-950/40 text-indigo-650 dark:text-indigo-400 rounded-2xl">
+              <div className="p-3 bg-[#f2ede3] dark:bg-[#3d3527] text-[#a23b2c] dark:text-[#ff816c] rounded-[4px] border border-[#d4c9a8] dark:border-[#4b463e]">
                 <Clapperboard className="w-6 h-6" />
               </div>
               <div>
-                <h2 className="text-xl font-display font-bold text-slate-800 dark:text-[#f0ecf9]">Buku Sinema Pribadi</h2>
-                <p className="text-xs text-slate-500 dark:text-[#b8b0cb] font-medium">Catat dan simpan memori film-film favoritmu selamanya</p>
+                <h2 className="text-xl font-display font-bold text-[#3d3527] dark:text-[#e8dcc4] uppercase tracking-wider">Katalog Sinema Pribadi</h2>
+                <p className="text-xs text-slate-500 dark:text-stone-400 font-sans mt-0.5">Catat dan simpan memori film-film favoritmu selamanya</p>
               </div>
             </div>
           </div>
@@ -390,7 +389,7 @@ export default function MovieTracker() {
             <button 
               onClick={exportData}
               title="Download cadangan data film dalam format JSON"
-              className="flex items-center gap-1.5 px-3 py-2 bg-slate-50 dark:bg-[#1e1a2e] hover:bg-slate-100 dark:hover:bg-[#2a2438] text-slate-700 dark:text-[#b8b0cb] border border-slate-205 dark:border-[#2a2438] rounded-xl text-xs font-bold transition cursor-pointer"
+              className="flex items-center gap-1.5 px-3 py-2 bg-[#fdfaf2] dark:bg-[#32302a] hover:bg-[#f2ede3] dark:hover:bg-[#3d3527] text-[#3d3527] dark:text-[#e8dcc4] border border-[#d4c9a8] dark:border-[#4b463e] rounded-[4px] text-xs font-display font-bold transition cursor-pointer shadow-xs"
             >
               <Download className="w-3.5 h-3.5" />
               Ekspor Cadangan
@@ -398,7 +397,7 @@ export default function MovieTracker() {
             <button 
               onClick={() => fileInputRef.current?.click()}
               title="Unggah berkas JSON cadangan untuk memulihkan"
-              className="flex items-center gap-1.5 px-3 py-2 bg-slate-50 dark:bg-[#1e1a2e] hover:bg-slate-100 dark:hover:bg-[#2a2438] text-slate-700 dark:text-[#b8b0cb] border border-slate-205 dark:border-[#2a2438] rounded-xl text-xs font-bold transition cursor-pointer"
+              className="flex items-center gap-1.5 px-3 py-2 bg-[#fdfaf2] dark:bg-[#32302a] hover:bg-[#f2ede3] dark:hover:bg-[#3d3527] text-[#3d3527] dark:text-[#e8dcc4] border border-[#d4c9a8] dark:border-[#4b463e] rounded-[4px] text-xs font-display font-bold transition cursor-pointer shadow-xs"
             >
               <Upload className="w-3.5 h-3.5" />
               Impor Cadangan
@@ -415,10 +414,10 @@ export default function MovieTracker() {
 
         {/* Dynamic Warning Notification */}
         {importStatus !== 'idle' && (
-          <div className={`mt-4 p-3.5 rounded-2xl text-xs font-semibold border flex items-center justify-between animate-pulse ${
+          <div className={`mt-4 p-3.5 rounded-[4px] text-xs font-display font-bold border flex items-center justify-between ${
             importStatus === 'success' 
-              ? 'bg-emerald-50 dark:bg-emerald-950/20 border-emerald-200 dark:border-emerald-800 text-emerald-750 dark:text-emerald-450' 
-              : 'bg-rose-50 dark:bg-rose-950/20 border-rose-200 dark:border-rose-800 text-rose-750 dark:text-rose-450'
+              ? 'bg-emerald-50 dark:bg-emerald-950/25 border-emerald-300 text-emerald-800 dark:text-emerald-300' 
+              : 'bg-rose-50 dark:bg-rose-950/25 border-rose-300 text-rose-800 dark:text-rose-300'
           }`}>
             <span>{importMessage}</span>
             <button onClick={() => setImportStatus('idle')} className="text-slate-400 hover:text-slate-600 transition">
@@ -429,45 +428,45 @@ export default function MovieTracker() {
 
         {/* Dashboard Metrics Grid */}
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 mt-6">
-          <div className="p-4 bg-slate-50/50 dark:bg-[#1c182a]/50 rounded-2xl border border-slate-100 dark:border-[#201b32]/60 flex items-center gap-3">
-            <div className="p-2.5 bg-indigo-50 dark:bg-indigo-950/40 text-indigo-600 dark:text-indigo-400 rounded-xl">
+          <div className="p-4 bg-[#fdfaf2]/50 dark:bg-[#32302a]/50 rounded-[4px] border border-[#d4c9a8] dark:border-[#4b463e] flex items-center gap-3">
+            <div className="p-2.5 bg-[#f2ede3] dark:bg-[#3d3527] text-[#a23b2c] dark:text-[#ff816c] rounded-[4px] border border-[#d4c9a8] dark:border-[#4b463e]">
               <Film className="w-5 h-5" />
             </div>
             <div>
-              <span className="block text-[10px] font-bold text-slate-400 dark:text-[#7a6f94] uppercase tracking-wider">Total Ditonton</span>
-              <span className="text-xl font-display font-bold text-slate-800 dark:text-[#f0ecf9]">{totalWatched} Film</span>
+              <span className="block text-[10px] font-display font-bold text-slate-400 dark:text-stone-500 uppercase tracking-wider">Total Ditonton</span>
+              <span className="text-lg font-display font-bold text-[#3d3527] dark:text-[#e8dcc4]">{totalWatched} Film</span>
             </div>
           </div>
 
-          <div className="p-4 bg-slate-50/50 dark:bg-[#1c182a]/50 rounded-2xl border border-slate-100 dark:border-[#201b32]/60 flex items-center gap-3">
-            <div className="p-2.5 bg-amber-50 dark:bg-amber-950/30 text-amber-500 dark:text-amber-400 rounded-xl">
+          <div className="p-4 bg-[#fdfaf2]/50 dark:bg-[#32302a]/50 rounded-[4px] border border-[#d4c9a8] dark:border-[#4b463e] flex items-center gap-3">
+            <div className="p-2.5 bg-[#f2ede3] dark:bg-[#3d3527] text-amber-500 dark:text-amber-400 rounded-[4px] border border-[#d4c9a8] dark:border-[#4b463e]">
               <Star className="w-5 h-5 fill-amber-400 text-amber-400" />
             </div>
             <div>
-              <span className="block text-[10px] font-bold text-slate-400 dark:text-[#7a6f94] uppercase tracking-wider">Rata-Rata Rating</span>
-              <span className="text-xl font-display font-bold text-slate-800 dark:text-[#f0ecf9]">{avgRating} / 5.0</span>
+              <span className="block text-[10px] font-display font-bold text-slate-400 dark:text-stone-500 uppercase tracking-wider">Rata-Rata Rating</span>
+              <span className="text-lg font-display font-bold text-[#3d3527] dark:text-[#e8dcc4]">{avgRating} / 5.0</span>
             </div>
           </div>
 
-          <div className="p-4 bg-slate-50/50 dark:bg-[#1c182a]/50 rounded-2xl border border-slate-100 dark:border-[#201b32]/60 flex items-center gap-3">
-            <div className="p-2.5 bg-emerald-50 dark:bg-emerald-950/30 text-emerald-600 dark:text-emerald-450 rounded-xl">
+          <div className="p-4 bg-[#fdfaf2]/50 dark:bg-[#32302a]/50 rounded-[4px] border border-[#d4c9a8] dark:border-[#4b463e] flex items-center gap-3">
+            <div className="p-2.5 bg-[#f2ede3] dark:bg-[#3d3527] text-indigo-500 dark:text-indigo-400 rounded-[4px] border border-[#d4c9a8] dark:border-[#4b463e]">
               <TrendingUp className="w-5 h-5" />
             </div>
             <div>
-              <span className="block text-[10px] font-bold text-slate-400 dark:text-[#7a6f94] uppercase tracking-wider">Genre Terfavorit</span>
-              <span className="text-sm font-display font-bold text-slate-800 dark:text-[#f0ecf9] truncate max-w-[120px] block">
+              <span className="block text-[10px] font-display font-bold text-slate-400 dark:text-stone-500 uppercase tracking-wider">Genre Terfavorit</span>
+              <span className="text-sm font-display font-bold text-[#3d3527] dark:text-[#e8dcc4] truncate max-w-[120px] block">
                 {favoriteGenre !== '-' ? GENRES.find(g => g.value === favoriteGenre)?.label || favoriteGenre : '-'}
               </span>
             </div>
           </div>
 
-          <div className="p-4 bg-slate-50/50 dark:bg-[#1c182a]/50 rounded-2xl border border-slate-100 dark:border-[#201b32]/60 flex items-center gap-3">
-            <div className="p-2.5 bg-purple-50 dark:bg-purple-950/30 text-purple-650 dark:text-purple-400 rounded-xl">
+          <div className="p-4 bg-[#fdfaf2]/50 dark:bg-[#32302a]/50 rounded-[4px] border border-[#d4c9a8] dark:border-[#4b463e] flex items-center gap-3">
+            <div className="p-2.5 bg-[#f2ede3] dark:bg-[#3d3527] text-rose-500 dark:text-rose-450 rounded-[4px] border border-[#d4c9a8] dark:border-[#4b463e]">
               <Sparkles className="w-5 h-5" />
             </div>
             <div>
-              <span className="block text-[10px] font-bold text-slate-400 dark:text-[#7a6f94] uppercase tracking-wider">Tingkat Kurasi</span>
-              <span className="text-xs font-display font-bold text-slate-800 dark:text-[#f0ecf9]">{getCritiqueLevel(totalWatched)}</span>
+              <span className="block text-[10px] font-display font-bold text-slate-400 dark:text-stone-500 uppercase tracking-wider">Tingkat Kurasi</span>
+              <span className="text-xs font-display font-bold text-[#3d3527] dark:text-[#e8dcc4]">{getCritiqueLevel(totalWatched)}</span>
             </div>
           </div>
         </div>
@@ -477,17 +476,18 @@ export default function MovieTracker() {
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
         
         {/* Left Side: Form Addition */}
-        <div className="lg:col-span-4 bg-white dark:bg-[#151221] border border-slate-150 dark:border-[#2a2438] rounded-3xl p-6 shadow-sm space-y-5 sticky top-24">
-          <h3 className="text-sm font-display font-bold text-slate-800 dark:text-[#f0ecf9] flex items-center gap-2 pb-3 border-b border-slate-100 dark:border-[#2a2438]">
-            <Plus className="w-4 h-4 text-indigo-505" />
-            Catat Film yang Baru Ditonton
+        <div className="lg:col-span-4 bg-[#fdfaf2] dark:bg-[#2d2820] border border-[#d4c9a8] dark:border-[#4b463e] rounded-[4px] p-6 shadow-tactile space-y-5 sticky top-20 border-l-[3px] border-l-[#a23b2c] dark:border-l-[#ff816c]">
+          <h3 className="text-sm font-display font-bold text-[#3d3527] dark:text-[#e8dcc4] flex items-center gap-2 pb-3 border-b border-[#d4c9a8] dark:border-[#4b463e] uppercase tracking-wider">
+            <Plus className="w-4 h-4 text-[#a23b2c] dark:text-[#ff816c]" />
+            Catat Kartu Sinema Baru
           </h3>
 
           <form onSubmit={handleAddMovie} className="space-y-4 text-xs font-semibold">
             {/* Title */}
             <div className="space-y-1.5">
-              <label className="text-slate-500 dark:text-[#b8b0cb] uppercase tracking-wider block text-[10px]">Judul Film / Serial</label>
+              <label className="text-[#3d3527]/70 dark:text-[#e8dcc4]/70 uppercase tracking-wider block text-[10px] font-display">Judul Film / Serial</label>
               <input 
+                id="open-add-dialog"
                 type="text" 
                 placeholder="cth. Interstellar, One Piece, Spirited Away" 
                 value={title}
@@ -495,44 +495,44 @@ export default function MovieTracker() {
                   setTitle(e.target.value);
                   if (errorText) setErrorText('');
                 }}
-                className="w-full px-4 py-3 bg-slate-50 dark:bg-[#1e1a2e] rounded-xl text-slate-850 dark:text-slate-150 border border-slate-200 dark:border-[#2d2740] focus:border-indigo-400 focus:ring-1 focus:ring-indigo-400 outline-none transition"
+                className="w-full bg-transparent text-[#3d3527] dark:text-[#e8dcc4] border-b border-[#d4c9a8] dark:border-[#4b463e] focus:border-[#3d3527] dark:focus:border-[#e8dcc4] rounded-none outline-none focus:ring-0 px-1 py-2 font-sans placeholder-stone-400"
               />
               {errorText && (
-                <p className="text-rose-500 text-[10px] font-bold mt-1">{errorText}</p>
+                <p className="text-[#a23b2c] dark:text-[#ff816c] text-[10px] font-display font-bold mt-1">{errorText}</p>
               )}
             </div>
 
             {/* Genre & Platform */}
-            <div className="grid grid-cols-2 gap-3">
+            <div className="grid grid-cols-2 gap-4">
               <div className="space-y-1.5">
-                <label className="text-slate-500 dark:text-[#b8b0cb] uppercase tracking-wider block text-[10px]">Genre Film</label>
+                <label className="text-[#3d3527]/70 dark:text-[#e8dcc4]/70 uppercase tracking-wider block text-[10px] font-display">Genre Film</label>
                 <div className="relative">
                   <select 
                     value={genre} 
                     onChange={e => setGenre(e.target.value)}
-                    className="w-full px-3 py-3 bg-slate-50 dark:bg-[#1e1a2e] rounded-xl text-slate-800 dark:text-slate-150 border border-slate-200 dark:border-[#2d2740] outline-none transition appearance-none cursor-pointer"
+                    className="w-full bg-transparent text-[#3d3527] dark:text-[#e8dcc4] border-b border-[#d4c9a8] dark:border-[#4b463e] focus:border-[#3d3527] dark:focus:border-[#e8dcc4] rounded-none outline-none focus:ring-0 px-1 py-2 font-sans cursor-pointer appearance-none"
                   >
                     {GENRES.map(g => (
-                      <option key={g.value} value={g.value}>{g.label}</option>
+                      <option key={g.value} value={g.value} className="bg-[#fdfaf2] dark:bg-[#2d2820]">{g.label}</option>
                     ))}
                   </select>
-                  <ChevronDown className="w-3.5 h-3.5 absolute right-3.5 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none" />
+                  <ChevronDown className="w-3.5 h-3.5 absolute right-1 top-1/2 -translate-y-1/2 text-stone-400 pointer-events-none" />
                 </div>
               </div>
 
               <div className="space-y-1.5">
-                <label className="text-slate-500 dark:text-[#b8b0cb] uppercase tracking-wider block text-[10px]">Layanan Media</label>
+                <label className="text-[#3d3527]/70 dark:text-[#e8dcc4]/70 uppercase tracking-wider block text-[10px] font-display">Layanan Media</label>
                 <div className="relative">
                   <select 
                     value={platform} 
                     onChange={e => setPlatform(e.target.value)}
-                    className="w-full px-3 py-3 bg-slate-50 dark:bg-[#1e1a2e] rounded-xl text-slate-800 dark:text-slate-150 border border-slate-200 dark:border-[#2d2740] outline-none transition appearance-none cursor-pointer"
+                    className="w-full bg-transparent text-[#3d3527] dark:text-[#e8dcc4] border-b border-[#d4c9a8] dark:border-[#4b463e] focus:border-[#3d3527] dark:focus:border-[#e8dcc4] rounded-none outline-none focus:ring-0 px-1 py-2 font-sans cursor-pointer appearance-none"
                   >
                     {PLATFORMS.map(p => (
-                      <option key={p.value} value={p.value}>{p.label}</option>
+                      <option key={p.value} value={p.value} className="bg-[#fdfaf2] dark:bg-[#2d2820]">{p.label}</option>
                     ))}
                   </select>
-                  <ChevronDown className="w-3.5 h-3.5 absolute right-3.5 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none" />
+                  <ChevronDown className="w-3.5 h-3.5 absolute right-1 top-1/2 -translate-y-1/2 text-stone-400 pointer-events-none" />
                 </div>
               </div>
             </div>
@@ -542,35 +542,35 @@ export default function MovieTracker() {
               <motion.div 
                 initial={{ opacity: 0, y: -10 }}
                 animate={{ opacity: 1, y: 0 }}
-                className="space-y-1.5 p-3.5 bg-indigo-50/40 dark:bg-indigo-950/10 border border-indigo-100 dark:border-indigo-900/40 rounded-2xl"
+                className="space-y-1.5 p-3.5 bg-[#f2ede3] dark:bg-[#32302a] border border-[#d4c9a8] dark:border-[#4b463e] rounded-[4px]"
               >
-                <label className="text-indigo-650 dark:text-indigo-400 uppercase tracking-wider block text-[10px] font-bold">Masukkan Genre Secara Manual</label>
+                <label className="text-[#a23b2c] dark:text-[#ff816c] uppercase tracking-wider block text-[10px] font-display font-bold">Masukkan Genre Secara Manual</label>
                 <input 
                   type="text" 
                   placeholder="cth. Dokumenter Sejarah, Cyberpunk, Neo-Noir" 
                   value={customGenreText}
                   onChange={e => setCustomGenreText(e.target.value)}
-                  className="w-full px-4.5 py-2.5 bg-white dark:bg-[#1c182a] rounded-xl text-slate-850 dark:text-slate-150 border border-indigo-200 dark:border-indigo-900 focus:border-indigo-400 focus:ring-1 focus:ring-indigo-400 outline-none transition"
+                  className="w-full bg-transparent text-[#3d3527] dark:text-[#e8dcc4] border-b border-[#d4c9a8] dark:border-[#4b463e] focus:border-[#3d3527] dark:focus:border-[#e8dcc4] rounded-none outline-none focus:ring-0 px-1 py-1.5 font-sans"
                 />
               </motion.div>
             )}
 
             {/* Watch Date */}
             <div className="space-y-1.5">
-              <label className="text-slate-500 dark:text-[#b8b0cb] uppercase tracking-wider block text-[10px]">Tanggal Menonton</label>
+              <label className="text-[#3d3527]/70 dark:text-[#e8dcc4]/70 uppercase tracking-wider block text-[10px] font-display">Tanggal Menonton</label>
               <div className="relative">
                 <input 
                   type="date" 
                   value={watchDate}
                   onChange={e => setWatchDate(e.target.value)}
-                  className="w-full px-4 py-3 bg-slate-50 dark:bg-[#1e1a2e] rounded-xl text-slate-850 dark:text-slate-150 border border-slate-200 dark:border-[#2d2740] focus:border-indigo-400 outline-none transition cursor-pointer"
+                  className="w-full bg-transparent text-[#3d3527] dark:text-[#e8dcc4] border-b border-[#d4c9a8] dark:border-[#4b463e] focus:border-[#3d3527] dark:focus:border-[#e8dcc4] rounded-none outline-none focus:ring-0 px-1 py-2 font-sans cursor-pointer"
                 />
               </div>
             </div>
 
             {/* Rating */}
             <div className="space-y-1.5">
-              <label className="text-slate-500 dark:text-[#b8b0cb] uppercase tracking-wider block text-[10px] mb-1">Berikan Penilaian</label>
+              <label className="text-[#3d3527]/70 dark:text-[#e8dcc4]/70 uppercase tracking-wider block text-[10px] font-display">Berikan Penilaian</label>
               <div className="flex items-center gap-2 py-1">
                 {[1, 2, 3, 4, 5].map((starValue) => (
                   <button
@@ -581,34 +581,34 @@ export default function MovieTracker() {
                     title={`${starValue} Bintang`}
                   >
                     <Star 
-                      className={`w-6 h-6 transition ${
+                      className={`w-5 h-5 transition ${
                         starValue <= rating 
-                          ? 'fill-amber-450 text-amber-450 dark:text-amber-400 drop-shadow-[0_0_6px_rgba(245,158,11,0.35)]' 
-                          : 'text-slate-300 dark:text-slate-700'
+                          ? 'fill-amber-400 text-amber-400 drop-shadow-[0_0_4px_rgba(245,158,11,0.2)]' 
+                          : 'text-stone-300 dark:text-stone-700'
                       }`} 
                     />
                   </button>
                 ))}
-                <span className="text-xs font-black text-amber-500 dark:text-amber-400 ml-2">{rating}.0 / 5.0</span>
+                <span className="text-xs font-display font-bold text-amber-500 dark:text-amber-400 ml-2">{rating}.0 / 5.0</span>
               </div>
             </div>
 
             {/* Notes / Review */}
             <div className="space-y-1.5">
-              <label className="text-slate-500 dark:text-[#b8b0cb] uppercase tracking-wider block text-[10px]">Catatan / Ulasan Singkat</label>
+              <label className="text-[#3d3527]/70 dark:text-[#e8dcc4]/70 uppercase tracking-wider block text-[10px] font-display">Catatan / Ulasan Singkat</label>
               <textarea 
                 placeholder="Bagikan opini kamu tentang alur cerita, akting, atau visual dalam film ini..."
                 rows={3}
                 value={notes}
                 onChange={e => setNotes(e.target.value)}
-                className="w-full px-4 py-3 bg-slate-50 dark:bg-[#1e1a2e] rounded-xl text-slate-850 dark:text-slate-150 border border-slate-200 dark:border-[#2d2740] focus:border-indigo-400 focus:ring-1 focus:ring-indigo-400 outline-none transition resize-none"
+                className="w-full bg-transparent text-[#3d3527] dark:text-[#e8dcc4] border-b border-[#d4c9a8] dark:border-[#4b463e] focus:border-[#3d3527] dark:focus:border-[#e8dcc4] rounded-none outline-none focus:ring-0 px-1 py-2 font-sans resize-none placeholder-stone-400"
               />
             </div>
 
             {/* Submit */}
             <button 
               type="submit"
-              className="w-full py-3.5 bg-gradient-to-tr from-violet-600 to-indigo-600 text-white rounded-xl text-xs font-bold transition-all shadow-md shadow-indigo-150 dark:shadow-none hover:brightness-110 active:scale-98 cursor-pointer flex items-center justify-center gap-2"
+              className="w-full py-3 bg-[#a23b2c] hover:bg-[#8f3224] dark:bg-[#ff816c] dark:hover:bg-[#f8654d] text-white dark:text-[#221e18] font-display font-bold uppercase tracking-widest rounded-[4px] border border-[#a23b2c] dark:border-[#ff816c] shadow-[2px_2px_0px_#3d3527] dark:shadow-[2px_2px_0px_#11100d] transition duration-200 hover:translate-y-0.5 active:translate-y-1 active:shadow-none cursor-pointer flex items-center justify-center gap-2"
             >
               <Plus className="w-4 h-4" />
               Simpan Ke Sinema Kamu
@@ -620,22 +620,22 @@ export default function MovieTracker() {
         <div className="lg:col-span-8 space-y-5">
           
           {/* Header Controls for Search, Filtering & Sorting */}
-          <div className="bg-white dark:bg-[#151221] border border-slate-150 dark:border-[#2a2438] rounded-3xl p-5 shadow-sm space-y-4">
+          <div className="bg-[#fdfaf2] dark:bg-[#2d2820] border border-[#d4c9a8] dark:border-[#4b463e] rounded-[4px] p-5 shadow-tactile space-y-4">
             <div className="flex flex-col md:flex-row gap-3">
               {/* Search input */}
               <div className="relative flex-1">
-                <Search className="w-4 h-4 text-slate-400 absolute left-4 top-1/2 -translate-y-1/2" />
+                <Search className="w-4 h-4 text-stone-450 absolute left-2 top-1/2 -translate-y-1/2" />
                 <input 
                   type="text" 
                   placeholder="Cari film berdasarkan judul atau ulasan..." 
                   value={searchQuery}
                   onChange={e => setSearchQuery(e.target.value)}
-                  className="w-full pl-10 pr-4 py-3 bg-slate-50 dark:bg-[#1e1a2e] rounded-xl text-slate-850 dark:text-slate-150 border border-slate-205 dark:border-[#2d2740] text-xs font-semibold outline-none focus:border-indigo-400"
+                  className="w-full pl-8 pr-4 py-2 bg-transparent text-[#3d3527] dark:text-[#e8dcc4] border-b border-[#d4c9a8] dark:border-[#4b463e] focus:border-[#3d3527] dark:focus:border-[#e8dcc4] rounded-none outline-none focus:ring-0 text-xs font-sans placeholder-stone-400"
                 />
                 {searchQuery && (
                   <button 
                     onClick={() => setSearchQuery('')}
-                    className="absolute right-3.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 font-bold"
+                    className="absolute right-2 top-1/2 -translate-y-1/2 text-stone-400 hover:text-stone-600 font-bold"
                   >
                     <X className="w-3.5 h-3.5" />
                   </button>
@@ -647,21 +647,21 @@ export default function MovieTracker() {
                 <select 
                   value={selectedSort}
                   onChange={e => setSelectedSort(e.target.value as any)}
-                  className="w-full pl-4 pr-10 py-3 bg-slate-50 dark:bg-[#1e1a2e] text-slate-800 dark:text-slate-200 border border-slate-205 dark:border-[#2d2740] rounded-xl text-xs font-semibold outline-none appearance-none cursor-pointer"
+                  className="w-full pl-2 pr-8 py-2 bg-transparent text-[#3d3527] dark:text-[#e8dcc4] border-b border-[#d4c9a8] dark:border-[#4b463e] focus:border-[#3d3527] dark:focus:border-[#e8dcc4] rounded-none outline-none focus:ring-0 text-xs font-sans cursor-pointer appearance-none"
                 >
-                  <option value="newest">Terbaru Ditonton</option>
-                  <option value="oldest">Terdahulu Ditonton</option>
-                  <option value="highest">Rating Tertinggi</option>
-                  <option value="lowest">Rating Terendah</option>
-                  <option value="alphabetical">Nama A - Z</option>
+                  <option value="newest" className="bg-[#fdfaf2] dark:bg-[#2d2820]">Terbaru Ditonton</option>
+                  <option value="oldest" className="bg-[#fdfaf2] dark:bg-[#2d2820]">Terdahulu Ditonton</option>
+                  <option value="highest" className="bg-[#fdfaf2] dark:bg-[#2d2820]">Rating Tertinggi</option>
+                  <option value="lowest" className="bg-[#fdfaf2] dark:bg-[#2d2820]">Rating Terendah</option>
+                  <option value="alphabetical" className="bg-[#fdfaf2] dark:bg-[#2d2820]">Nama A - Z</option>
                 </select>
-                <ChevronDown className="w-3.5 h-3.5 absolute right-3.5 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none" />
+                <ChevronDown className="w-3.5 h-3.5 absolute right-1 top-1/2 -translate-y-1/2 text-stone-400 pointer-events-none" />
               </div>
             </div>
 
             {/* Quick Filters */}
-            <div className="flex flex-wrap items-center gap-2 pt-2 border-t border-slate-100 dark:border-[#2a2438] text-xs font-bold text-slate-500">
-              <span className="flex items-center gap-1.5 mr-1 text-[10px] uppercase tracking-wider text-slate-400">
+            <div className="flex flex-wrap items-center gap-3 pt-3 border-t border-[#d4c9a8] dark:border-[#4b463e] text-xs font-bold text-stone-550">
+              <span className="flex items-center gap-1.5 mr-1 text-[10px] uppercase tracking-wider text-stone-400 font-display">
                 <Filter className="w-3 h-3" />
                 Filter:
               </span>
@@ -671,14 +671,14 @@ export default function MovieTracker() {
                 <select 
                   value={selectedFilterGenre}
                   onChange={e => setSelectedFilterGenre(e.target.value)}
-                  className="px-3 py-1.5 bg-transparent border border-slate-200 dark:border-slate-800 text-slate-600 dark:text-[#b8b0cb] rounded-lg text-[11px] font-bold outline-none appearance-none cursor-pointer pr-7 dark:bg-[#151221]"
+                  className="px-2 py-1 bg-transparent border-b border-[#d4c9a8] dark:border-[#4b463e] text-[#3d3527] dark:text-[#e8dcc4] text-[11px] font-sans outline-none appearance-none cursor-pointer pr-5"
                 >
-                  <option value="All">Semua Genre ({movies.length})</option>
+                  <option value="All" className="bg-[#fdfaf2] dark:bg-[#2d2820]">Semua Genre ({movies.length})</option>
                   {/* Preset list */}
                   {GENRES.filter(g => g.value !== 'Custom').map(g => {
                     const count = movies.filter(m => m.genre === g.value).length;
                     return (
-                      <option key={g.value} value={g.value}>
+                      <option key={g.value} value={g.value} className="bg-[#fdfaf2] dark:bg-[#2d2820]">
                         {g.label} ({count})
                       </option>
                     );
@@ -689,14 +689,14 @@ export default function MovieTracker() {
                     .map(customG => {
                       const count = movies.filter(m => m.genre === customG).length;
                       return (
-                        <option key={customG} value={customG}>
+                        <option key={customG} value={customG} className="bg-[#fdfaf2] dark:bg-[#2d2820]">
                           ✍️ {customG} ({count})
                         </option>
                       );
                     })
                   }
                 </select>
-                <ChevronDown className="w-3 h-3 absolute right-2.5 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none" />
+                <ChevronDown className="w-3 h-3 absolute right-0 top-1/2 -translate-y-1/2 text-stone-400 pointer-events-none" />
               </div>
 
               {/* Rating Filter Dropdown */}
@@ -707,16 +707,16 @@ export default function MovieTracker() {
                     const val = e.target.value;
                     setSelectedFilterRating(val === 'All' ? 'All' : Number(val));
                   }}
-                  className="px-3 py-1.5 bg-transparent border border-slate-200 dark:border-slate-800 text-slate-600 dark:text-[#b8b0cb] rounded-lg text-[11px] font-bold outline-none appearance-none cursor-pointer pr-7 dark:bg-[#151221]"
+                  className="px-2 py-1 bg-transparent border-b border-[#d4c9a8] dark:border-[#4b463e] text-[#3d3527] dark:text-[#e8dcc4] text-[11px] font-sans outline-none appearance-none cursor-pointer pr-5"
                 >
-                  <option value="All">Semua Rating</option>
-                  <option value="5">⭐⭐⭐⭐⭐ (5 Bintang)</option>
-                  <option value="4">⭐⭐⭐⭐ (4 Bintang)</option>
-                  <option value="3">⭐⭐⭐ (3 Bintang)</option>
-                  <option value="2">⭐⭐ (2 Bintang)</option>
-                  <option value="1">⭐ (1 Bintang)</option>
+                  <option value="All" className="bg-[#fdfaf2] dark:bg-[#2d2820]">Semua Rating</option>
+                  <option value="5" className="bg-[#fdfaf2] dark:bg-[#2d2820]">⭐⭐⭐⭐⭐ (5 Bintang)</option>
+                  <option value="4" className="bg-[#fdfaf2] dark:bg-[#2d2820]">⭐⭐⭐⭐ (4 Bintang)</option>
+                  <option value="3" className="bg-[#fdfaf2] dark:bg-[#2d2820]">⭐⭐⭐ (3 Bintang)</option>
+                  <option value="2" className="bg-[#fdfaf2] dark:bg-[#2d2820]">⭐⭐ (2 Bintang)</option>
+                  <option value="1" className="bg-[#fdfaf2] dark:bg-[#2d2820]">⭐ (1 Bintang)</option>
                 </select>
-                <ChevronDown className="w-3 h-3 absolute right-2.5 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none" />
+                <ChevronDown className="w-3 h-3 absolute right-0 top-1/2 -translate-y-1/2 text-stone-400 pointer-events-none" />
               </div>
             </div>
           </div>
@@ -729,13 +729,13 @@ export default function MovieTracker() {
                   initial={{ opacity: 0, scale: 0.95 }}
                   animate={{ opacity: 1, scale: 1 }}
                   exit={{ opacity: 0, scale: 0.95 }}
-                  className="flex flex-col items-center justify-center p-12 text-center border-2 border-dashed border-slate-150 dark:border-[#2a2438] rounded-3xl bg-white dark:bg-[#151221]"
+                  className="flex flex-col items-center justify-center p-12 text-center border border-dashed border-[#d4c9a8] dark:border-[#4b463e] rounded-[4px] bg-[#fdfaf2] dark:bg-[#2d2820] shadow-tactile"
                 >
-                  <div className="p-3 bg-slate-50 dark:bg-[#1e1a2e] rounded-2xl mb-4 text-slate-400">
-                    <Film className="w-8 h-8 text-indigo-400" />
+                  <div className="p-3 bg-[#f2ede3] dark:bg-[#3d3527] border border-[#d4c9a8] dark:border-[#4b463e] rounded-[4px] mb-4 text-[#a23b2c] dark:text-[#ff816c]">
+                    <Film className="w-8 h-8" />
                   </div>
-                  <h4 className="text-sm font-display font-bold text-slate-850 dark:text-[#f0ecf9]">Arsip Menonton Kosong</h4>
-                  <p className="text-xs text-slate-500 dark:text-[#b8b0cb] mt-1 max-w-sm font-medium">
+                  <h4 className="text-sm font-display font-bold text-[#3d3527] dark:text-[#e8dcc4] uppercase tracking-wide">Arsip Menonton Kosong</h4>
+                  <p className="text-xs text-slate-500 dark:text-stone-450 mt-1 max-w-sm font-sans">
                     {movies.length === 0 
                       ? 'Kamu belum menambahkan film apa pun ke buku pribadi. Ayo masukkan judul pertamamu sekarang!' 
                       : 'Hasil pencarian atau filter kamu tidak menemukan kecocokan di arsip.'}
@@ -754,75 +754,83 @@ export default function MovieTracker() {
                       animate={{ opacity: 1, y: 0 }}
                       exit={{ opacity: 0, scale: 0.95 }}
                       transition={{ duration: 0.2 }}
-                      className={`relative bg-white dark:bg-[#151221] border dark:border-[#2a2438] rounded-2xl p-5 shadow-xs transition-all ${
+                      className={`relative bg-[#fdfaf2] dark:bg-[#2d2820] border border-[#d4c9a8] dark:border-[#4b463e] rounded-[4px] p-5 shadow-tactile transition-all border-l-[4px] border-l-[#a23b2c] dark:border-l-[#ff816c] ${
                         isEditing 
-                          ? 'border-indigo-400 ring-1 ring-indigo-400 dark:border-indigo-550' 
-                          : 'border-slate-150 hover:border-slate-300 dark:hover:border-[#38314a]'
+                          ? 'ring-1 ring-[#a23b2c] dark:ring-[#ff816c]' 
+                          : 'hover:border-[#3d3527] dark:hover:border-[#e8dcc4]'
                       }`}
                     >
+                      {/* Hole punch circle */}
+                      <div className="absolute bottom-2.5 left-1/2 -translate-x-1/2 w-3 h-3 rounded-full bg-[#f2ede3] dark:bg-[#1f1b15] border border-[#d4c9a8] dark:border-[#4b463e] shadow-[inset_0_2px_3px_rgba(0,0,0,0.08)] pointer-events-none" />
+
+                      {/* Vintage Rubber Stamp */}
+                      <div className="absolute right-16 top-6 pointer-events-none select-none rotate-[-12deg] border-2 border-dashed border-[#a23b2c]/15 dark:border-[#ff816c]/15 text-[#a23b2c]/20 dark:text-[#ff816c]/20 rounded-[4px] px-2 py-0.5 text-[9px] font-mono font-bold tracking-widest uppercase sm:block hidden">
+                        DITONTON
+                      </div>
+
                       {isEditing ? (
                         /* Editing form inline */
                         <div className="space-y-4 text-xs font-semibold">
                           <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                             <div className="space-y-1">
-                              <label className="text-[10px] uppercase text-slate-400">Judul Film</label>
+                              <label className="text-[10px] uppercase text-stone-400 font-display">Judul Film</label>
                               <input 
                                 type="text"
                                 value={editTitle}
                                 onChange={e => setEditTitle(e.target.value)}
-                                className="w-full px-3 py-2 bg-slate-50 dark:bg-[#1e1a2e] rounded-xl border border-slate-200 dark:border-[#2d2740] outline-none"
+                                className="w-full bg-transparent text-[#3d3527] dark:text-[#e8dcc4] border-b border-[#d4c9a8] dark:border-[#4b463e] focus:border-[#3d3527] dark:focus:border-[#e8dcc4] rounded-none outline-none focus:ring-0 px-1 py-1 font-sans"
                               />
                             </div>
                             <div className="space-y-1">
-                              <label className="text-[10px] uppercase text-slate-400">Tanggal Nonton</label>
+                              <label className="text-[10px] uppercase text-stone-400 font-display">Tanggal Nonton</label>
                               <input 
                                 type="date"
                                 value={editWatchDate}
                                 onChange={e => setEditWatchDate(e.target.value)}
-                                className="w-full px-3 py-2 bg-slate-50 dark:bg-[#1e1a2e] rounded-xl border border-slate-200 dark:border-[#2d2740] outline-none cursor-pointer"
+                                className="w-full bg-transparent text-[#3d3527] dark:text-[#e8dcc4] border-b border-[#d4c9a8] dark:border-[#4b463e] focus:border-[#3d3527] dark:focus:border-[#e8dcc4] rounded-none outline-none focus:ring-0 px-1 py-1 font-sans cursor-pointer"
                               />
                             </div>
                           </div>
 
                           <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
                             <div className="space-y-1">
-                              <label className="text-[10px] uppercase text-slate-400">Genre</label>
+                              <label className="text-[10px] uppercase text-stone-400 font-display">Genre</label>
                               <select 
                                 value={editGenre}
                                 onChange={e => setEditGenre(e.target.value)}
-                                className="w-full px-3 py-2 bg-slate-50 dark:bg-[#1e1a2e] rounded-xl border border-slate-205 dark:border-[#2d2740] outline-none cursor-pointer"
+                                className="w-full bg-transparent text-[#3d3527] dark:text-[#e8dcc4] border-b border-[#d4c9a8] dark:border-[#4b463e] focus:border-[#3d3527] dark:focus:border-[#e8dcc4] rounded-none outline-none focus:ring-0 px-1 py-1 font-sans cursor-pointer"
                               >
                                 {GENRES.map(g => (
-                                  <option key={g.value} value={g.value}>{g.label}</option>
+                                  <option key={g.value} value={g.value} className="bg-[#fdfaf2] dark:bg-[#2d2820]">{g.label}</option>
                                 ))}
                               </select>
                             </div>
 
                             <div className="space-y-1">
-                              <label className="text-[10px] uppercase text-slate-400">Media Platform</label>
+                              <label className="text-[10px] uppercase text-stone-400 font-display">Media Platform</label>
                               <select 
                                 value={editPlatform}
                                 onChange={e => setEditPlatform(e.target.value)}
-                                className="w-full px-3 py-2 bg-slate-50 dark:bg-[#1e1a2e] rounded-xl border border-slate-205 dark:border-[#2d2740] outline-none cursor-pointer"
+                                className="w-full bg-transparent text-[#3d3527] dark:text-[#e8dcc4] border-b border-[#d4c9a8] dark:border-[#4b463e] focus:border-[#3d3527] dark:focus:border-[#e8dcc4] rounded-none outline-none focus:ring-0 px-1 py-1 font-sans cursor-pointer"
                               >
                                 {PLATFORMS.map(p => (
-                                  <option key={p.value} value={p.value}>{p.label}</option>
+                                  <option key={p.value} value={p.value} className="bg-[#fdfaf2] dark:bg-[#2d2820]">{p.label}</option>
                                 ))}
                               </select>
                             </div>
 
                             <div className="space-y-1">
-                              <label className="text-[10px] uppercase text-slate-400">Rating</label>
+                              <label className="text-[10px] uppercase text-stone-400 font-display">Rating</label>
                               <select 
                                 value={editRating}
                                 onChange={e => setEditRating(Number(e.target.value))}
-                                className="w-full px-3 py-2 bg-slate-50 dark:bg-[#1e1a2e] rounded-xl border border-slate-205 dark:border-[#2d2740] outline-none text-amber-500 cursor-pointer"
+                                className="w-full bg-transparent text-[#3d3527] dark:text-[#e8dcc4] border-b border-[#d4c9a8] dark:border-[#4b463e] focus:border-[#3d3527] dark:focus:border-[#e8dcc4] rounded-none outline-none focus:ring-0 px-1 py-1 font-sans text-amber-500 cursor-pointer"
                               >
-                                <option value="5">⭐⭐⭐⭐⭐ 5/5</option>
-                                <option value="4">⭐⭐⭐⭐ 4/5</option>
-                                <option value="3">⭐⭐⭐ 3/5</option>
-                                <option value="2">⭐⭐ 2/5</option>
-                                <option value="1">⭐ 1/5</option>
+                                <option value="5" className="bg-[#fdfaf2] dark:bg-[#2d2820]">⭐⭐⭐⭐⭐ 5/5</option>
+                                <option value="4" className="bg-[#fdfaf2] dark:bg-[#2d2820]">⭐⭐⭐⭐ 4/5</option>
+                                <option value="3" className="bg-[#fdfaf2] dark:bg-[#2d2820]">⭐⭐⭐ 3/5</option>
+                                <option value="2" className="bg-[#fdfaf2] dark:bg-[#2d2820]">⭐⭐ 2/5</option>
+                                <option value="1" className="bg-[#fdfaf2] dark:bg-[#2d2820]">⭐ 1/5</option>
                               </select>
                             </div>
                           </div>
@@ -832,42 +840,42 @@ export default function MovieTracker() {
                             <motion.div 
                               initial={{ opacity: 0, y: -4 }}
                               animate={{ opacity: 1, y: 0 }}
-                              className="p-3 bg-indigo-50/20 dark:bg-indigo-950/20 border border-indigo-100 dark:border-indigo-900/30 rounded-xl space-y-1"
+                              className="p-3 bg-[#f2ede3] dark:bg-[#32302a] border border-[#d4c9a8] dark:border-[#4b463e] rounded-[4px] space-y-1"
                             >
-                              <label className="text-[10px] uppercase text-indigo-650 dark:text-indigo-400 font-bold">Masukkan Genre Secara Manual</label>
+                              <label className="text-[10px] uppercase text-[#a23b2c] dark:text-[#ff816c] font-display font-bold">Masukkan Genre Secara Manual</label>
                               <input 
                                 type="text"
                                 value={editCustomGenreText}
                                 onChange={e => setEditCustomGenreText(e.target.value)}
-                                className="w-full px-3 py-2 bg-white dark:bg-[#1e1a2e] rounded-xl border border-indigo-200 dark:border-indigo-900/30 outline-none text-xs"
+                                className="w-full bg-transparent text-[#3d3527] dark:text-[#e8dcc4] border-b border-[#d4c9a8] dark:border-[#4b463e] focus:border-[#3d3527] dark:focus:border-[#e8dcc4] rounded-none outline-none focus:ring-0 px-1 py-1 font-sans text-xs"
                                 placeholder="cth. Dokumenter Sejarah, Cyberpunk, Neo-Noir"
                               />
                             </motion.div>
                           )}
 
                           <div className="space-y-1">
-                            <label className="text-[10px] uppercase text-slate-400">Ulasan</label>
+                            <label className="text-[10px] uppercase text-stone-400 font-display">Ulasan</label>
                             <textarea 
                               value={editNotes}
                               onChange={e => setEditNotes(e.target.value)}
                               rows={2}
-                              className="w-full px-3 py-2 bg-slate-50 dark:bg-[#1e1a2e] rounded-xl border border-slate-200 dark:border-[#2d2740] outline-none resize-none"
+                              className="w-full bg-transparent text-[#3d3527] dark:text-[#e8dcc4] border-b border-[#d4c9a8] dark:border-[#4b463e] focus:border-[#3d3527] dark:focus:border-[#e8dcc4] rounded-none outline-none focus:ring-0 px-1 py-1 font-sans resize-none"
                             />
                           </div>
 
                           <div className="flex gap-2 justify-end pt-1">
                             <button 
                               onClick={() => setEditingId(null)}
-                              className="px-4 py-2 bg-slate-50 dark:bg-[#1e1a2e] hover:bg-slate-100 border border-slate-200 dark:border-slate-800 text-slate-600 dark:text-[#b8b0cb] rounded-xl text-xs font-bold cursor-pointer"
+                              className="px-3 py-1.5 bg-[#f2ede3] dark:bg-[#32302a] border border-[#d4c9a8] dark:border-[#4b463e] text-[#3d3527] dark:text-[#e8dcc4] rounded-[4px] text-xs font-display font-bold cursor-pointer"
                             >
                               Batal
                             </button>
                             <button 
                               onClick={() => saveEditing(movie.id)}
-                              className="px-4 py-2 bg-indigo-600 text-white hover:bg-indigo-700 rounded-xl text-xs font-bold flex items-center gap-1.5 cursor-pointer shadow-xs"
+                              className="px-3 py-1.5 bg-[#a23b2c] dark:bg-[#ff816c] text-white dark:text-[#221e18] rounded-[4px] border border-[#a23b2c] dark:border-[#ff816c] text-xs font-display font-bold cursor-pointer flex items-center gap-1"
                             >
                               <Save className="w-3.5 h-3.5" />
-                              Simpan Perubahan
+                              Simpan
                             </button>
                           </div>
                         </div>
@@ -875,20 +883,20 @@ export default function MovieTracker() {
                         /* Display movie card mode */
                         <div className="flex flex-col sm:flex-row justify-between gap-4">
                           {/* Inner details container */}
-                          <div className="space-y-3 flex-1">
+                          <div className="space-y-3 flex-1 pb-4">
                             <div className="flex flex-wrap items-center gap-2">
                               {/* Title display */}
-                              <h4 className="text-base font-display font-bold text-slate-800 dark:text-[#f0ecf9] leading-tight">
+                              <h4 className="text-base font-display font-bold text-[#3d3527] dark:text-[#e8dcc4] leading-tight">
                                 {movie.title}
                               </h4>
                               
                               {/* Genre Tag */}
-                              <span className={`px-2.5 py-0.5 rounded-lg border text-[10px] font-bold ${getGenreColor(movie.genre)}`}>
+                              <span className={`px-2 py-0.5 rounded-[4px] border text-[9px] font-display font-bold ${getGenreColor(movie.genre)}`}>
                                 {genreDetails?.label || movie.genre}
                               </span>
 
                               {/* Media tag */}
-                              <span className="px-2 py-0.5 bg-slate-50 dark:bg-[#1c172e] border border-slate-100 dark:border-slate-805 text-slate-500 dark:text-[#9381b8] rounded-lg text-[9px] font-bold flex items-center gap-1">
+                              <span className="px-2 py-0.5 bg-[#f2ede3] dark:bg-[#3d3527] border border-[#d4c9a8] dark:border-[#4b463e] text-slate-550 dark:text-stone-400 rounded-[4px] text-[9px] font-display font-bold flex items-center gap-1">
                                 <Tv className="w-2.5 h-2.5" />
                                 {movie.platform}
                               </span>
@@ -899,45 +907,45 @@ export default function MovieTracker() {
                               {[1, 2, 3, 4, 5].map((s) => (
                                 <Star 
                                   key={s} 
-                                  className={`w-4 h-4 ${
+                                  className={`w-3.5 h-3.5 ${
                                     s <= movie.rating 
                                       ? 'fill-amber-400 text-amber-400' 
-                                      : 'text-slate-200 dark:text-slate-800'
+                                      : 'text-[#d4c9a8] dark:text-[#4b463e]'
                                   }`} 
                                 />
                               ))}
-                              <span className="text-xs font-semibold text-slate-400 dark:text-slate-500 ml-1.5">
+                              <span className="text-[11px] font-sans text-[#3d3527]/60 dark:text-[#e8dcc4]/60 ml-1.5">
                                 • Ditonton: {new Date(movie.watchDate).toLocaleDateString('id-ID', { day: 'numeric', month: 'short', year: 'numeric' })}
                               </span>
                             </div>
 
                             {/* Review notes block */}
                             {movie.notes ? (
-                              <p className="text-xs text-slate-600 dark:text-[#b8b0cb] font-medium leading-relaxed bg-slate-50/50 dark:bg-[#181526]/50 rounded-xl p-3 border border-slate-100/50 dark:border-[#2a2438]/20 flex items-start gap-2">
-                                <MessageSquare className="w-3.5 h-3.5 text-slate-400 shrink-0 mt-0.5" />
+                              <p className="text-xs text-[#3d3527] dark:text-[#e8dcc4] font-mono leading-relaxed bg-[#f5f0e6]/65 dark:bg-[#221e18]/65 rounded-[4px] p-3 border border-[#d4c9a8]/40 dark:border-[#4b463e]/40 flex items-start gap-2">
+                                <MessageSquare className="w-3.5 h-3.5 text-stone-400 shrink-0 mt-0.5" />
                                 <span>{movie.notes}</span>
                               </p>
                             ) : (
-                              <p className="text-[11px] italic text-slate-400">Tidak ada catatan ulasan film ini.</p>
+                              <p className="text-[11px] italic text-stone-400 font-mono">Tidak ada catatan ulasan film ini.</p>
                             )}
                           </div>
 
                           {/* Control Action Tools */}
-                          <div className="flex items-center sm:flex-col justify-end gap-1.5 border-t sm:border-t-0 border-slate-100 sm:pt-0 pt-3 shrink-0">
+                          <div className="flex items-center sm:flex-col justify-end gap-1.5 border-t sm:border-t-0 border-[#d4c9a8]/30 dark:border-[#4b463e]/30 sm:pt-0 pt-3 shrink-0">
                             <button
                               onClick={() => startEditing(movie)}
-                              className="p-2 bg-slate-50 dark:bg-[#1e1a2e] hover:bg-slate-100 dark:hover:bg-[#252038] text-slate-550 dark:text-[#a59aba] hover:text-indigo-650 dark:hover:text-[#8b5cf6] border border-slate-150 dark:border-[#2a2438] rounded-xl hover:shadow-xs transition cursor-pointer flex items-center gap-1 text-xs font-bold"
+                              className="p-1.5 bg-[#f2ede3] dark:bg-[#3d3527] hover:bg-[#d4c9a8]/40 dark:hover:bg-[#4b463e]/40 text-[#3d3527] dark:text-[#e8dcc4] border border-[#d4c9a8] dark:border-[#4b463e] rounded-[4px] transition cursor-pointer flex items-center gap-1 text-[11px] font-display font-bold"
                               title="Sunting catatan film ini"
                             >
-                              <Edit2 className="w-3.5 h-3.5" />
+                              <Edit2 className="w-3 h-3" />
                               <span className="sm:hidden">Edit</span>
                             </button>
                             <button
                               onClick={() => setMovieToDelete(movie.id)}
-                              className="p-2 bg-slate-50 dark:bg-[#1e1a2e] hover:bg-rose-50 dark:hover:bg-rose-950/20 text-slate-550 dark:text-[#a59aba] hover:text-rose-600 border border-slate-150 dark:border-[#2a2438] hover:border-rose-200 dark:hover:border-rose-900 rounded-xl hover:shadow-xs transition cursor-pointer flex items-center gap-1 text-xs font-bold"
+                              className="p-1.5 bg-[#f2ede3] dark:bg-[#3d3527] hover:bg-rose-100/50 dark:hover:bg-rose-950/20 text-[#a23b2c] dark:text-[#ff816c] border border-[#d4c9a8] dark:border-[#4b463e] hover:border-[#a23b2c] dark:hover:border-[#ff816c] rounded-[4px] transition cursor-pointer flex items-center gap-1 text-[11px] font-display font-bold"
                               title="Hapus film dari arsip"
                             >
-                              <Trash2 className="w-3.5 h-3.5" />
+                              <Trash2 className="w-3 h-3" />
                               <span className="sm:hidden">Hapus</span>
                             </button>
                           </div>

@@ -745,29 +745,29 @@ export default function WeeklySchedule() {
   return (
     <div className="w-full">
       {/* Control and Actions Bar */}
-      <div className="flex flex-col md:flex-row items-center justify-between gap-4 mb-8 bg-white dark:bg-slate-900 p-6 rounded-3xl border border-slate-100 dark:border-slate-800 shadow-sm">
+      <div className="flex flex-col md:flex-row items-center justify-between gap-4 mb-8 bg-[#fdfaf2] dark:bg-[#2d2820] border border-[#d4c9a8] dark:border-[#4b463e] rounded-[4px] p-6 shadow-tactile relative overflow-hidden card-margin-line">
         <div>
-          <h2 className="text-2xl font-black text-slate-850 dark:text-slate-50 tracking-tight">Weekly Activity Planner</h2>
-          <p className="text-sm text-slate-500 dark:text-slate-400 font-medium">Buat jadwal kegiatan hiburanmu per hari secara adil dan menyenangkan!</p>
+          <h2 className="text-lg font-display font-bold text-[#3d3527] dark:text-[#e8dcc4] uppercase tracking-wide">Weekly Activity Planner</h2>
+          <p className="text-xs text-slate-500 dark:text-stone-450 mt-1">Buat jadwal kegiatan hiburanmu per hari secara adil dan menyenangkan!</p>
         </div>
 
         <div className="flex items-center gap-2 w-full md:w-auto flex-wrap sm:flex-nowrap">
           {/* Sound toggle button */}
           <button
             onClick={() => setSoundEnabled(!soundEnabled)}
-            className="w-11 h-11 bg-white dark:bg-slate-900 text-slate-600 dark:text-slate-355 hover:text-slate-900 dark:hover:text-slate-50 border border-slate-200 dark:border-slate-800 rounded-2xl hover:bg-slate-50 dark:hover:bg-slate-850 hover:border-indigo-305 dark:hover:border-indigo-500 transition-all shadow-sm cursor-pointer flex items-center justify-center shrink-0"
+            className="w-10 h-10 bg-[#f2ede3] dark:bg-[#3d3527] text-stone-500 dark:text-stone-300 hover:text-[#a23b2c] dark:hover:text-[#ff816c] border border-[#d4c9a8] dark:border-[#4b463e] rounded-[4px] transition-all shadow-sm cursor-pointer flex items-center justify-center shrink-0"
             title={soundEnabled ? "Matikan Efek Suara" : "Aktifkan Efek Suara"}
           >
-            {soundEnabled ? <Volume2 className="w-4 h-4 text-indigo-500" /> : <VolumeX className="w-4 h-4 text-slate-400" />}
+            {soundEnabled ? <Volume2 className="w-4 h-4 text-[#a23b2c] dark:text-[#ff816c]" /> : <VolumeX className="w-4 h-4 text-stone-400" />}
           </button>
 
           <button
             onClick={() => setShowManager(true)}
             disabled={isSpinning || isSpinningSingleDay}
-            className="flex-1 md:flex-none flex items-center justify-center gap-1.5 px-4 h-11 rounded-2xl font-bold text-xs sm:text-sm text-slate-700 dark:text-slate-300 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 hover:border-indigo-300 dark:hover:border-indigo-500 hover:text-indigo-600 dark:hover:text-indigo-400 transition-all shadow-sm cursor-pointer disabled:opacity-50 whitespace-nowrap"
+            className="flex-1 md:flex-none flex items-center justify-center gap-1.5 px-4 h-10 rounded-[4px] font-display font-bold text-xs text-[#3d3527] dark:text-[#e8dcc4] bg-[#f2ede3] dark:bg-[#3d3527] border border-[#d4c9a8] dark:border-[#4b463e] hover:bg-[#d4c9a8]/35 transition-all shadow-sm cursor-pointer disabled:opacity-50 whitespace-nowrap"
             title="Kelola daftar pilihan aktivitas"
           >
-            <Settings className="w-4 h-4 flex-shrink-0" />
+            <Settings className="w-3.5 h-3.5 flex-shrink-0" />
             Kelola Aktivitas
           </button>
 
@@ -776,15 +776,15 @@ export default function WeeklySchedule() {
               <button
                 onClick={() => setShowDownloadDropdown(!showDownloadDropdown)}
                 disabled={isDownloading}
-                className="w-full flex items-center justify-center gap-1.5 px-4 h-11 rounded-2xl font-bold text-xs sm:text-sm bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-slate-700 dark:text-slate-300 hover:text-indigo-600 dark:hover:text-indigo-400 hover:border-indigo-300 dark:hover:border-indigo-550 transition-all shadow-sm cursor-pointer disabled:opacity-50 whitespace-nowrap"
+                className="w-full flex items-center justify-center gap-1.5 px-4 h-10 rounded-[4px] font-display font-bold text-xs bg-[#f2ede3] dark:bg-[#3d3527] border border-[#d4c9a8] dark:border-[#4b463e] text-[#3d3527] dark:text-[#e8dcc4] hover:bg-[#d4c9a8]/35 transition-all shadow-sm cursor-pointer disabled:opacity-50 whitespace-nowrap"
               >
                 {isDownloading ? (
-                  <Loader2 className="w-4 h-4 animate-spin text-indigo-600 dark:text-indigo-400" />
+                  <Loader2 className="w-3.5 h-3.5 animate-spin text-[#a23b2c] dark:text-[#ff816c]" />
                 ) : (
-                  <Download className="w-4 h-4" />
+                  <Download className="w-3.5 h-3.5" />
                 )}
                 Ekspor Jadwal
-                <ChevronDown className={`w-3.5 h-3.5 transition-transform ${showDownloadDropdown ? 'rotate-180' : ''}`} />
+                <ChevronDown className={`w-3 h-3 transition-transform ${showDownloadDropdown ? 'rotate-180' : ''}`} />
               </button>
 
               <AnimatePresence>
@@ -794,16 +794,16 @@ export default function WeeklySchedule() {
                     animate={{ opacity: 1, y: 0, scale: 1 }}
                     exit={{ opacity: 0, y: 8, scale: 0.95 }}
                     transition={{ duration: 0.15 }}
-                    className="absolute right-0 top-full mt-2 w-56 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl shadow-xl z-20 overflow-hidden py-1.5"
+                    className="absolute right-0 top-full mt-2 w-52 bg-[#fdfaf2] dark:bg-[#2d2820] border border-[#d4c9a8] dark:border-[#4b463e] rounded-[4px] shadow-tactile z-20 overflow-hidden py-1"
                   >
                     <button
                       onClick={async () => {
                         setShowDownloadDropdown(false);
                         await downloadPng();
                       }}
-                      className="w-full text-left px-4.5 py-3 text-xs font-bold text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-850 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors flex items-center gap-2.5 cursor-pointer"
+                      className="w-full text-left px-4 py-2.5 text-xs font-display font-bold text-[#3d3527] dark:text-[#e8dcc4] hover:bg-[#f2ede3] dark:hover:bg-[#3d3527] transition-colors flex items-center gap-2 cursor-pointer"
                     >
-                      <Download className="w-4 h-4 text-slate-400" />
+                      <Download className="w-3.5 h-3.5 text-stone-400" />
                       Unduh PNG
                     </button>
                     <button
@@ -811,9 +811,9 @@ export default function WeeklySchedule() {
                         setShowDownloadDropdown(false);
                         await downloadPdf();
                       }}
-                      className="w-full text-left px-4.5 py-3 text-xs font-bold text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-850 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors flex items-center gap-2.5 cursor-pointer"
+                      className="w-full text-left px-4 py-2.5 text-xs font-display font-bold text-[#3d3527] dark:text-[#e8dcc4] hover:bg-[#f2ede3] dark:hover:bg-[#3d3527] transition-colors flex items-center gap-2 cursor-pointer"
                     >
-                      <FileText className="w-4 h-4 text-slate-400" />
+                      <FileText className="w-3.5 h-3.5 text-stone-400" />
                       Unduh PDF
                     </button>
                     <button
@@ -821,9 +821,9 @@ export default function WeeklySchedule() {
                         setShowDownloadDropdown(false);
                         await copyToClipboard();
                       }}
-                      className="w-full text-left px-4.5 py-3 text-xs font-bold text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-850 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors flex items-center gap-2.5 cursor-pointer"
+                      className="w-full text-left px-4 py-2.5 text-xs font-display font-bold text-[#3d3527] dark:text-[#e8dcc4] hover:bg-[#f2ede3] dark:hover:bg-[#3d3527] transition-colors flex items-center gap-2 cursor-pointer"
                     >
-                      <Copy className="w-4 h-4 text-slate-400" />
+                      <Copy className="w-3.5 h-3.5 text-stone-400" />
                       Salin ke Clipboard
                     </button>
                   </motion.div>
@@ -837,16 +837,16 @@ export default function WeeklySchedule() {
             disabled={isSpinning || isSpinningSingleDay}
             aria-label={!isInitialState ? 'Putar Ulang' : 'Mulai Atur Jadwal'}
             className={`
-              flex-1 md:flex-none flex items-center justify-center gap-1.5 px-5 h-11 rounded-2xl font-bold text-xs sm:text-sm transition-all whitespace-nowrap
+              flex-1 md:flex-none flex items-center justify-center gap-1.5 px-5 h-10 rounded-[4px] font-display font-bold text-xs transition-all whitespace-nowrap cursor-pointer border
               ${isSpinning || isSpinningSingleDay 
-                ? 'bg-slate-100 text-slate-400 cursor-not-allowed' 
-                : 'bg-indigo-600 text-white hover:bg-indigo-750 hover:scale-102 active:scale-98 shadow-md shadow-indigo-150'}
+                ? 'bg-stone-100 text-stone-400 cursor-not-allowed border-stone-200' 
+                : 'bg-[#a23b2c] dark:bg-[#ff816c] text-white dark:text-[#221e18] border-[#a23b2c] dark:border-[#ff816c] hover:bg-[#a23b2c]/90 dark:hover:bg-[#ff816c]/90'}
             `}
           >
             {isSpinning || isSpinningSingleDay ? (
-              <RotateCcw className="w-4 h-4 animate-spin" />
+              <RotateCcw className="w-3.5 h-3.5 animate-spin" />
             ) : (
-              <RotateCcw className="w-4 h-4" />
+              <RotateCcw className="w-3.5 h-3.5" />
             )}
             {!isInitialState ? 'Putar Ulang' : 'Mulai Atur Jadwal'}
           </button>
@@ -858,13 +858,13 @@ export default function WeeklySchedule() {
         <motion.div 
           initial={{ opacity: 0, y: 15 }}
           animate={{ opacity: 1, y: 0 }}
-          className="flex flex-col items-center justify-center py-20 bg-white dark:bg-slate-900 rounded-3xl border border-slate-150 dark:border-slate-800 text-center shadow-sm"
+          className="flex flex-col items-center justify-center p-12 text-center border border-dashed border-[#d4c9a8] dark:border-[#4b463e] rounded-[4px] bg-[#fdfaf2] dark:bg-[#2d2820] shadow-tactile"
         >
-          <div className="w-20 h-20 bg-indigo-50 dark:bg-indigo-950/40 rounded-full flex items-center justify-center mb-6">
-            <Calendar className="w-10 h-10 text-indigo-400 dark:text-indigo-400" />
+          <div className="p-3 bg-[#f2ede3] dark:bg-[#3d3527] border border-[#d4c9a8] dark:border-[#4b463e] rounded-[4px] mb-4 text-[#a23b2c] dark:text-[#ff816c]">
+            <Calendar className="w-8 h-8" />
           </div>
-          <h2 className="text-xl font-extrabold text-slate-800 dark:text-slate-100 mb-2">Jadwal masih kosong</h2>
-          <p className="text-slate-500 dark:text-slate-400 max-w-sm text-sm font-medium">
+          <h4 className="text-sm font-display font-bold text-[#3d3527] dark:text-[#e8dcc4] uppercase tracking-wide">Jadwal masih kosong</h4>
+          <p className="text-xs text-slate-500 dark:text-stone-450 mt-1 max-w-sm font-sans">
             Ketuk tombol "Mulai Atur Jadwal" untuk mengisi otomatis jadwalmu dengan putaran animasi interaktif.
           </p>
         </motion.div>
@@ -872,7 +872,7 @@ export default function WeeklySchedule() {
 
       {/* Schedule Container for Download */}
       {!isInitialState && (
-        <div ref={scheduleRef} className="p-4 bg-slate-50/50 dark:bg-slate-950/20 rounded-[2.5rem]">
+        <div ref={scheduleRef} className="p-4 bg-[#f2ede3]/20 dark:bg-[#1f1b15]/20 rounded-[4px] border border-[#d4c9a8]/40 dark:border-[#4b463e]/40">
           {/* Schedule Grid */}
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
             {DAYS.map((day, index) => {
@@ -890,14 +890,14 @@ export default function WeeklySchedule() {
                   transition={{ delay: index * 0.04 }}
                   aria-label={`Hari ${day}, Aktivitas: ${displayActivity ? displayActivity.name : "Belum ditentukan"}`}
                   className={`
-                    relative group overflow-hidden rounded-3xl border-2 transition-all duration-500 min-h-[250px] flex flex-col
-                    ${(isSettled && displayActivity) 
-                      ? `${displayActivity.borderColor} dark:border-slate-800 bg-white dark:bg-slate-900 shadow-md ${displayActivity.shadow} dark:shadow-none` 
-                      : 'border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-900/40'}
-                    ${isCurrentlySpinning ? 'border-indigo-400 dark:border-indigo-500 ring-4 ring-indigo-55/40 bg-white dark:bg-slate-900' : ''}
-                    ${isWaiting ? 'opacity-40' : 'opacity-100'}
+                    relative group overflow-hidden bg-[#fdfaf2] dark:bg-[#2d2820] border rounded-[4px] transition-all min-h-[220px] flex flex-col shadow-tactile border-l-[4px] border-l-[#a23b2c] dark:border-l-[#ff816c]
+                    ${isCurrentlySpinning ? 'border-[#3d3527] dark:border-[#e8dcc4] ring-1 ring-[#a23b2c] dark:ring-[#ff816c]' : 'border-[#d4c9a8] dark:border-[#4b463e]'}
+                    ${isWaiting ? 'opacity-50' : 'opacity-100'}
                   `}
                 >
+                  {/* Hole punch circle */}
+                  <div className="absolute bottom-2 left-1/2 -translate-x-1/2 w-3 h-3 rounded-full bg-[#f2ede3] dark:bg-[#1f1b15] border border-[#d4c9a8] dark:border-[#4b463e] shadow-[inset_0_2px_3px_rgba(0,0,0,0.08)] pointer-events-none" />
+
                   {/* Single Day Spin Button */}
                   {isSettled && (
                     <button
@@ -906,22 +906,22 @@ export default function WeeklySchedule() {
                         spinSingleDay(index);
                       }}
                       disabled={isSpinning || isSpinningSingleDay}
-                      className="absolute top-3 right-3 z-10 p-2 rounded-xl bg-white/90 dark:bg-slate-800 border border-slate-250 dark:border-slate-700 text-slate-500 dark:text-slate-400 hover:text-indigo-600 dark:hover:text-indigo-400 hover:border-indigo-200 dark:hover:border-indigo-800 shadow-sm transition-all duration-200 hover:scale-105 active:scale-95 disabled:opacity-40 disabled:cursor-not-allowed opacity-100 md:opacity-0 md:group-hover:opacity-100 cursor-pointer flex items-center justify-center"
+                      className="absolute top-2.5 right-2.5 z-10 p-1.5 rounded-[4px] bg-[#f2ede3] dark:bg-[#3d3527] border border-[#d4c9a8] dark:border-[#4b463e] text-[#3d3527] dark:text-[#e8dcc4] hover:bg-[#d4c9a8]/30 transition-all opacity-100 cursor-pointer flex items-center justify-center"
                       title="Spin ulang hari ini"
                     >
-                      <RotateCcw className={`w-3.5 h-3.5 ${(isSpinningSingleDay && currentSpinningIndex === index) ? 'animate-spin' : ''}`} />
+                      <RotateCcw className={`w-3 h-3 ${(isSpinningSingleDay && currentSpinningIndex === index) ? 'animate-spin' : ''}`} />
                     </button>
                   )}
 
                   {/* Day Label */}
                   <div className={`
-                    px-6 py-4 border-b font-extrabold tracking-wider text-xs uppercase
-                    ${isSettled ? 'border-slate-100 dark:border-slate-800 text-slate-400 dark:text-slate-500' : 'border-slate-200 dark:border-slate-800 text-slate-400 dark:text-slate-550'}
+                    px-5 py-3 border-b font-display font-bold text-xs uppercase tracking-wider
+                    ${isSettled ? 'border-[#d4c9a8]/35 dark:border-[#4b463e]/35 text-[#a23b2c] dark:text-[#ff816c] bg-[#f5f0e6]/40 dark:bg-[#221e18]/10' : 'border-[#d4c9a8]/35 dark:border-[#4b463e]/35 text-stone-400'}
                   `}>
                     {day}
                   </div>
 
-                  <div className="flex-1 p-6 flex flex-col items-center justify-center">
+                  <div className="flex-1 p-5 flex flex-col items-center justify-center">
                     <AnimatePresence mode="wait">
                       {displayActivity ? (
                         <motion.div
@@ -932,12 +932,11 @@ export default function WeeklySchedule() {
                           className="flex flex-col items-center text-center"
                         >
                           <div className={`
-                            p-4 rounded-2xl mb-4 transition-colors duration-300
-                            ${displayActivity.color} text-white shadow-md
+                            p-3 bg-[#f2ede3] dark:bg-[#3d3527] border border-[#d4c9a8] dark:border-[#4b463e] rounded-[4px] mb-3 text-[#a23b2c] dark:text-[#ff816c] shadow-sm
                           `}>
-                            <displayActivity.icon className="w-8 h-8" />
+                            <displayActivity.icon className="w-6 h-6" />
                           </div>
-                          <h3 className={`text-base font-bold ${displayActivity.textColor}`}>
+                          <h3 className="text-sm font-display font-bold text-[#3d3527] dark:text-[#e8dcc4]">
                             {displayActivity.name}
                           </h3>
                           
@@ -945,17 +944,17 @@ export default function WeeklySchedule() {
                             <motion.div
                               initial={{ opacity: 0 }}
                               animate={{ opacity: 1 }}
-                              className="mt-3 flex items-center gap-1 text-[10px] font-extrabold text-slate-400"
+                              className="mt-2.5 flex items-center gap-1 text-[9px] font-display font-bold text-stone-550 dark:text-stone-400"
                             >
-                              <CheckCircle2 className="w-3 h-3 text-emerald-500" />
+                              <CheckCircle2 className="w-3 h-3 text-[#a23b2c] dark:text-[#ff816c]" />
                               SETTLED
                             </motion.div>
                           )}
                         </motion.div>
                       ) : (
-                        <div className="flex flex-col items-center opacity-10">
-                          <div className="w-14 h-14 bg-slate-300 rounded-2xl mb-4" />
-                          <div className="h-4 w-20 bg-slate-300 rounded-full" />
+                        <div className="flex flex-col items-center opacity-25">
+                          <div className="w-10 h-10 bg-[#d4c9a8]/40 dark:bg-[#4b463e]/40 rounded-[4px] mb-2" />
+                          <div className="h-3 w-16 bg-[#d4c9a8]/40 dark:bg-[#4b463e]/40 rounded-[2px]" />
                         </div>
                       )}
                     </AnimatePresence>
@@ -963,10 +962,7 @@ export default function WeeklySchedule() {
 
                   {/* Decorative background logo */}
                   {isSettled && displayActivity && (
-                    <div className={`
-                      absolute -bottom-6 -right-6 w-20 h-20 opacity-[0.03] pointer-events-none
-                      ${displayActivity.textColor}
-                    `}>
+                    <div className="absolute -bottom-6 -right-6 w-16 h-16 opacity-[0.03] pointer-events-none text-[#a23b2c] dark:text-[#ff816c]">
                       <displayActivity.icon className="w-full h-full" />
                     </div>
                   )}
@@ -980,10 +976,10 @@ export default function WeeklySchedule() {
             <motion.section 
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              className="mt-10 p-8 bg-white rounded-3xl border border-slate-150 shadow-sm"
+              className="mt-8 p-6 bg-[#fdfaf2] dark:bg-[#2d2820] border border-[#d4c9a8] dark:border-[#4b463e] rounded-[4px] shadow-tactile"
             >
-              <h3 className="text-lg font-black text-slate-800 mb-6 flex items-center gap-2">
-                <Sparkles className="w-4 h-4 text-indigo-500" />
+              <h3 className="text-sm font-display font-bold text-[#3d3527] dark:text-[#e8dcc4] uppercase tracking-wide mb-4 flex items-center gap-1.5">
+                <Sparkles className="w-4 h-4 text-[#a23b2c] dark:text-[#ff816c]" />
                 Ringkasan Distribusi Kegiatan
               </h3>
               <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
@@ -991,13 +987,13 @@ export default function WeeklySchedule() {
                   const count = schedule.filter(s => s && s.id === activity.id).length;
                   if (count === 0) return null;
                   return (
-                    <div key={activity.id} className="p-4 rounded-2xl bg-slate-50 border border-slate-100 flex items-center gap-4">
-                      <div className={`p-2.5 rounded-xl ${activity.color} text-white`}>
-                        <activity.icon className="w-4.5 h-4.5" />
+                    <div key={activity.id} className="p-3 bg-[#f2ede3] dark:bg-[#3d3527] border border-[#d4c9a8]/40 dark:border-[#4b463e]/40 rounded-[4px] flex items-center gap-3">
+                      <div className="p-2 bg-[#fdfaf2] dark:bg-[#2d2820] border border-[#d4c9a8]/50 dark:border-[#4b463e]/50 rounded-[4px] text-[#a23b2c] dark:text-[#ff816c]">
+                        <activity.icon className="w-4 h-4" />
                       </div>
                       <div>
-                        <div className="text-xl font-black text-slate-800 leading-none">{count}</div>
-                        <div className="text-[10px] font-bold uppercase tracking-wider text-slate-400 mt-1">{count > 1 ? 'Hari' : 'Hari'}</div>
+                        <div className="text-lg font-display font-bold text-[#3d3527] dark:text-[#e8dcc4] leading-none">{count}</div>
+                        <div className="text-[9px] font-display font-bold uppercase tracking-wider text-stone-500 mt-1">Hari</div>
                       </div>
                     </div>
                   );
@@ -1025,17 +1021,17 @@ export default function WeeklySchedule() {
               initial={{ opacity: 0, scale: 0.95, y: 10 }}
               animate={{ opacity: 1, scale: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.95, y: 10 }}
-              className="relative w-full max-w-2xl bg-white dark:bg-slate-900 rounded-[2rem] border border-slate-150 dark:border-slate-800 shadow-2xl overflow-hidden flex flex-col max-h-[85vh] z-10"
+              className="relative w-full max-w-2xl bg-[#fdfaf2] dark:bg-[#2d2820] rounded-[4px] border border-[#d4c9a8] dark:border-[#4b463e] shadow-tactile overflow-hidden flex flex-col max-h-[85vh] z-10"
             >
               {/* Header */}
-              <div className="flex items-center justify-between border-b border-slate-100 dark:border-slate-800 p-6 md:px-8">
+              <div className="flex items-center justify-between border-b border-[#d4c9a8]/50 dark:border-[#4b463e]/50 p-5 bg-[#f5f0e6] dark:bg-[#1f1b15]">
                 <div className="flex items-center gap-2.5">
-                  <div className="p-2 bg-indigo-50 dark:bg-indigo-950/40 text-indigo-600 dark:text-indigo-450 rounded-xl">
-                    <Settings className="w-5 h-5 animate-spin-once" />
+                  <div className="p-2 bg-[#fdfaf2] dark:bg-[#2d2820] border border-[#d4c9a8] dark:border-[#4b463e] text-[#a23b2c] dark:text-[#ff816c] rounded-[4px]">
+                    <Settings className="w-4 h-4 animate-spin-once" />
                   </div>
                   <div>
-                    <h3 className="text-lg font-bold text-slate-850 dark:text-slate-100">Kelola Aktivitas Mingguan</h3>
-                    <p className="text-xs text-slate-400 dark:text-slate-500 font-medium">Tambah, edit, atau hapus jenis aktivitas untuk jadwalmu</p>
+                    <h3 className="text-sm font-display font-bold text-[#3d3527] dark:text-[#e8dcc4] uppercase tracking-wide">Kelola Aktivitas Mingguan</h3>
+                    <p className="text-[11px] text-stone-500 dark:text-stone-400 font-sans">Tambah, edit, atau hapus jenis aktivitas untuk jadwalmu</p>
                   </div>
                 </div>
                 <button
@@ -1043,26 +1039,26 @@ export default function WeeklySchedule() {
                     setShowManager(false);
                     handleResetManagerForm();
                   }}
-                  className="p-2 bg-slate-50 dark:bg-slate-800 hover:bg-slate-100 dark:hover:bg-slate-700 text-slate-500 dark:text-slate-400 hover:text-slate-750 dark:hover:text-slate-200 rounded-full transition cursor-pointer"
+                  className="p-1.5 bg-[#f2ede3] dark:bg-[#3d3527] hover:bg-[#d4c9a8]/30 text-stone-500 dark:text-stone-300 rounded-[4px] border border-[#d4c9a8] dark:border-[#4b463e] cursor-pointer"
                 >
-                  <X className="w-5 h-5" />
+                  <X className="w-4 h-4" />
                 </button>
               </div>
 
               {/* Scrollable Content Area */}
-              <div className="p-6 md:p-8 overflow-y-auto flex-1 space-y-6">
+              <div className="p-5 md:p-6 overflow-y-auto flex-1 space-y-6">
                 
                 {/* 1. Form Section (Add or Edit) */}
-                <div className="bg-slate-50 dark:bg-slate-950/30 border border-slate-150 dark:border-slate-800/80 rounded-2xl p-5 space-y-4">
-                  <h4 className="text-xs font-black text-slate-400 dark:text-slate-500 uppercase tracking-widest flex items-center gap-1.5">
+                <div className="bg-[#fdfaf2]/50 dark:bg-[#2d2820]/50 border border-[#d4c9a8]/70 dark:border-[#4b463e]/70 rounded-[4px] p-5 space-y-4">
+                  <h4 className="text-[11px] font-display font-bold text-[#a23b2c] dark:text-[#ff816c] uppercase tracking-wider flex items-center gap-1.5">
                     {editingActivityId ? (
                       <>
-                        <Sparkles className="w-3.5 h-3.5 text-indigo-500 animate-pulse" />
+                        <Sparkles className="w-3.5 h-3.5 text-[#a23b2c] dark:text-[#ff816c] animate-pulse" />
                         Edit Aktivitas
                       </>
                     ) : (
                       <>
-                        <Plus className="w-3.5 h-3.5 text-slate-400" />
+                        <Plus className="w-3.5 h-3.5 text-stone-450" />
                         Tambah Aktivitas Baru
                       </>
                     )}
@@ -1075,7 +1071,7 @@ export default function WeeklySchedule() {
                       placeholder="Contoh: Belajar Coding, Olahraga, Menggambar..."
                       value={actInputName}
                       onChange={(e) => setActInputName(e.target.value)}
-                      className="flex-1 px-4 py-2.5 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl text-sm font-semibold focus:outline-none focus:ring-2 focus:ring-indigo-400 focus:border-indigo-400 text-slate-800 dark:text-slate-100"
+                      className="flex-1 bg-transparent text-[#3d3527] dark:text-[#e8dcc4] border-b border-[#d4c9a8] dark:border-[#4b463e] focus:border-[#3d3527] dark:focus:border-[#e8dcc4] rounded-none outline-none focus:ring-0 text-xs font-sans py-2"
                       onKeyDown={(e) => {
                         if (e.key === 'Enter') {
                           e.preventDefault();
@@ -1086,14 +1082,14 @@ export default function WeeklySchedule() {
                     <div className="flex gap-2">
                       <button
                         onClick={handleSaveActivity}
-                        className="flex-1 sm:flex-initial px-5 py-2.5 bg-indigo-600 hover:bg-indigo-750 text-white rounded-xl text-xs font-bold shadow-md hover:shadow-lg transition-all flex items-center justify-center gap-1.5 cursor-pointer"
+                        className="flex-1 sm:flex-initial px-4 py-2 bg-[#a23b2c] dark:bg-[#ff816c] text-white dark:text-[#221e18] rounded-[4px] border border-[#a23b2c] dark:border-[#ff816c] text-xs font-display font-bold cursor-pointer transition-all hover:bg-opacity-90"
                       >
                         {editingActivityId ? 'Simpan' : 'Tambah'}
                       </button>
                       {editingActivityId && (
                         <button
                           onClick={handleResetManagerForm}
-                          className="px-4 py-2.5 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-slate-500 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-xl text-xs font-semibold transition cursor-pointer"
+                          className="px-4 py-2 bg-[#f2ede3] dark:bg-[#3d3527] border border-[#d4c9a8] dark:border-[#4b463e] text-[#3d3527] dark:text-[#e8dcc4] rounded-[4px] text-xs font-display font-bold cursor-pointer hover:bg-[#d4c9a8]/20 transition-all"
                         >
                           Batal
                         </button>
@@ -1103,10 +1099,10 @@ export default function WeeklySchedule() {
 
                   {/* Icon grid option */}
                   <div className="space-y-2">
-                    <div className="text-[11px] font-black text-slate-400 dark:text-slate-550 uppercase tracking-wider">
+                    <div className="text-[10px] font-display font-bold text-stone-500 dark:text-stone-400 uppercase tracking-wider">
                       Pilih Ikon Aktivitas:
                     </div>
-                    <div className="grid grid-cols-5 sm:grid-cols-8 gap-2 bg-white dark:bg-slate-900 p-3 rounded-xl border border-slate-150 dark:border-slate-800">
+                    <div className="grid grid-cols-5 sm:grid-cols-8 gap-2 bg-[#fdfaf2] dark:bg-[#2d2820] p-3 rounded-[4px] border border-[#d4c9a8] dark:border-[#4b463e]">
                       {ICON_OPTIONS.map((item) => {
                         const Icon = item.icon;
                         const isSelected = actInputIconName === item.name;
@@ -1115,14 +1111,14 @@ export default function WeeklySchedule() {
                             key={item.name}
                             type="button"
                             onClick={() => setActInputIconName(item.name)}
-                            className={`p-2.5 rounded-xl flex flex-col items-center justify-center border transition-all cursor-pointer ${
+                            className={`p-2 rounded-[4px] flex flex-col items-center justify-center border transition-all cursor-pointer ${
                               isSelected
-                                ? 'bg-indigo-50 dark:bg-indigo-950/40 border-indigo-400 dark:border-indigo-500 text-indigo-600 dark:text-indigo-400 scale-105 shadow-sm'
-                                : 'border-slate-100 dark:border-slate-800/60 text-slate-400 dark:text-slate-500 hover:bg-slate-50 dark:hover:bg-slate-800 hover:text-slate-650 dark:hover:text-slate-300'
+                                ? 'bg-[#f2ede3] dark:bg-[#3d3527] border-[#a23b2c] dark:border-[#ff816c] text-[#a23b2c] dark:text-[#ff816c]'
+                                : 'border-[#d4c9a8]/30 dark:border-[#4b463e]/30 text-stone-400 dark:text-stone-500 hover:bg-[#f2ede3]/50 dark:hover:bg-[#3d3527]/50 hover:text-[#3d3527] dark:hover:text-[#e8dcc4]'
                             }`}
                             title={item.label}
                           >
-                            <Icon className="w-5 h-5 animate-none" />
+                            <Icon className="w-4 h-4 animate-none" />
                           </button>
                         );
                       })}
@@ -1131,13 +1127,13 @@ export default function WeeklySchedule() {
 
                   {/* Preset styling option */}
                   <div className="space-y-2">
-                    <div className="text-[11px] font-black text-slate-400 dark:text-slate-550 uppercase tracking-wider flex justify-between items-center">
+                    <div className="text-[10px] font-display font-bold text-stone-500 dark:text-stone-400 uppercase tracking-wider flex justify-between items-center">
                       <span>Pilih Tema Warna:</span>
-                      <span className="text-[10px] font-mono font-black text-indigo-600 dark:text-indigo-400 bg-indigo-100 dark:bg-indigo-950/50 px-2 py-0.5 rounded-md uppercase">
+                      <span className="text-[10px] font-mono font-bold text-[#a23b2c] dark:text-[#ff816c] bg-[#f2ede3] dark:bg-[#3d3527] px-2 py-0.5 rounded-[2px] uppercase">
                         {actInputColorPreset.name}
                       </span>
                     </div>
-                    <div className="flex flex-wrap gap-2.5 bg-white dark:bg-slate-900 p-3 rounded-xl border border-slate-150 dark:border-slate-800 items-center">
+                    <div className="flex flex-wrap gap-2.5 bg-[#fdfaf2] dark:bg-[#2d2820] p-3 rounded-[4px] border border-[#d4c9a8] dark:border-[#4b463e] items-center">
                       {COLOR_PRESETS.map((preset) => {
                         const isSelected = actInputColorPreset.color === preset.color;
                         return (
@@ -1149,19 +1145,19 @@ export default function WeeklySchedule() {
                               preset.color
                             } ${
                               isSelected
-                                ? 'ring-2 ring-indigo-500 dark:ring-indigo-400 ring-offset-2 dark:ring-offset-slate-900 scale-110 shadow-md'
+                                ? 'ring-2 ring-[#a23b2c] dark:ring-[#ff816c] ring-offset-2 dark:ring-offset-[#2d2820] scale-105 shadow-sm'
                                 : 'hover:scale-105'
                             }`}
                             title={preset.name}
                           >
                             {isSelected && (
                               <div className="absolute inset-0 flex items-center justify-center text-white">
-                                <CheckCircle2 className="w-4 h-4 text-white drop-shadow-sm" />
+                                <CheckCircle2 className="w-3.5 h-3.5 text-white drop-shadow-xs" />
                               </div>
                             )}
                           </button>
                         );
-                      })}
+                       })}
                     </div>
                   </div>
                 </div>
@@ -1169,10 +1165,10 @@ export default function WeeklySchedule() {
                 {/* 2. Listed Items Section */}
                 <div className="space-y-3">
                   <div className="flex items-center justify-between">
-                    <h4 className="text-xs font-black text-slate-400 dark:text-slate-500 uppercase tracking-widest">
+                    <h4 className="text-[10px] font-display font-bold text-stone-500 dark:text-stone-400 uppercase tracking-wider">
                       Daftar Pilihan Aktivitas ({activities.length})
                     </h4>
-                    <span className="text-[10px] text-slate-400 dark:text-slate-500 font-bold">
+                    <span className="text-[9px] font-mono text-stone-400">
                       Klik salah satu untuk mengedit
                     </span>
                   </div>
@@ -1185,41 +1181,41 @@ export default function WeeklySchedule() {
                         <div
                           key={act.id}
                           onClick={() => handleSelectEditActivity(act)}
-                          className={`group flex items-center justify-between p-3 rounded-xl border transition-all cursor-pointer ${
+                          className={`group flex items-center justify-between p-3 rounded-[4px] border transition-all cursor-pointer ${
                             isEditingThis
-                              ? 'bg-indigo-50 dark:bg-indigo-950/40 border-indigo-350 dark:border-indigo-900 shadow-sm ring-1 ring-indigo-200 dark:ring-indigo-900/50'
-                              : 'bg-white dark:bg-slate-900 border-slate-150 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-850'
+                              ? 'bg-[#f2ede3] dark:bg-[#32302a] border-[#a23b2c] dark:border-[#ff816c] shadow-xs ring-1 ring-[#a23b2c] dark:ring-[#ff816c]'
+                              : 'bg-[#fdfaf2] dark:bg-[#2d2820] border-[#d4c9a8]/50 dark:border-[#4b463e]/50 hover:bg-[#f5f0e6] dark:hover:bg-[#221e18]'
                           }`}
                         >
                           <div className="flex items-center gap-2.5 min-w-0">
-                            <div className={`p-2 rounded-lg ${act.color} text-white shadow-sm flex-shrink-0`}>
-                              <Icon className="w-4 h-4" />
+                            <div className={`p-1.5 rounded-[2px] ${act.color} text-white shadow-xs flex-shrink-0`}>
+                              <Icon className="w-3.5 h-3.5" />
                             </div>
-                            <span className="font-extrabold text-slate-750 dark:text-slate-200 text-xs truncate">
+                            <span className="font-display font-bold text-[#3d3527] dark:text-[#e8dcc4] text-xs truncate">
                               {act.name}
                             </span>
                           </div>
 
-                          <div className="flex items-center gap-0.5 opacity-100 sm:opacity-40 group-hover:opacity-100 transition-all flex-shrink-0">
+                          <div className="flex items-center gap-1 opacity-100 sm:opacity-40 group-hover:opacity-100 transition-all flex-shrink-0">
                             <button
                               onClick={(e) => {
                                 e.stopPropagation();
                                 handleSelectEditActivity(act);
                               }}
-                              className="p-1 text-slate-400 dark:text-slate-500 hover:text-indigo-650 dark:hover:text-indigo-400 rounded-md"
+                              className="p-1 text-stone-400 dark:text-stone-500 hover:text-[#a23b2c] dark:hover:text-[#ff816c] rounded-[2px]"
                               title="Edit aktivitas"
                             >
-                              <Settings className="w-3.5 h-3.5" />
+                              <Settings className="w-3 h-3" />
                             </button>
                             <button
                               onClick={(e) => {
                                 e.stopPropagation();
                                 handleDeleteActivity(act.id);
                               }}
-                              className="p-1 text-slate-400 dark:text-slate-500 hover:text-rose-500 dark:hover:text-rose-450 rounded-md"
+                              className="p-1 text-stone-400 dark:text-stone-500 hover:text-rose-600 dark:hover:text-rose-400 rounded-[2px]"
                               title="Hapus aktivitas"
                             >
-                              <Trash2 className="w-3.5 h-3.5" />
+                              <Trash2 className="w-3 h-3" />
                             </button>
                           </div>
                         </div>
@@ -1231,13 +1227,13 @@ export default function WeeklySchedule() {
               </div>
 
               {/* Footer */}
-              <div className="p-6 border-t border-slate-100 dark:border-slate-800 bg-slate-50 dark:bg-slate-950/40 flex justify-end">
+              <div className="p-4 border-t border-[#d4c9a8]/50 dark:border-[#4b463e]/50 bg-[#f5f0e6] dark:bg-[#1f1b15] flex justify-end">
                 <button
                   onClick={() => {
                     setShowManager(false);
                     handleResetManagerForm();
                   }}
-                  className="px-6 py-2.5 bg-slate-800 dark:bg-slate-950 hover:bg-slate-900 dark:hover:bg-slate-900/60 text-white rounded-xl text-xs font-bold shadow transition cursor-pointer"
+                  className="px-5 py-2 bg-[#3d3527] dark:bg-[#e8dcc4] text-[#fdfaf2] dark:text-[#221e18] hover:bg-[#3d3527]/90 dark:hover:bg-[#e8dcc4]/90 rounded-[4px] text-xs font-display font-bold border border-[#3d3527] dark:border-[#e8dcc4] cursor-pointer"
                 >
                   Selesai
                 </button>

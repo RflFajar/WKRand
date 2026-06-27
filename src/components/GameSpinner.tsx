@@ -952,7 +952,7 @@ export default function GameSpinner() {
       </AnimatePresence>
 
       {/* Dynamic Header */}
-      <div className="flex flex-col md:flex-row items-center justify-between mb-8 gap-4 bg-white dark:bg-slate-900 p-6 rounded-3xl border border-slate-100 dark:border-slate-800 shadow-sm">
+      <div className="flex flex-col md:flex-row items-center justify-between mb-8 gap-4 bg-[#fdfaf2] dark:bg-[#2d2820] border border-[#d4c9a8] dark:border-[#4b463e] rounded-[4px] p-6 shadow-tactile relative overflow-hidden card-margin-line">
         <div>
           <div className="flex items-center gap-2 mb-1">
             {showNewBadge && (
@@ -961,38 +961,38 @@ export default function GameSpinner() {
                   setShowNewBadge(false);
                   localStorage.setItem('game_spinner_badge_dismissed', 'true');
                 }}
-                className="px-3 py-1 bg-violet-100 dark:bg-violet-950/40 text-violet-700 dark:text-violet-400 rounded-full text-xs font-bold uppercase tracking-wider cursor-pointer hover:bg-violet-200 dark:hover:bg-violet-900/40 transition-all flex items-center gap-1.5 active:scale-95 select-none"
+                className="px-2.5 py-0.5 bg-[#a23b2c] dark:bg-[#ff816c] text-white dark:text-[#221e18] rounded-[2px] text-[10px] font-display font-bold uppercase tracking-wider cursor-pointer hover:bg-opacity-90 transition-all flex items-center gap-1 active:scale-95 select-none"
                 title="Klik untuk menyembunyikan badge ini selamanya"
               >
                 Fitur Baru
-                <span className="text-[9px] font-normal lowercase opacity-85 hover:opacity-100 bg-violet-200/50 px-1 rounded">×</span>
+                <span className="text-[8px] font-normal lowercase bg-[#3d3527]/25 px-0.5 rounded">×</span>
               </span>
             )}
-            <div className="p-1 bg-violet-600 rounded-lg text-white">
-              <Dice5 className="w-4 h-4" />
+            <div className="p-1 bg-[#a23b2c] rounded-[2px] text-white">
+              <Dice5 className="w-3.5 h-3.5" />
             </div>
           </div>
-          <h2 className="text-2xl font-black text-slate-800 dark:text-slate-100 tracking-tight">Game Category Spinner</h2>
-          <p className="text-sm text-slate-500 dark:text-slate-400 font-medium">Spinner bertingkat: pilih Kategori, lalu pilih Game yang akan dimainkan!</p>
+          <h2 className="text-lg font-display font-bold text-[#3d3527] dark:text-[#e8dcc4] uppercase tracking-wide">Game Category Spinner</h2>
+          <p className="text-xs text-slate-500 dark:text-stone-450 mt-1">Spinner bertingkat: pilih Kategori, lalu pilih Game yang akan dimainkan!</p>
         </div>
 
         <div className="flex items-center gap-2 w-full md:w-auto flex-wrap sm:flex-nowrap justify-start sm:justify-end">
           {/* Sound toggle button */}
           <button
             onClick={() => setSoundEnabled(!soundEnabled)}
-            className="w-11 h-11 bg-white dark:bg-slate-900 text-slate-600 dark:text-slate-355 hover:text-slate-900 dark:hover:text-slate-50 border border-slate-200 dark:border-slate-800 rounded-2xl hover:bg-slate-50 dark:hover:bg-slate-850 hover:border-violet-350 dark:hover:border-violet-500 transition-all shadow-sm cursor-pointer flex items-center justify-center shrink-0"
+            className="w-10 h-10 bg-[#f2ede3] dark:bg-[#3d3527] text-stone-500 dark:text-stone-300 hover:text-[#a23b2c] dark:hover:text-[#ff816c] border border-[#d4c9a8] dark:border-[#4b463e] rounded-[4px] transition-all shadow-sm cursor-pointer flex items-center justify-center shrink-0"
             title={soundEnabled ? "Matikan Efek Suara" : "Aktifkan Efek Suara"}
           >
-            {soundEnabled ? <Volume2 className="w-4 h-4 text-violet-500" /> : <VolumeX className="w-4 h-4 text-slate-400" />}
+            {soundEnabled ? <Volume2 className="w-4 h-4 text-[#a23b2c] dark:text-[#ff816c]" /> : <VolumeX className="w-4 h-4 text-stone-400" />}
           </button>
 
           {/* Manage database button */}
           <button
             onClick={() => setShowManager(!showManager)}
-            className="flex-1 md:flex-none flex items-center justify-center gap-1.5 px-4 h-11 rounded-2xl font-bold text-xs sm:text-sm text-slate-700 dark:text-slate-300 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 hover:border-violet-300 dark:hover:border-violet-550 hover:text-violet-600 dark:hover:text-violet-400 transition-all shadow-sm cursor-pointer whitespace-nowrap"
+            className="flex-1 md:flex-none flex items-center justify-center gap-1.5 px-4 h-10 rounded-[4px] font-display font-bold text-xs text-[#3d3527] dark:text-[#e8dcc4] bg-[#f2ede3] dark:bg-[#3d3527] border border-[#d4c9a8] dark:border-[#4b463e] hover:bg-[#d4c9a8]/35 transition-all shadow-sm cursor-pointer whitespace-nowrap"
             title="Kelola daftar kategori dan game"
           >
-            <Settings className="w-4 h-4 flex-shrink-0" />
+            <Settings className="w-3.5 h-3.5 flex-shrink-0" />
             Kelola Game & Kategori
           </button>
         </div>
@@ -1008,56 +1008,55 @@ export default function GameSpinner() {
                 key="manager"
                 initial={{ opacity: 0, scale: 0.95 }}
                 animate={{ opacity: 1, scale: 1 }}
-                exit={{ opacity: 0, scale: 0.95 }}
-                className="bg-white dark:bg-slate-900 p-6 md:p-8 rounded-[2.5rem] border border-slate-200 dark:border-slate-800 shadow-lg"
+                exit={{ opacity: 0, scale: 0.95 }}                className="bg-[#fdfaf2] dark:bg-[#2d2820] p-6 md:p-8 rounded-[4px] border border-[#d4c9a8] dark:border-[#4b463e] shadow-tactile"
               >
-                <div className="flex items-center justify-between border-b border-slate-100 dark:border-slate-800 pb-4 mb-6">
+                <div className="flex items-center justify-between border-b border-[#d4c9a8]/50 dark:border-[#4b463e]/50 pb-4 mb-6">
                   <div className="flex items-center gap-2">
-                    <Settings className="text-violet-500 w-5 h-5 animate-spin-once" />
-                    <h3 className="text-xl font-bold text-slate-800 dark:text-slate-100">Database & Kategori Manager</h3>
+                    <Settings className="text-[#a23b2c] dark:text-[#ff816c] w-4 h-4 animate-spin-once" />
+                    <h3 className="text-base font-display font-bold text-[#3d3527] dark:text-[#e8dcc4] uppercase tracking-wide">Database & Kategori Manager</h3>
                   </div>
                   <button 
                     onClick={() => setShowManager(false)}
-                    className="p-2 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-600 dark:text-slate-350 rounded-full transition-all cursor-pointer"
+                    className="p-1.5 bg-[#f2ede3] dark:bg-[#3d3527] hover:bg-[#d4c9a8]/30 border border-[#d4c9a8] dark:border-[#4b463e] text-[#3d3527] dark:text-[#e8dcc4] rounded-[4px] transition-all cursor-pointer"
                   >
-                    <X className="w-5 h-5" />
+                    <X className="w-4 h-4" />
                   </button>
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-12 gap-8">
                   {/* Left Column: Categories List */}
-                  <div className="md:col-span-5 border-r border-slate-100 dark:border-slate-800 pr-0 md:pr-6">
-                    <h4 className="text-sm font-black text-slate-400 dark:text-slate-500 uppercase tracking-wider mb-4">List Kategori ({categories.length})</h4>
+                  <div className="md:col-span-5 border-r border-[#d4c9a8]/40 dark:border-[#4b463e]/40 pr-0 md:pr-6">
+                    <h4 className="text-[11px] font-display font-bold text-stone-500 dark:text-stone-400 uppercase tracking-wider mb-4">List Kategori ({categories.length})</h4>
                     
                     {/* Add Category Form */}
-                    <div className="bg-slate-50 dark:bg-slate-950/40 p-4 rounded-2xl mb-4 border border-slate-200 dark:border-slate-800">
-                      <div className="text-xs font-bold text-slate-500 dark:text-slate-400 mb-2">Tambah Kategori Baru</div>
+                    <div className="bg-[#fdfaf2]/50 dark:bg-[#2d2820]/50 p-4 rounded-[4px] mb-4 border border-[#d4c9a8]/70 dark:border-[#4b463e]/70">
+                      <div className="text-[10px] font-display font-bold text-[#a23b2c] dark:text-[#ff816c] uppercase tracking-wide mb-2">Tambah Kategori Baru</div>
                       <div className="flex gap-2">
                         <input
                           type="text"
                           placeholder="Nama Kategori..."
                           value={newCatName}
                           onChange={(e) => setNewCatName(e.target.value)}
-                          className="flex-1 px-3 py-2 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-violet-400 font-medium text-slate-800 dark:text-slate-100"
+                          className="flex-1 px-3 py-1.5 bg-transparent text-[#3d3527] dark:text-[#e8dcc4] border-b border-[#d4c9a8] dark:border-[#4b463e] rounded-none text-xs focus:outline-none focus:border-[#3d3527] dark:focus:border-[#e8dcc4] font-medium"
                           onKeyDown={(e) => e.key === 'Enter' && handleAddCategory()}
                         />
                         <button
                           onClick={handleAddCategory}
-                          className="p-2 bg-violet-600 hover:bg-violet-750 text-white rounded-xl transition cursor-pointer"
+                          className="p-1.5 bg-[#a23b2c] dark:bg-[#ff816c] text-white dark:text-[#221e18] border border-[#a23b2c] dark:border-[#ff816c] rounded-[4px] transition cursor-pointer"
                         >
-                          <Plus className="w-5 h-5" />
+                          <Plus className="w-4 h-4" />
                         </button>
                       </div>
 
                       {/* Pick color for new Cat */}
                       <div className="mt-3">
-                        <div className="text-[11px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-wider mb-1.5 flex justify-between items-center">
+                        <div className="text-[10px] font-display font-bold text-stone-500 dark:text-stone-400 uppercase tracking-wider mb-1.5 flex justify-between items-center">
                           <span>Pilih Warna Kategori:</span>
                           {newCatColorIdx === -1 && (
-                            <span className="text-[10px] font-mono font-bold text-violet-600 dark:text-violet-400 bg-violet-50 dark:bg-violet-950/45 px-1.5 py-0.5 rounded uppercase">{customHexColor}</span>
+                            <span className="text-[10px] font-mono font-bold text-[#a23b2c] dark:text-[#ff816c] bg-[#f2ede3] dark:bg-[#3d3527] px-1.5 py-0.5 rounded uppercase">{customHexColor}</span>
                           )}
                         </div>
-                        <div className="flex flex-wrap gap-1.5 items-center bg-white dark:bg-slate-900 p-2 rounded-xl border border-slate-200 dark:border-slate-800">
+                        <div className="flex flex-wrap gap-1.5 items-center bg-[#fdfaf2] dark:bg-[#2d2820] p-2 rounded-[4px] border border-[#d4c9a8] dark:border-[#4b463e]">
                           {PRESET_COLORS.map((preset, idx) => (
                             <button
                               key={idx}
@@ -1066,15 +1065,15 @@ export default function GameSpinner() {
                                 setNewCatColorIdx(idx);
                                 setCustomHexColor(preset.hex);
                               }}
-                              className={`w-6 h-6 rounded-full flex-shrink-0 transition-all border-2 cursor-pointer ${newCatColorIdx === idx ? 'scale-110 border-slate-800 dark:border-slate-200 shadow-sm' : 'border-transparent'}`}
+                              className={`w-5 h-5 rounded-full flex-shrink-0 transition-all border-2 cursor-pointer ${newCatColorIdx === idx ? 'scale-110 border-[#a23b2c] dark:border-[#ff816c] shadow-xs' : 'border-transparent'}`}
                               style={{ backgroundColor: preset.hex }}
                               title={preset.name}
                             />
                           ))}
                           
                           {/* Unlimited Color Picker */}
-                          <div className="h-6 w-px bg-slate-200 dark:bg-slate-850 mx-1 flex-shrink-0" />
-                          <div className="relative w-8 h-8 rounded-full overflow-hidden border-2 border-dashed border-slate-300 dark:border-slate-750 flex items-center justify-center cursor-pointer hover:border-violet-400 dark:hover:border-violet-500 transition active:scale-95 flex-shrink-0" title="Pilih warna kustom tanpa batas">
+                          <div className="h-5 w-px bg-[#d4c9a8]/40 dark:bg-[#4b463e]/40 mx-1 flex-shrink-0" />
+                          <div className="relative w-7 h-7 rounded-[4px] overflow-hidden border border-dashed border-[#d4c9a8] dark:border-[#4b463e] flex items-center justify-center cursor-pointer hover:border-[#a23b2c] transition active:scale-95 flex-shrink-0" title="Pilih warna kustom tanpa batas">
                             <input
                               type="color"
                               value={customHexColor}
@@ -1085,7 +1084,7 @@ export default function GameSpinner() {
                               className="absolute inset-0 opacity-0 w-full h-full cursor-pointer"
                             />
                             <div 
-                              className="w-5 h-5 rounded-full shadow-inner" 
+                              className="w-4 h-4 rounded-full shadow-inner" 
                               style={{ backgroundColor: customHexColor }}
                             />
                           </div>
@@ -1099,32 +1098,32 @@ export default function GameSpinner() {
                         <div
                           key={cat.id}
                           onClick={() => setEditCategoryIdx(idx)}
-                          className={`flex items-center justify-between p-3 rounded-2xl border cursor-pointer transition-all ${editCategoryIdx === idx ? 'bg-violet-50 dark:bg-violet-955/20 border-violet-200 dark:border-violet-850 shadow-sm' : 'bg-white dark:bg-slate-900 border-slate-100 dark:border-slate-850 hover:bg-slate-50 dark:hover:bg-slate-850/60'}`}
+                          className={`flex items-center justify-between p-3 rounded-[4px] border border-[#d4c9a8]/50 dark:border-[#4b463e]/50 cursor-pointer transition-all ${editCategoryIdx === idx ? 'bg-[#f2ede3] dark:bg-[#32302a] border-[#a23b2c] dark:border-[#ff816c] shadow-xs' : 'bg-[#fdfaf2] dark:bg-[#2d2820] hover:bg-[#f5f0e6] dark:hover:bg-[#221e18]'}`}
                         >
                           <div className="flex items-center gap-3">
                             <div 
                               className="w-3 h-3 rounded-full" 
                               style={getCategoryStyle(cat)}
                             />
-                            <span className="font-extrabold text-slate-800 dark:text-slate-150 text-sm">{cat.name}</span>
+                            <span className="font-display font-bold text-[#3d3527] dark:text-[#e8dcc4] text-xs">{cat.name}</span>
                           </div>
                           <div className="flex items-center gap-2">
                             {cat.games.length === 0 ? (
-                              <span className="text-[10px] font-black bg-rose-50 dark:bg-rose-950/40 border border-rose-200 dark:border-rose-900/50 text-rose-600 dark:text-rose-400 px-2 py-0.5 rounded-lg flex items-center gap-1 animate-pulse" title="Kategori ini kosong!">
+                              <span className="text-[9px] font-display font-bold bg-rose-500/10 border border-rose-600/30 text-rose-600 dark:text-rose-400 px-1.5 py-0.5 rounded-[2px] flex items-center gap-1 animate-pulse" title="Kategori ini kosong!">
                                 <AlertTriangle className="w-2.5 h-2.5" />
                                 Butuh Game
                               </span>
                             ) : (
-                              <span className="text-xs font-bold bg-slate-100 dark:bg-slate-800 text-slate-500 dark:text-slate-400 px-2 py-0.5 rounded-full">{cat.games.length} Game</span>
+                              <span className="text-[10px] font-display font-bold bg-[#f2ede3] dark:bg-[#3d3527] text-stone-500 dark:text-stone-400 px-1.5 py-0.5 rounded-[2px] border border-[#d4c9a8]/30 dark:border-[#4b463e]/30">{cat.games.length} Game</span>
                             )}
                             <button
                               onClick={(e) => {
                                 e.stopPropagation();
                                 handleDeleteCategory(idx);
                               }}
-                              className="p-1 text-slate-400 dark:text-slate-500 hover:text-red-500 dark:hover:text-red-400 rounded-lg cursor-pointer"
+                              className="p-1 text-stone-400 hover:text-rose-600 dark:hover:text-rose-400 rounded-[2px] cursor-pointer"
                             >
-                              <Trash2 className="w-4 h-4" />
+                              <Trash2 className="w-3.5 h-3.5" />
                             </button>
                           </div>
                         </div>
@@ -1137,27 +1136,27 @@ export default function GameSpinner() {
                     {editCategoryIdx !== null && categories[editCategoryIdx] ? (
                       <div>
                         {/* Selected Cat Header */}
-                        <div className="bg-slate-50 dark:bg-slate-950/40 p-4 rounded-3xl border border-slate-200 dark:border-slate-800 mb-6">
+                        <div className="bg-[#fdfaf2]/50 dark:bg-[#2d2820]/50 p-4 rounded-[4px] border border-[#d4c9a8]/70 dark:border-[#4b463e]/70 mb-6">
                           <div className="mb-3">
-                            <div className="flex items-center justify-between mb-1.55">
-                              <span className="text-xs font-black text-slate-400 dark:text-slate-505 uppercase tracking-widest">Detail & Warna Kategori</span>
-                              <span className="text-[10px] font-mono font-bold text-violet-600 dark:text-violet-400 bg-violet-50 dark:bg-violet-950/40 px-1.5 py-0.5 rounded uppercase">{categories[editCategoryIdx].color}</span>
+                            <div className="flex items-center justify-between mb-1.5">
+                              <span className="text-[10px] font-display font-bold text-[#a23b2c] dark:text-[#ff816c] uppercase tracking-wider">Detail & Warna Kategori</span>
+                              <span className="text-[10px] font-mono font-bold text-[#a23b2c] dark:text-[#ff816c] bg-[#f2ede3] dark:bg-[#3d3527] px-1.5 py-0.5 rounded-[2px] uppercase">{categories[editCategoryIdx].color}</span>
                             </div>
-                            <div className="flex flex-wrap items-center gap-1.5 p-2 bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800">
+                            <div className="flex flex-wrap items-center gap-1.5 p-2 bg-[#fdfaf2] dark:bg-[#2d2820] rounded-[4px] border border-[#d4c9a8] dark:border-[#4b463e]">
                               {PRESET_COLORS.map((preset, pIdx) => (
                                 <button
                                   key={pIdx}
                                   type="button"
                                   onClick={() => handleUpdateCategoryColor(editCategoryIdx, pIdx)}
-                                  className={`w-5 h-5 rounded-full transition-all border-2 cursor-pointer ${categories[editCategoryIdx].color === preset.hex ? 'scale-110 border-slate-800 dark:border-slate-200' : 'border-transparent'}`}
+                                  className={`w-5 h-5 rounded-full transition-all border-2 cursor-pointer ${categories[editCategoryIdx].color === preset.hex ? 'scale-110 border-[#a23b2c] dark:border-[#ff816c]' : 'border-transparent'}`}
                                   style={{ backgroundColor: preset.hex }}
                                   title={preset.name}
                                 />
                               ))}
                               
                               {/* Unlimited Color Picker */}
-                              <div className="h-5 w-px bg-slate-200 dark:bg-slate-805 mx-1 flex-shrink-0" />
-                              <div className="relative w-7 h-7 rounded-full overflow-hidden border-2 border-dashed border-slate-300 dark:border-slate-705 flex items-center justify-center cursor-pointer hover:border-violet-400 dark:hover:border-violet-500 transition" title="Ganti ke warna kustom">
+                              <div className="h-5 w-px bg-[#d4c9a8]/40 dark:bg-[#4b463e]/40 mx-1 flex-shrink-0" />
+                              <div className="relative w-7 h-7 rounded-[4px] overflow-hidden border border-dashed border-[#d4c9a8] dark:border-[#4b463e] flex items-center justify-center cursor-pointer hover:border-[#a23b2c] transition" title="Ganti ke warna kustom">
                                 <input
                                   type="color"
                                   value={categories[editCategoryIdx].color}
@@ -1176,16 +1175,16 @@ export default function GameSpinner() {
                             type="text"
                             value={categories[editCategoryIdx].name}
                             onChange={(e) => handleUpdateCategoryName(editCategoryIdx, e.target.value)}
-                            className="w-full text-lg font-black bg-white dark:bg-slate-950 border border-slate-200 dark:border-slate-800 px-3 py-2 rounded-xl text-slate-800 dark:text-slate-105 focus:ring-2 focus:ring-violet-400 focus:outline-none"
+                            className="w-full text-sm font-display font-bold bg-transparent text-[#3d3527] dark:text-[#e8dcc4] border-b border-[#d4c9a8] dark:border-[#4b463e] px-2 py-1 focus:ring-0 focus:outline-none rounded-none"
                           />
                         </div>
 
                         {/* List of Game Titles */}
-                        <h4 className="text-sm font-black text-slate-400 dark:text-slate-500 uppercase tracking-wider mb-4">Daftar Game ({categories[editCategoryIdx].games.length})</h4>
+                        <h4 className="text-[11px] font-display font-bold text-stone-500 dark:text-stone-400 uppercase tracking-wider mb-4">Daftar Game ({categories[editCategoryIdx].games.length})</h4>
                         
                         {/* New Game Input with Multi-line Support */}
-                        <div className="flex flex-col gap-2 mb-4 bg-slate-50/50 dark:bg-slate-950/30 p-3 rounded-2xl border border-slate-200 dark:border-slate-800">
-                          <div className="text-[11px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-wider">
+                        <div className="flex flex-col gap-2 mb-4 bg-[#fdfaf2]/50 dark:bg-[#2d2820]/50 p-3 rounded-[4px] border border-[#d4c9a8]/70 dark:border-[#4b463e]/70">
+                          <div className="text-[10px] font-display font-bold text-[#a23b2c] dark:text-[#ff816c] uppercase tracking-wider">
                             Masukkan Nama-nama Game (bisa sekaligus, pisahkan per baris):
                           </div>
                           <div className="flex flex-col sm:flex-row gap-2">
@@ -1195,11 +1194,11 @@ export default function GameSpinner() {
                               placeholder="Contoh:&#10;Danganronpa&#10;Mobile Legend&#10;Pou"
                               value={newGameInput}
                               onChange={(e) => setNewGameInput(e.target.value)}
-                              className="flex-1 px-3 py-2 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-violet-400 font-medium resize-none min-h-[80px] text-slate-800 dark:text-slate-100"
+                              className="flex-1 px-3 py-2 bg-transparent text-[#3d3527] dark:text-[#e8dcc4] border border-[#d4c9a8] dark:border-[#4b463e] rounded-[4px] text-xs font-sans focus:outline-none focus:border-[#3d3527] dark:focus:border-[#e8dcc4] font-medium resize-none min-h-[80px]"
                             />
                             <button
                               onClick={() => handleAddGameToCategory(editCategoryIdx)}
-                              className="sm:self-end px-5 py-3 bg-violet-600 hover:bg-violet-750 text-white rounded-xl font-bold transition flex items-center justify-center gap-2 flex-shrink-0 cursor-pointer"
+                              className="sm:self-end px-4 py-2.5 bg-[#a23b2c] dark:bg-[#ff816c] hover:bg-opacity-90 text-white dark:text-[#221e18] rounded-[4px] border border-[#a23b2c] dark:border-[#ff816c] text-xs font-display font-bold transition flex items-center justify-center gap-2 flex-shrink-0 cursor-pointer"
                             >
                               <Plus className="w-4 h-4" />
                               <span>Tambah ke List</span>
@@ -1208,22 +1207,22 @@ export default function GameSpinner() {
                         </div>
 
                         {/* Game Pills container */}
-                        <div className="flex flex-wrap gap-2 max-h-[220px] overflow-y-auto p-1 bg-slate-50 dark:bg-slate-950/35 rounded-2xl border border-slate-100 dark:border-slate-850">
+                        <div className="flex flex-wrap gap-2 max-h-[220px] overflow-y-auto p-2 bg-[#fdfaf2]/40 dark:bg-[#2d2820]/40 rounded-[4px] border border-[#d4c9a8]/40 dark:border-[#4b463e]/40">
                           {categories[editCategoryIdx].games.length === 0 ? (
-                            <div className="w-full text-center py-6 text-xs font-bold text-slate-400 dark:text-slate-500 flex flex-col items-center justify-center gap-2">
-                              <Gamepad2 className="w-8 h-8 text-slate-300 dark:text-slate-650" />
+                            <div className="w-full text-center py-6 text-xs font-bold text-stone-500 dark:text-stone-400 flex flex-col items-center justify-center gap-2">
+                              <Gamepad2 className="w-8 h-8 text-[#d4c9a8] dark:text-[#4b463e]" />
                               Kategori ini masih kosong! Tambahkan game di atas.
                             </div>
                           ) : (
                             categories[editCategoryIdx].games.map((g, gIdx) => (
                               <div
                                 key={g.id}
-                                className="flex items-center gap-2 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 px-3 py-1.5 rounded-xl font-bold text-slate-700 dark:text-slate-300 text-sm shadow-sm hover:border-slate-300 dark:hover:border-slate-600 transition"
+                                className="flex items-center gap-2 bg-[#fdfaf2] dark:bg-[#2d2820] border border-[#d4c9a8]/70 dark:border-[#4b463e]/70 px-2.5 py-1 rounded-[4px] text-stone-700 dark:text-stone-300 text-xs shadow-xs hover:border-[#a23b2c] dark:hover:border-[#ff816c] transition"
                               >
                                 {g.name}
                                 <button
                                   onClick={() => handleDeleteGameFromCategory(editCategoryIdx, gIdx)}
-                                  className="text-slate-400 dark:text-slate-500 hover:text-red-500 dark:hover:text-red-400 cursor-pointer"
+                                  className="text-stone-400 hover:text-rose-650 cursor-pointer"
                                 >
                                   <X className="w-3.5 h-3.5" />
                                 </button>
@@ -1233,31 +1232,31 @@ export default function GameSpinner() {
                         </div>
                       </div>
                     ) : (
-                      <div className="flex flex-col items-center justify-center text-center py-12 text-slate-400 dark:text-slate-500">
-                        <HelpCircle className="w-12 h-12 text-slate-300 dark:text-slate-705 mb-3" />
-                        <h5 className="font-bold text-slate-700 dark:text-slate-300 mb-1">Pilih Kategori</h5>
+                      <div className="flex flex-col items-center justify-center text-center py-12 text-stone-400">
+                        <HelpCircle className="w-12 h-12 text-[#d4c9a8] dark:text-[#4b463e] mb-3" />
+                        <h5 className="font-display font-bold text-stone-500 dark:text-stone-400 text-xs uppercase tracking-wider mb-1">Pilih Kategori</h5>
                         <p className="text-xs font-medium max-w-[280px]">Pilih salah satu kategori di list kiri untuk mulai menambahkan atau merubah game!</p>
                       </div>
                     )}
                   </div>
                 </div>
 
-                <div className="mt-8 border-t border-slate-100 dark:border-slate-800 pt-6 flex flex-col sm:flex-row justify-between items-center gap-4">
+                <div className="mt-8 border-t border-[#d4c9a8]/50 dark:border-[#4b463e]/50 pt-6 flex flex-col sm:flex-row justify-between items-center gap-4">
                   <div className="flex flex-col sm:flex-row items-center gap-2.5 w-full sm:w-auto">
                     <button
                       onClick={handleExportConfig}
-                      className="w-full sm:w-auto px-4 py-2.5 bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 rounded-xl font-bold text-sm transition-all flex items-center justify-center gap-2 cursor-pointer shadow-sm border border-slate-200/60 dark:border-slate-700/60"
+                      className="w-full sm:w-auto px-4 py-2.5 bg-[#f2ede3] dark:bg-[#3d3527] hover:bg-[#d4c9a8]/30 border border-[#d4c9a8] dark:border-[#4b463e] text-[#3d3527] dark:text-[#e8dcc4] rounded-[4px] font-display font-bold text-xs transition-all flex items-center justify-center gap-2 cursor-pointer shadow-sm"
                       title="Ekspor seluruh konfigurasi kategori dan daftar game ke file JSON"
                     >
-                      <Download className="w-4 h-4 text-violet-500" />
+                      <Download className="w-4 h-4 text-[#a23b2c] dark:text-[#ff816c]" />
                       <span>Export JSON</span>
                     </button>
                     <button
                       onClick={handleImportTrigger}
-                      className="w-full sm:w-auto px-4 py-2.5 bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 rounded-xl font-bold text-sm transition-all flex items-center justify-center gap-2 cursor-pointer shadow-sm border border-slate-200/60 dark:border-slate-700/60"
+                      className="w-full sm:w-auto px-4 py-2.5 bg-[#f2ede3] dark:bg-[#3d3527] hover:bg-[#d4c9a8]/30 border border-[#d4c9a8] dark:border-[#4b463e] text-[#3d3527] dark:text-[#e8dcc4] rounded-[4px] font-display font-bold text-xs transition-all flex items-center justify-center gap-2 cursor-pointer shadow-sm"
                       title="Impor konfigurasi dari file JSON"
                     >
-                      <Upload className="w-4 h-4 text-violet-500" />
+                      <Upload className="w-4 h-4 text-[#a23b2c] dark:text-[#ff816c]" />
                       <span>Import JSON</span>
                     </button>
                     <input
@@ -1270,7 +1269,7 @@ export default function GameSpinner() {
                   </div>
                   <button
                     onClick={() => setShowManager(false)}
-                    className="w-full sm:w-auto px-6 py-3 bg-violet-600 hover:bg-violet-750 text-white rounded-2xl font-bold transition-all shadow-md cursor-pointer text-center"
+                    className="w-full sm:w-auto px-5 py-2.5 bg-[#3d3527] dark:bg-[#e8dcc4] text-[#fdfaf2] dark:text-[#221e18] hover:bg-[#3d3527]/90 dark:hover:bg-[#e8dcc4]/90 rounded-[4px] border border-[#3d3527] dark:border-[#e8dcc4] text-xs font-display font-bold cursor-pointer transition-all text-center"
                   >
                     Selesai & Simpan perubahan
                   </button>
@@ -1286,30 +1285,30 @@ export default function GameSpinner() {
                 className="grid grid-cols-1 md:grid-cols-12 gap-8 items-center"
               >                 {/* Left Area: Status and current selected components */}
                 <div className="md:col-span-4 flex flex-col justify-center h-full">
-                  <div className="bg-white dark:bg-slate-900 p-6 rounded-3xl border border-slate-100 dark:border-slate-800 shadow-sm flex flex-col gap-6">
+                    <div className="bg-[#fdfaf2] dark:bg-[#2d2820] p-6 rounded-[4px] border border-[#d4c9a8] dark:border-[#4b463e] shadow-tactile flex flex-col gap-6">
                     <div>
-                      <span className="text-xs font-extrabold text-slate-400 dark:text-slate-500 uppercase tracking-widest">Langkah Proses</span>
-                      <h3 className="text-2xl font-black text-slate-800 dark:text-slate-100 mt-1">Nested Spinner</h3>
+                      <span className="text-[10px] font-display font-bold text-stone-500 uppercase tracking-wider">Langkah Proses</span>
+                      <h3 className="text-xl font-display font-bold text-[#3d3527] dark:text-[#e8dcc4] mt-1 uppercase tracking-wide">Nested Spinner</h3>
                     </div>
 
                     {/* Step Visualizer */}
                     <div className="space-y-4">
                       {/* Step 1: Category */}
-                      <div className={`p-4 rounded-2xl border transition-all ${stage === 'category' ? 'bg-violet-50/50 dark:bg-violet-955/10 border-violet-200 dark:border-violet-850' : 'bg-slate-50/50 dark:bg-slate-950/20 border-slate-200 dark:border-slate-800'}`}>
-                        <div className="flex items-center justify-between mb-1">
-                          <span className="text-xs font-black text-slate-400 dark:text-slate-500 uppercase tracking-widest">Kategori Game</span>
+                      <div className={`p-4 rounded-[4px] border transition-all ${stage === 'category' ? 'bg-[#f2ede3]/50 dark:bg-[#32302a]/50 border-[#a23b2c] dark:border-[#ff816c]' : 'bg-[#fdfaf2]/30 dark:bg-[#2d2820]/30 border-[#d4c9a8]/50 dark:border-[#4b463e]/50'}`}>
+                        <div className="flex items-center justify-between mb-1.5">
+                          <span className="text-[10px] font-display font-bold text-stone-550 dark:text-stone-350 uppercase tracking-wider">Kategori Game</span>
                           {selectedCategory ? (
-                            <span className="px-2 py-0.5 bg-emerald-105 dark:bg-emerald-950/40 text-emerald-700 dark:text-emerald-400 rounded-full text-[10px] font-black uppercase">Selesai</span>
+                            <span className="px-1.5 py-0.5 bg-emerald-500/10 border border-emerald-600/30 text-emerald-600 dark:text-emerald-400 rounded-[2px] text-[9px] font-display font-bold uppercase">Selesai</span>
                           ) : (
-                            <span className="px-2 py-0.5 bg-violet-100 dark:bg-violet-950/40 text-violet-700 dark:text-violet-400 rounded-full text-[10px] font-black uppercase">Aktif</span>
+                            <span className="px-1.5 py-0.5 bg-[#a23b2c]/10 dark:bg-[#ff816c]/20 border border-[#a23b2c]/30 dark:border-[#ff816c]/30 text-[#a23b2c] dark:text-[#ff816c] rounded-[2px] text-[9px] font-display font-bold uppercase">Aktif</span>
                           )}
                         </div>
                         <div className="flex items-center gap-3">
                           <div 
-                            className={`w-3.5 h-3.5 rounded-full ${!selectedCategory ? 'bg-slate-300 dark:bg-slate-700 animate-pulse' : ''}`}
+                            className={`w-3 h-3 rounded-full border border-black/10 dark:border-white/10 ${!selectedCategory ? 'bg-stone-300 dark:bg-stone-700 animate-pulse' : ''}`}
                             style={getCategoryStyle(selectedCategory)}
                           />
-                          <span className="font-extrabold text-slate-700 dark:text-slate-200 text-base" role="status" aria-live="polite">
+                          <span className="font-display font-bold text-[#3d3527] dark:text-[#e8dcc4] text-sm" role="status" aria-live="polite">
                             {selectedCategory ? selectedCategory.name : 'Memilih Kategori...'}
                           </span>
                         </div>
@@ -1317,24 +1316,24 @@ export default function GameSpinner() {
 
                       {/* Divider line */}
                       <div className="flex justify-center">
-                        <ChevronRight className="w-5 h-5 text-slate-350 dark:text-slate-700 transform rotate-90" />
+                        <ChevronRight className="w-4 h-4 text-[#d4c9a8] dark:text-[#4b463e] transform rotate-90" />
                       </div>
 
                       {/* Step 2: Game */}
-                      <div className={`p-4 rounded-2xl border transition-all ${stage === 'game' ? 'bg-violet-50/50 dark:bg-violet-955/10 border-violet-200 dark:border-violet-855' : selectedGame ? 'bg-emerald-50/50 dark:bg-emerald-955/15 border-emerald-200 dark:border-emerald-800' : 'bg-slate-50/50 dark:bg-slate-950/20 border-slate-200 dark:border-slate-800 opacity-60'}`}>
-                        <div className="flex items-center justify-between mb-1">
-                          <span className="text-xs font-black text-slate-400 dark:text-slate-500 uppercase tracking-widest">Game Terpilih</span>
+                      <div className={`p-4 rounded-[4px] border transition-all ${stage === 'game' ? 'bg-[#f2ede3]/50 dark:bg-[#32302a]/50 border-[#a23b2c] dark:border-[#ff816c]' : selectedGame ? 'bg-emerald-500/5 dark:bg-emerald-400/5 border-emerald-650/20' : 'bg-[#fdfaf2]/30 dark:bg-[#2d2820]/30 border-[#d4c9a8]/50 dark:border-[#4b463e]/50 opacity-60'}`}>
+                        <div className="flex items-center justify-between mb-1.5">
+                          <span className="text-[10px] font-display font-bold text-stone-550 dark:text-stone-350 uppercase tracking-wider">Game Terpilih</span>
                           {selectedGame ? (
-                            <span className="px-2 py-0.5 bg-emerald-100 dark:bg-emerald-950/40 text-emerald-700 dark:text-emerald-400 rounded-full text-[10px] font-black uppercase">Selesai</span>
+                            <span className="px-1.5 py-0.5 bg-emerald-500/10 border border-emerald-600/30 text-emerald-600 dark:text-emerald-400 rounded-[2px] text-[9px] font-display font-bold uppercase">Selesai</span>
                           ) : stage === 'game' ? (
-                            <span className="px-2 py-0.5 bg-violet-100 dark:bg-violet-955/40 text-violet-700 dark:text-violet-400 rounded-full text-[10px] font-black uppercase">Aktif</span>
+                            <span className="px-1.5 py-0.5 bg-[#a23b2c]/10 dark:bg-[#ff816c]/20 border border-[#a23b2c]/30 dark:border-[#ff816c]/30 text-[#a23b2c] dark:text-[#ff816c] rounded-[2px] text-[9px] font-display font-bold uppercase">Aktif</span>
                           ) : (
-                            <span className="px-2 py-0.5 bg-slate-100 dark:bg-slate-800 text-slate-400 dark:text-slate-500 rounded-full text-[10px] font-black uppercase">Menunggu</span>
+                            <span className="px-1.5 py-0.5 bg-[#f2ede3] dark:bg-[#3d3527] border border-[#d4c9a8]/45 dark:border-[#4b463e]/45 text-stone-500 rounded-[2px] text-[9px] font-display font-bold uppercase">Menunggu</span>
                           )}
                         </div>
                         <div className="flex items-center gap-3">
-                          <Gamepad2 className={`w-5 h-5 ${selectedGame ? 'text-emerald-555 dark:text-emerald-400' : 'text-slate-400 dark:text-slate-600'}`} />
-                          <span className="font-extrabold text-slate-700 dark:text-slate-200 text-base" role="status" aria-live="polite">
+                          <Gamepad2 className={`w-4 h-4 ${selectedGame ? 'text-emerald-600 dark:text-emerald-400' : 'text-[#d4c9a8] dark:text-[#4b463e]'}`} />
+                          <span className="font-display font-bold text-[#3d3527] dark:text-[#e8dcc4] text-sm" role="status" aria-live="polite">
                             {selectedGame ? selectedGame : stage === 'game' ? 'Menentukan Game...' : '---'}
                           </span>
                         </div>
@@ -1345,9 +1344,9 @@ export default function GameSpinner() {
                     {(selectedCategory || selectedGame) && (
                       <button
                         onClick={() => setConfirmReset(true)}
-                        className="w-full flex items-center justify-center gap-2 px-6 py-4 bg-slate-50 dark:bg-slate-800 hover:bg-slate-100 dark:hover:bg-slate-750 text-slate-700 dark:text-slate-300 border-2 border-slate-200 dark:border-slate-700 hover:border-slate-300 dark:hover:border-slate-600 font-bold rounded-2xl transition cursor-pointer"
+                        className="w-full flex items-center justify-center gap-2 px-4 py-3 bg-[#f2ede3] dark:bg-[#3d3527] hover:bg-[#d4c9a8]/30 text-[#3d3527] dark:text-[#e8dcc4] border border-[#d4c9a8] dark:border-[#4b463e] font-display font-bold text-xs uppercase tracking-wider rounded-[4px] transition cursor-pointer shadow-xs"
                       >
-                        <RotateCcw className="w-4 h-4" />
+                        <RotateCcw className="w-3.5 h-3.5" />
                         Ulangi Dari Awal
                       </button>
                     )}
@@ -1366,13 +1365,13 @@ export default function GameSpinner() {
                         exit={{ opacity: 0, scale: 0.8 }}
                         className="flex flex-col items-center"
                       >
-                        <h3 className="text-sm font-black text-slate-400 dark:text-slate-500 uppercase tracking-widest mb-6">PUTAR UNTUK KATEGORI</h3>
+                        <h3 className="text-xs font-display font-bold text-stone-550 dark:text-stone-400 uppercase tracking-widest mb-6">PUTAR UNTUK KATEGORI</h3>
                         
                         {/* The Circular SVG Spinner wheel */}
                         <div className="relative w-[340px] h-[340px] md:w-[400px] md:h-[400px]">
                           {/* Inner circle with slices */}
                           <motion.div
-                            className="w-full h-full rounded-full border-[10px] border-slate-800 dark:border-slate-850 shadow-2xl relative overflow-hidden"
+                            className="w-full h-full rounded-full border-[10px] border-[#3d3527] dark:border-[#4b463e] shadow-tactile relative overflow-hidden"
                             initial={{ rotate: categoryRotation }}
                             animate={{ rotate: categoryRotation }}
                             transition={isSpinning ? { ease: [0.15, 0.85, 0.1, 1], duration: SPIN_ANIMATION_MS / 1000 } : { duration: 0 }}
@@ -1438,14 +1437,14 @@ export default function GameSpinner() {
                             </div>
 
                             {/* Center Pin */}
-                            <div className="absolute inset-x-0 inset-y-0 w-12 h-12 bg-slate-900 border-4 border-white dark:border-slate-800 rounded-full m-auto shadow-lg flex items-center justify-center">
+                            <div className="absolute inset-x-0 inset-y-0 w-12 h-12 bg-[#3d3527] dark:bg-[#4b463e] border-4 border-[#fdfaf2] dark:border-[#2d2820] rounded-full m-auto shadow-sm flex items-center justify-center">
                               <Dice5 className="w-5 h-5 text-white" />
                             </div>
                           </motion.div>
 
                           {/* Top Pointer Indicator */}
                           <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-[10px] z-10">
-                            <div className="w-0 h-0 border-l-[15px] border-l-transparent border-r-[15px] border-r-transparent border-t-[25px] border-t-slate-805 dark:border-t-slate-700 drop-shadow-md" />
+                            <div className="w-0 h-0 border-l-[15px] border-l-transparent border-r-[15px] border-r-transparent border-t-[25px] border-t-[#a23b2c] dark:border-t-[#ff816c] drop-shadow-sm" />
                           </div>
                         </div>
 
@@ -1454,9 +1453,9 @@ export default function GameSpinner() {
                           onClick={handleSpinCategory}
                           disabled={isSpinning || categories.length === 0}
                           aria-label="Putar kategori game"
-                          className="mt-8 px-10 py-5 bg-gradient-to-r from-violet-600 to-indigo-600 text-white rounded-full text-xl font-black shadow-xl shadow-indigo-100 dark:shadow-none hover:scale-105 active:scale-95 transition-all flex items-center gap-3 disabled:opacity-50 cursor-pointer"
+                          className="mt-8 px-8 py-4 bg-[#a23b2c] dark:bg-[#ff816c] text-white dark:text-[#221e18] border-2 border-[#a23b2c] dark:border-[#ff816c] rounded-[4px] text-base font-display font-bold uppercase tracking-wider shadow-tactile hover:scale-102 active:scale-98 transition-all flex items-center gap-3 disabled:opacity-50 cursor-pointer"
                         >
-                          <Sparkles className="w-6 h-6 animate-spin-once" />
+                          <Sparkles className="w-5 h-5 animate-spin-once" />
                           PUTAR KATEGORI
                         </button>
                       </motion.div>
@@ -1470,18 +1469,18 @@ export default function GameSpinner() {
                         className="flex flex-col items-center"
                       >
                         <span 
-                          className="px-4 py-1.5 rounded-full text-xs font-black uppercase tracking-wider text-white mb-2"
+                          className="px-3 py-1 rounded-[2px] text-[10px] font-display font-bold uppercase tracking-wider text-white mb-2 shadow-xs"
                           style={getCategoryStyle(selectedCategory)}
                         >
                           Kategori: {selectedCategory.name}
                         </span>
-                        <h4 className="text-xl font-black text-slate-800 tracking-tight mb-6">KINI PUTAR UNTUK NAMA GAME</h4>
+                        <h4 className="text-sm font-display font-bold text-[#3d3527] dark:text-[#e8dcc4] uppercase tracking-wider mb-6">KINI PUTAR UNTUK NAMA GAME</h4>
                         
                         {shuffledGames.length === 0 ? (
-                          <div className="flex flex-col items-center justify-center text-center py-12 p-6 bg-white rounded-3xl border border-slate-200 max-w-[320px]">
-                            <Gamepad2 className="w-12 h-12 text-slate-300 mb-3" />
-                            <h5 className="font-bold text-slate-700">Daftar Game Kosong!</h5>
-                            <p className="text-xs text-slate-500 font-medium mb-4">
+                          <div className="flex flex-col items-center justify-center text-center py-12 p-6 bg-[#fdfaf2] dark:bg-[#2d2820] rounded-[4px] border border-[#d4c9a8] dark:border-[#4b463e] shadow-tactile max-w-[320px]">
+                            <Gamepad2 className="w-12 h-12 text-[#d4c9a8] dark:text-[#4b463e] mb-3" />
+                            <h5 className="font-display font-bold text-[#3d3527] dark:text-[#e8dcc4] text-xs uppercase tracking-wider mb-1">Daftar Game Kosong!</h5>
+                            <p className="text-[11px] text-stone-500 font-medium mb-4">
                               Belum ada game yang dimasukkan ke kategori "{selectedCategory.name}". Tambah game terlebih dahulu.
                             </p>
                             <button
@@ -1492,18 +1491,17 @@ export default function GameSpinner() {
                                 }
                                 setShowManager(true);
                               }}
-                              className="px-6 py-2.5 bg-gradient-to-r from-violet-600 to-indigo-600 hover:from-violet-700 hover:to-indigo-700 text-white rounded-xl text-xs font-bold shadow-md hover:shadow-lg transition cursor-pointer"
+                              className="px-4 py-2 bg-[#a23b2c] dark:bg-[#ff816c] text-white dark:text-[#221e18] border border-[#a23b2c] dark:border-[#ff816c] rounded-[4px] text-xs font-display font-bold transition cursor-pointer uppercase tracking-wider shadow-sm"
                             >
                               Tambah Game Sekarang
                             </button>
                           </div>
                         ) : (
-                          <>
-                            {/* Game Spinner visual wheels */}
+                          <>                            {/* Game Spinner visual wheels */}
                             <div className="relative w-[340px] h-[340px] md:w-[400px] md:h-[400px]">
                               {/* Inner slices rotation */}
                               <motion.div
-                                className="w-full h-full rounded-full border-[10px] border-slate-800 shadow-2xl relative overflow-hidden"
+                                className="w-full h-full rounded-full border-[10px] border-[#3d3527] dark:border-[#4b463e] shadow-tactile relative overflow-hidden"
                                 initial={{ rotate: gameRotation }}
                                 animate={{ rotate: gameRotation }}
                                 transition={isSpinning ? { ease: [0.15, 0.85, 0.1, 1], duration: SPIN_ANIMATION_MS / 1000 } : { duration: 0 }}
@@ -1561,24 +1559,24 @@ export default function GameSpinner() {
                                 </div>
 
                                 {/* Center circle */}
-                                <div className="absolute inset-x-0 inset-y-0 w-12 h-12 bg-slate-900 border-4 border-white rounded-full m-auto shadow-lg flex items-center justify-center">
+                                <div className="absolute inset-x-0 inset-y-0 w-12 h-12 bg-[#3d3527] dark:bg-[#4b463e] border-4 border-[#fdfaf2] dark:border-[#2d2820] rounded-full m-auto shadow-sm flex items-center justify-center">
                                   <Gamepad2 className="w-5 h-5 text-white" />
                                 </div>
                               </motion.div>
-
+ 
                               {/* Pointer */}
                               <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-[10px] z-10">
-                                <div className="w-0 h-0 border-l-[15px] border-l-transparent border-r-[15px] border-r-transparent border-t-[25px] border-t-slate-800 drop-shadow-md" />
+                                <div className="w-0 h-0 border-l-[15px] border-l-transparent border-r-[15px] border-r-transparent border-t-[25px] border-t-[#a23b2c] dark:border-t-[#ff816c] drop-shadow-sm" />
                               </div>
                             </div>
-
+ 
                             <button
                               onClick={handleSpinGame}
                               disabled={isSpinning}
                               aria-label="Putar game"
-                              className={`mt-8 px-10 py-5 bg-gradient-to-r from-teal-500 to-emerald-500 text-white rounded-full text-xl font-black shadow-xl shadow-emerald-100 hover:scale-105 active:scale-95 transition-all flex items-center gap-3 disabled:opacity-50`}
+                              className="mt-8 px-8 py-4 bg-[#a23b2c] dark:bg-[#ff816c] text-white dark:text-[#221e18] border-2 border-[#a23b2c] dark:border-[#ff816c] rounded-[4px] text-base font-display font-bold uppercase tracking-wider shadow-tactile hover:scale-102 active:scale-98 transition-all flex items-center gap-3 disabled:opacity-50 cursor-pointer"
                             >
-                              <Sparkles className="w-6 h-6 animate-pulse" />
+                              <Sparkles className="w-5 h-5 animate-pulse" />
                               PUTAR GAME!
                             </button>
                           </>
@@ -1593,31 +1591,31 @@ export default function GameSpinner() {
                         initial={{ opacity: 0, scale: 0.9, y: 10 }}
                         animate={{ opacity: 1, scale: 1, y: 0 }}
                         exit={{ opacity: 0, scale: 0.9 }}
-                        className="flex flex-col items-center max-w-md w-full bg-white p-8 rounded-[3rem] border border-slate-200 shadow-xl relative overflow-hidden"
+                        className="flex flex-col items-center max-w-md w-full bg-[#fdfaf2] dark:bg-[#2d2820] p-8 rounded-[4px] border border-[#d4c9a8] dark:border-[#4b463e] shadow-tactile relative overflow-hidden"
                       >
                         {/* Shimmer background */}
-                        <div className="absolute inset-0 bg-gradient-to-tr from-indigo-50/20 via-pink-50/10 to-amber-50/20 pointer-events-none" />
+                        <div className="absolute inset-0 bg-[#fdfaf2] opacity-10 pointer-events-none" />
                         
                         {/* Confetti element */}
-                        <div className="w-20 h-20 bg-emerald-55 bg-gradient-to-tr from-violet-500 to-indigo-500 rounded-2xl flex items-center justify-center shadow-lg mb-6 text-white text-3xl">
-                          <Gamepad2 className="w-10 h-10" />
+                        <div className="w-16 h-16 bg-[#f2ede3] dark:bg-[#3d3527] border border-[#d4c9a8] dark:border-[#4b463e] rounded-[4px] flex items-center justify-center shadow-sm mb-6 text-[#a23b2c] dark:text-[#ff816c]">
+                          <Gamepad2 className="w-8 h-8" />
                         </div>
 
-                        <span className="text-xs font-black text-slate-400 tracking-widest uppercase mb-1">HASIL SPINNER</span>
-                        <h4 className="text-4xl font-extrabold text-slate-800 tracking-tight mb-2 text-center">Waktunya Main!</h4>
+                        <span className="text-[10px] font-display font-bold text-stone-500 tracking-widest uppercase mb-1">HASIL SPINNER</span>
+                        <h4 className="text-2xl font-display font-bold text-[#3d3527] dark:text-[#e8dcc4] tracking-tight mb-2 text-center uppercase">Waktunya Main!</h4>
                         
-                        <div className="w-full flex flex-col items-center gap-4 my-6 py-5 px-6 bg-slate-50 border border-slate-100 rounded-3xl">
+                        <div className="w-full flex flex-col items-center gap-4 my-6 py-5 px-6 bg-[#fdfaf2] dark:bg-[#2d2820] border border-[#d4c9a8]/60 dark:border-[#4b463e]/60 rounded-[4px]">
                           <div>
-                            <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest block text-center mb-1">Pilihan Game</span>
-                            <div className="text-2xl font-black text-indigo-600 tracking-tight text-center">
+                            <span className="text-[10px] font-display font-bold text-stone-500 uppercase tracking-widest block text-center mb-1">Pilihan Game</span>
+                            <div className="text-xl font-display font-bold text-[#a23b2c] dark:text-[#ff816c] tracking-wide text-center uppercase">
                               {selectedGame}
                             </div>
                           </div>
 
                           <div className="flex items-center gap-2">
-                            <span className="text-xs font-bold text-slate-500">Kategori:</span>
+                            <span className="text-[11px] font-display font-bold text-stone-550 dark:text-stone-350 uppercase">Kategori:</span>
                             <span 
-                              className="px-2.5 py-0.5 rounded-full text-xs font-black uppercase text-white"
+                              className="px-2 py-0.5 rounded-[2px] text-[10px] font-display font-bold uppercase text-white shadow-xs"
                               style={getCategoryStyle(selectedCategory)}
                             >
                               {selectedCategory.name}
@@ -1626,17 +1624,17 @@ export default function GameSpinner() {
                         </div>
 
                         {/* Settled trigger */}
-                        <div className="flex items-center gap-2 text-xs font-extrabold text-emerald-500 mb-6 bg-emerald-50 px-4 py-1.5 rounded-full">
-                          <CheckCircle2 className="w-4 h-4" />
+                        <div className="flex items-center gap-2 text-[10px] font-display font-bold text-emerald-600 dark:text-emerald-400 mb-6 bg-emerald-500/10 border border-emerald-600/30 px-3 py-1.5 rounded-[2px] uppercase">
+                          <CheckCircle2 className="w-3.5 h-3.5" />
                           GAME SELESAI DITENTUKAN
                         </div>
 
                         {/* Restart option */}
                         <button
                           onClick={resetAll}
-                          className="w-full flex items-center justify-center gap-2 px-6 py-4 bg-slate-900 hover:bg-slate-800 text-white font-bold rounded-2xl transition shadow-md hover:scale-102"
+                          className="w-full flex items-center justify-center gap-2 px-5 py-3.5 bg-[#a23b2c] dark:bg-[#ff816c] text-white dark:text-[#221e18] border border-[#a23b2c] dark:border-[#ff816c] font-display font-bold text-xs uppercase tracking-wider rounded-[4px] shadow-tactile transition hover:scale-102 cursor-pointer"
                         >
-                          <RotateCcw className="w-4 h-4" />
+                          <RotateCcw className="w-3.5 h-3.5" />
                           Putar Ulang Cari Game Baru
                         </button>
                       </motion.div>
@@ -1650,28 +1648,28 @@ export default function GameSpinner() {
           {/* Collapsible Spin History Panel */}
           {!showManager && (
             <div className="mt-8">
-              <div className="bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800 rounded-3xl p-6 shadow-sm">
+              <div className="bg-[#fdfaf2] dark:bg-[#2d2820] border border-[#d4c9a8] dark:border-[#4b463e] rounded-[4px] p-6 shadow-tactile">
                 <button
                   onClick={() => setShowHistoryPanel(!showHistoryPanel)}
-                  className="w-full flex items-center justify-between text-slate-800 dark:text-slate-100 hover:text-indigo-650 dark:hover:text-indigo-400 transition-colors py-1 cursor-pointer"
+                  className="w-full flex items-center justify-between text-[#3d3527] dark:text-[#e8dcc4] hover:text-[#a23b2c] dark:hover:text-[#ff816c] transition-colors py-1 cursor-pointer"
                 >
                   <div className="flex items-center gap-3">
-                    <div className="p-2 bg-indigo-50/75 dark:bg-indigo-950/40 text-indigo-600 dark:text-indigo-400 rounded-xl">
-                      <History className="w-5.5 h-5.5" />
+                    <div className="p-2 bg-[#f2ede3] dark:bg-[#3d3527] text-[#a23b2c] dark:text-[#ff816c] border border-[#d4c9a8]/60 dark:border-[#4b463e]/60 rounded-[4px]">
+                      <History className="w-5 h-5" />
                     </div>
                     <div className="text-left">
-                      <span className="text-base font-bold flex items-center gap-2">
+                      <span className="text-xs font-display font-bold flex items-center gap-2 uppercase tracking-wide">
                         Riwayat Hasil Spin 
                         {spinHistory.length > 0 && (
-                          <span className="px-2.5 py-0.5 bg-indigo-100 dark:bg-indigo-950/60 text-indigo-700 dark:text-indigo-400 rounded-full text-[10px] font-black">
+                          <span className="px-1.5 py-0.5 bg-[#ff816c]/10 dark:bg-[#ff816c]/20 text-[#a23b2c] dark:text-[#ff816c] rounded-[2px] border border-[#a23b2c]/30 text-[9px] font-display font-bold">
                             {spinHistory.length}
                           </span>
                         )}
                       </span>
-                      <p className="text-xs text-slate-400 dark:text-slate-500 font-medium">Klik untuk {showHistoryPanel ? 'menyembunyikan' : 'menampilkan'} daftar riwayat putaran game</p>
+                      <p className="text-[10px] text-stone-500 font-medium">Klik untuk {showHistoryPanel ? 'menyembunyikan' : 'menampilkan'} daftar riwayat putaran game</p>
                     </div>
                   </div>
-                  <ChevronRight className={`w-5 h-5 text-slate-400 dark:text-slate-500 transition-transform ${showHistoryPanel ? 'rotate-90' : ''}`} />
+                  <ChevronRight className={`w-4 h-4 text-stone-400 dark:text-stone-500 transition-transform ${showHistoryPanel ? 'rotate-90' : ''}`} />
                 </button>
 
                 <AnimatePresence initial={false}>
@@ -1684,27 +1682,27 @@ export default function GameSpinner() {
                       className="overflow-hidden"
                     >
                       {/* Tab Buttons */}
-                      <div className="flex border-b border-slate-100 dark:border-slate-800 mb-6">
+                      <div className="flex border-b border-[#d4c9a8]/40 dark:border-[#4b463e]/40 mb-6">
                         <button
                           onClick={() => setActivePanelTab('history')}
-                          className={`py-2.5 px-4 text-xs font-bold border-b-2 transition-all cursor-pointer flex items-center gap-2 ${
+                          className={`py-2 px-3 text-[10px] font-display font-bold border-b-2 transition-all cursor-pointer flex items-center gap-1.5 ${
                             activePanelTab === 'history'
-                              ? 'border-indigo-600 text-indigo-600 dark:text-indigo-400 dark:border-indigo-400'
-                              : 'border-transparent text-slate-400 dark:text-slate-500 hover:text-slate-600 dark:hover:text-slate-400'
+                              ? 'border-[#a23b2c] dark:border-[#ff816c] text-[#a23b2c] dark:text-[#ff816c]'
+                              : 'border-transparent text-stone-400 dark:text-stone-500 hover:text-[#3d3527] dark:hover:text-[#e8dcc4]'
                           }`}
                         >
-                          <History className="w-4 h-4" />
+                          <History className="w-3.5 h-3.5" />
                           Riwayat Hasil
                         </button>
                         <button
                           onClick={() => setActivePanelTab('stats')}
-                          className={`py-2.5 px-4 text-xs font-bold border-b-2 transition-all cursor-pointer flex items-center gap-2 ${
+                          className={`py-2 px-3 text-[10px] font-display font-bold border-b-2 transition-all cursor-pointer flex items-center gap-1.5 ${
                             activePanelTab === 'stats'
-                              ? 'border-indigo-600 text-indigo-600 dark:text-indigo-400 dark:border-indigo-400'
-                              : 'border-transparent text-slate-400 dark:text-slate-500 hover:text-slate-600 dark:hover:text-slate-400'
+                              ? 'border-[#a23b2c] dark:border-[#ff816c] text-[#a23b2c] dark:text-[#ff816c]'
+                              : 'border-transparent text-stone-400 dark:text-stone-500 hover:text-[#3d3527] dark:hover:text-[#e8dcc4]'
                           }`}
                         >
-                          <BarChart3 className="w-4 h-4" />
+                          <BarChart3 className="w-3.5 h-3.5" />
                           Statistik Penggunaan
                         </button>
                       </div>
