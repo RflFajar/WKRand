@@ -36,6 +36,7 @@ export interface WishlistGame {
   id: string;
   name: string;
   genre: string;
+  price?: number;
   addedAt: number;
 }
 
