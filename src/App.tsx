@@ -166,7 +166,8 @@ export default function App() {
                 } else if (activeTab === 'schedule') {
                   targetEl = document.getElementById('manage-activities-btn');
                 } else if (activeTab === 'game') {
-                  targetEl = document.getElementById('manage-games-btn');
+                  targetEl = document.getElementById('add-wishlist-btn') || 
+                             document.getElementById('manage-games-btn');
                 }
 
                 // Fallback search if specific target not found

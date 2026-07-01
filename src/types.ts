@@ -32,3 +32,11 @@ export interface SpinResult {
   timestamp: number;
 }
 
+export interface WishlistGame {
+  id: string;
+  name: string;
+  genre: string;
+  addedAt: number;
+}
+
+

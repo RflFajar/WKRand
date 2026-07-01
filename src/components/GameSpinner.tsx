@@ -22,12 +22,14 @@ import {
   AlertTriangle,
   History,
   Download,
-  Upload
+  Upload,
+  Bookmark
 } from 'lucide-react';
 import { GameCategory, GameItem, SpinResult } from '../types';
 import ConfirmDialog from './ConfirmDialog';
 import SpinHistory from './SpinHistory';
 import SpinStats from './SpinStats';
+import GameWishlist from './GameWishlist';
 import { BarChart3 } from 'lucide-react';
 
 // Default categories and games
@@ -409,6 +411,7 @@ export default function GameSpinner() {
   });
   const [showHistoryPanel, setShowHistoryPanel] = useState(false);
   const [activePanelTab, setActivePanelTab] = useState<'history' | 'stats'>('history');
+  const [activeSubTab, setActiveSubTab] = useState<'spinner' | 'wishlist'>('spinner');
 
   const [showNewBadge, setShowNewBadge] = useState(() => {
     const dismissed = localStorage.getItem('game_spinner_badge_dismissed');
@@ -922,6 +925,18 @@ export default function GameSpinner() {
     setCategories(updated);
   };
 
+  const handleAddSingleGameToCategory = (categoryId: string, gameName: string) => {
+    const updated = [...categories];
+    const catIdx = updated.findIndex(c => c.id === categoryId);
+    if (catIdx !== -1) {
+      updated[catIdx].games.push({
+        id: `game-wish-${Date.now()}-${Math.random().toString(36).substring(2, 6)}`,
+        name: gameName
+      });
+      setCategories(updated);
+    }
+  };
+
   return (
     <div className="w-full max-w-5xl mx-auto py-4">
       {/* Toast Notification */}
@@ -998,7 +1013,42 @@ export default function GameSpinner() {
         </div>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+      {/* Sub-tab Switcher: Spinner vs Wishlist */}
+      <div className="flex border-b border-[#d4c9a8] dark:border-[#4b463e] mb-6 gap-2">
+        <button
+          onClick={() => {
+            setActiveSubTab('spinner');
+            setShowManager(false);
+          }}
+          className={`px-5 py-2.5 font-display font-bold text-[11px] sm:text-xs uppercase tracking-wider border-t border-x rounded-t-[4px] -mb-[1px] transition-all cursor-pointer flex items-center gap-1.5 ${
+            activeSubTab === 'spinner'
+              ? 'bg-[#fdfaf2] dark:bg-[#2d2820] text-[#a23b2c] dark:text-[#ff816c] border-[#d4c9a8] dark:border-[#4b463e] border-b-[#fdfaf2] dark:border-b-[#2d2820] font-bold shadow-xs'
+              : 'bg-transparent text-stone-500 hover:text-stone-700 dark:hover:text-stone-300 border-transparent'
+          }`}
+        >
+          <Dice5 className="w-3.5 h-3.5" />
+          <span>Putar Roda Game</span>
+        </button>
+        <button
+          onClick={() => {
+            setActiveSubTab('wishlist');
+            setShowManager(false);
+          }}
+          className={`px-5 py-2.5 font-display font-bold text-[11px] sm:text-xs uppercase tracking-wider border-t border-x rounded-t-[4px] -mb-[1px] transition-all cursor-pointer flex items-center gap-1.5 ${
+            activeSubTab === 'wishlist'
+              ? 'bg-[#fdfaf2] dark:bg-[#2d2820] text-[#a23b2c] dark:text-[#ff816c] border-[#d4c9a8] dark:border-[#4b463e] border-b-[#fdfaf2] dark:border-b-[#2d2820] font-bold shadow-xs'
+              : 'bg-transparent text-stone-500 hover:text-stone-700 dark:hover:text-stone-300 border-transparent'
+          }`}
+        >
+          <Bookmark className="w-3.5 h-3.5" />
+          <span>Arsip Wishlist Game</span>
+        </button>
+      </div>
+
+      {activeSubTab === 'wishlist' ? (
+        <GameWishlist />
+      ) : (
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
         {/* Core Game Arena */}
         <div className="lg:col-span-12">
           <AnimatePresence mode="wait">
@@ -1727,6 +1777,7 @@ export default function GameSpinner() {
           )}
         </div>
       </div>
+      )}
 
       <ConfirmDialog
         isOpen={confirmReset}

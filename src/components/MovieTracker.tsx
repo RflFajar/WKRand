@@ -19,9 +19,11 @@ import {
   Tv,
   Filter,
   Check,
-  ChevronDown
+  ChevronDown,
+  Bookmark
 } from 'lucide-react';
 import ConfirmDialog from './ConfirmDialog';
+import MovieWishlist from './MovieWishlist';
 
 interface Movie {
   id: string;
@@ -136,6 +138,7 @@ export default function MovieTracker() {
   const [editPlatform, setEditPlatform] = useState('Netflix');
 
   // Filters state
+  const [activeSubTab, setActiveSubTab] = useState<'tracker' | 'wishlist'>('tracker');
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedFilterGenre, setSelectedFilterGenre] = useState('All');
   const [selectedFilterRating, setSelectedFilterRating] = useState<number | 'All'>('All');
@@ -472,8 +475,40 @@ export default function MovieTracker() {
         </div>
       </div>
 
-      {/* Main Grid: Form Left, Movie List & Filter Right */}
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+      {/* Sub-tab Switcher: Tracker vs Wishlist */}
+      <div className="flex border-b border-[#d4c9a8] dark:border-[#4b463e] mb-6 gap-2">
+        <button
+          onClick={() => {
+            setActiveSubTab('tracker');
+          }}
+          className={`px-5 py-2.5 font-display font-bold text-[11px] sm:text-xs uppercase tracking-wider border-t border-x rounded-t-[4px] -mb-[1px] transition-all cursor-pointer flex items-center gap-1.5 ${
+            activeSubTab === 'tracker'
+              ? 'bg-[#fdfaf2] dark:bg-[#2d2820] text-[#a23b2c] dark:text-[#ff816c] border-[#d4c9a8] dark:border-[#4b463e] border-b-[#fdfaf2] dark:border-b-[#2d2820] font-bold shadow-xs'
+              : 'bg-transparent text-stone-500 hover:text-stone-700 dark:hover:text-stone-300 border-transparent'
+          }`}
+        >
+          <Film className="w-3.5 h-3.5" />
+          <span>Arsip Sinema</span>
+        </button>
+        <button
+          onClick={() => {
+            setActiveSubTab('wishlist');
+          }}
+          className={`px-5 py-2.5 font-display font-bold text-[11px] sm:text-xs uppercase tracking-wider border-t border-x rounded-t-[4px] -mb-[1px] transition-all cursor-pointer flex items-center gap-1.5 ${
+            activeSubTab === 'wishlist'
+              ? 'bg-[#fdfaf2] dark:bg-[#2d2820] text-[#a23b2c] dark:text-[#ff816c] border-[#d4c9a8] dark:border-[#4b463e] border-b-[#fdfaf2] dark:border-b-[#2d2820] font-bold shadow-xs'
+              : 'bg-transparent text-stone-500 hover:text-stone-700 dark:hover:text-stone-300 border-transparent'
+          }`}
+        >
+          <Bookmark className="w-3.5 h-3.5" />
+          <span>Arsip Wishlist Film</span>
+        </button>
+      </div>
+
+      {activeSubTab === 'wishlist' ? (
+        <MovieWishlist />
+      ) : (
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
         
         {/* Left Side: Form Addition */}
         <div className="lg:col-span-4 bg-[#fdfaf2] dark:bg-[#2d2820] border border-[#d4c9a8] dark:border-[#4b463e] rounded-[4px] p-6 shadow-tactile space-y-5 sticky top-20 border-l-[3px] border-l-[#a23b2c] dark:border-l-[#ff816c]">
@@ -960,6 +995,7 @@ export default function MovieTracker() {
 
         </div>
       </div>
+      )}
 
       {/* Delete confirmation modal */}
       <ConfirmDialog 
