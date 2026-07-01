@@ -76,6 +76,7 @@ export default function MovieWishlist() {
   const [editingId, setEditingId] = useState<string | null>(null);
   const [title, setTitle] = useState('');
   const [genre, setGenre] = useState('');
+  const [error, setError] = useState<string | null>(null);
 
   // Search & Sort States
   const [search, setSearch] = useState('');
@@ -95,6 +96,16 @@ export default function MovieWishlist() {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!title.trim()) return;
+
+    const normalizedTitle = title.trim().toLowerCase();
+    const isDuplicate = wishlist.some(item => 
+      item.title.trim().toLowerCase() === normalizedTitle && item.id !== editingId
+    );
+
+    if (isDuplicate) {
+      setError('Film dengan judul tersebut sudah ada di daftar wishlist Anda!');
+      return;
+    }
 
     if (editingId) {
       // Edit
@@ -122,6 +133,7 @@ export default function MovieWishlist() {
   const resetForm = () => {
     setTitle('');
     setGenre('');
+    setError(null);
     setIsFormOpen(false);
     setEditingId(null);
   };
@@ -215,7 +227,10 @@ export default function MovieWishlist() {
                     required
                     placeholder="Contoh: Dune: Part Three"
                     value={title}
-                    onChange={(e) => setTitle(e.target.value)}
+                    onChange={(e) => {
+                      setTitle(e.target.value);
+                      if (error) setError(null);
+                    }}
                     className="w-full px-3 py-2 bg-[#fdfaf2] dark:bg-[#221e18] text-[#3d3527] dark:text-[#e8dcc4] border border-[#d4c9a8] dark:border-[#4b463e] rounded-[4px] text-xs focus:outline-none focus:border-[#a23b2c] dark:focus:border-[#ff816c]"
                   />
                 </div>
@@ -246,6 +261,12 @@ export default function MovieWishlist() {
                   </div>
                 </div>
               </div>
+
+              {error && (
+                <div className="text-[11px] font-mono font-bold text-[#a23b2c] dark:text-[#ff816c] bg-[#a23b2c]/10 dark:bg-[#ff816c]/10 px-3 py-2 rounded-[3px] border border-[#a23b2c]/20 dark:border-[#ff816c]/20 animate-pulse">
+                  {error}
+                </div>
+              )}
 
               <div className="flex justify-end gap-3 pt-2">
                 <button

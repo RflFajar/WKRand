@@ -95,6 +95,7 @@ export default function GameWishlist({}: GameWishlistProps) {
   const [name, setName] = useState('');
   const [genre, setGenre] = useState('');
   const [price, setPrice] = useState<string>('');
+  const [error, setError] = useState<string | null>(null);
 
   // Search & Sort States
   const [search, setSearch] = useState('');
@@ -114,6 +115,16 @@ export default function GameWishlist({}: GameWishlistProps) {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!name.trim()) return;
+
+    const normalizedName = name.trim().toLowerCase();
+    const isDuplicate = wishlist.some(item => 
+      item.name.trim().toLowerCase() === normalizedName && item.id !== editingId
+    );
+
+    if (isDuplicate) {
+      setError('Game dengan nama tersebut sudah ada di daftar wishlist Anda!');
+      return;
+    }
 
     const parsedPrice = price.trim() === '' ? 0 : parseFloat(price);
     const validPrice = isNaN(parsedPrice) || parsedPrice < 0 ? 0 : parsedPrice;
@@ -147,6 +158,7 @@ export default function GameWishlist({}: GameWishlistProps) {
     setName('');
     setGenre('');
     setPrice('');
+    setError(null);
     setIsFormOpen(false);
     setEditingId(null);
   };
@@ -250,7 +262,10 @@ export default function GameWishlist({}: GameWishlistProps) {
                     required
                     placeholder="Contoh: Black Myth: Wukong"
                     value={name}
-                    onChange={(e) => setName(e.target.value)}
+                    onChange={(e) => {
+                      setName(e.target.value);
+                      if (error) setError(null);
+                    }}
                     className="w-full px-3 py-2 bg-[#fdfaf2] dark:bg-[#221e18] text-[#3d3527] dark:text-[#e8dcc4] border border-[#d4c9a8] dark:border-[#4b463e] rounded-[4px] text-xs focus:outline-none focus:border-[#a23b2c] dark:focus:border-[#ff816c]"
                   />
                 </div>
@@ -297,6 +312,12 @@ export default function GameWishlist({}: GameWishlistProps) {
                   </div>
                 </div>
               </div>
+
+              {error && (
+                <div className="text-[11px] font-mono font-bold text-[#a23b2c] dark:text-[#ff816c] bg-[#a23b2c]/10 dark:bg-[#ff816c]/10 px-3 py-2 rounded-[3px] border border-[#a23b2c]/20 dark:border-[#ff816c]/20 animate-pulse">
+                  {error}
+                </div>
+              )}
 
               <div className="flex justify-end gap-3 pt-2">
                 <button
