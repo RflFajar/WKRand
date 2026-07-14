@@ -7,9 +7,10 @@ import ConfirmDialog from './ConfirmDialog';
 interface SpinHistoryProps {
   history: SpinResult[];
   onClearHistory: () => void;
+  onDeleteHistoryItem: (id: string) => void;
 }
 
-export default function SpinHistory({ history, onClearHistory }: SpinHistoryProps) {
+export default function SpinHistory({ history, onClearHistory, onDeleteHistoryItem }: SpinHistoryProps) {
   const [showConfirmClear, setShowConfirmClear] = useState(false);
 
   const formatIndonesianDate = (timestamp: number) => {
@@ -70,6 +71,7 @@ export default function SpinHistory({ history, onClearHistory }: SpinHistoryProp
                   <th className="py-3 px-6">Waktu Spin</th>
                   <th className="py-3 px-6">Kategori</th>
                   <th className="py-3 px-6">Game Terpilih</th>
+                  <th className="py-3 px-6 text-right">Aksi</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-[#d4c9a8]/30 dark:divide-[#4b463e]/30">
@@ -96,6 +98,15 @@ export default function SpinHistory({ history, onClearHistory }: SpinHistoryProp
                         {item.gameName}
                       </div>
                     </td>
+                    <td className="py-3 px-6 text-right">
+                      <button
+                        onClick={() => onDeleteHistoryItem(item.id)}
+                        className="p-1.5 text-stone-400 hover:text-rose-650 dark:hover:text-rose-400 transition cursor-pointer rounded-[3px] hover:bg-rose-500/10"
+                        title="Hapus dari Riwayat"
+                      >
+                        <Trash2 className="w-3.5 h-3.5" />
+                      </button>
+                    </td>
                   </tr>
                 ))}
               </tbody>
@@ -111,9 +122,18 @@ export default function SpinHistory({ history, onClearHistory }: SpinHistoryProp
                     <Calendar className="w-3 h-3" />
                     {formatIndonesianDate(item.timestamp)}
                   </span>
-                  <span className="bg-[#f2ede3] dark:bg-[#3d3527] border border-[#d4c9a8]/50 dark:border-[#4b463e]/50 px-1.5 py-0.5 rounded-[2px] text-[9px] font-display font-bold uppercase text-stone-550 dark:text-stone-350">
-                    {item.categoryName}
-                  </span>
+                  <div className="flex items-center gap-2">
+                    <span className="bg-[#f2ede3] dark:bg-[#3d3527] border border-[#d4c9a8]/50 dark:border-[#4b463e]/50 px-1.5 py-0.5 rounded-[2px] text-[9px] font-display font-bold uppercase text-stone-550 dark:text-stone-350">
+                      {item.categoryName}
+                    </span>
+                    <button
+                      onClick={() => onDeleteHistoryItem(item.id)}
+                      className="p-1 text-stone-400 hover:text-rose-600 dark:hover:text-rose-400 transition cursor-pointer rounded-[3px] hover:bg-rose-500/10"
+                      title="Hapus dari Riwayat"
+                    >
+                      <Trash2 className="w-3 h-3" />
+                    </button>
+                  </div>
                 </div>
                 <div className="flex items-center gap-2 text-[#a23b2c] dark:text-[#ff816c] font-display font-bold">
                   <Gamepad2 className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />

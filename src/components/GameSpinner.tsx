@@ -820,6 +820,14 @@ export default function GameSpinner() {
     localStorage.removeItem('spin_history');
   };
 
+  const handleDeleteSpinHistoryItem = (id: string) => {
+    setSpinHistory(prev => {
+      const updated = prev.filter(item => item.id !== id);
+      localStorage.setItem('spin_history', JSON.stringify(updated));
+      return updated;
+    });
+  };
+
   // Category & Game Management Functions
   const handleAddCategory = () => {
     if (!newCatName.trim()) return;
@@ -1761,6 +1769,7 @@ export default function GameSpinner() {
                         <SpinHistory 
                           history={spinHistory} 
                           onClearHistory={handleClearSpinHistory} 
+                          onDeleteHistoryItem={handleDeleteSpinHistoryItem}
                         />
                       ) : (
                         <SpinStats 
