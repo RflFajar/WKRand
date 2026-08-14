@@ -25,11 +25,12 @@ import {
   Upload,
   Bookmark
 } from 'lucide-react';
-import { GameCategory, GameItem, SpinResult } from '../types';
+import { GameCategory, GameItem, SpinResult, WishlistGame } from '../types';
 import ConfirmDialog from './ConfirmDialog';
 import SpinHistory from './SpinHistory';
 import SpinStats from './SpinStats';
 import GameWishlist from './GameWishlist';
+import SteamImportModal from './SteamImportModal';
 import { BarChart3 } from 'lucide-react';
 
 // Default categories and games
@@ -393,6 +394,7 @@ export default function GameSpinner() {
 
   // Management panel state
   const [showManager, setShowManager] = useState(false);
+  const [showSteamModal, setShowSteamModal] = useState(false);
   const [editCategoryIdx, setEditCategoryIdx] = useState<number | null>(null);
   const [newCatName, setNewCatName] = useState('');
   const [newCatColorIdx, setNewCatColorIdx] = useState(0);
@@ -949,6 +951,81 @@ export default function GameSpinner() {
     }
   };
 
+  const handleImportToCategory = (
+    categoryId: string, 
+    newGameNames: string[], 
+    newCategoryMeta?: { name: string; color: string }
+  ) => {
+    if (newCategoryMeta) {
+      const newCategory: GameCategory = {
+        id: categoryId,
+        name: newCategoryMeta.name,
+        color: newCategoryMeta.color,
+        textColor: newCategoryMeta.color,
+        borderColor: '#cbd5e1',
+        games: newGameNames.map((name, idx) => ({
+          id: `game-steam-${Date.now()}-${idx}-${Math.random().toString(36).substring(2, 6)}`,
+          name
+        }))
+      };
+      setCategories(prev => [...prev, newCategory]);
+      setToast({
+        message: `Berhasil membuat kategori "${newCategoryMeta.name}" dengan ${newGameNames.length} game!`,
+        type: 'success'
+      });
+    } else {
+      setCategories(prev => prev.map(cat => {
+        if (cat.id === categoryId) {
+          const existingNames = new Set(cat.games.map(g => g.name.trim().toLowerCase()));
+          const uniqueNewGames: GameItem[] = newGameNames
+            .filter(n => !existingNames.has(n.trim().toLowerCase()))
+            .map((n, idx) => ({
+              id: `game-steam-${Date.now()}-${idx}-${Math.random().toString(36).substring(2, 6)}`,
+              name: n
+            }));
+          
+          return {
+            ...cat,
+            games: [...cat.games, ...uniqueNewGames]
+          };
+        }
+        return cat;
+      }));
+      setToast({
+        message: `Berhasil menambahkan game ke kategori!`,
+        type: 'success'
+      });
+    }
+  };
+
+  const handleImportToWishlist = (games: { name: string; genre?: string }[]) => {
+    const saved = localStorage.getItem('game_wishlist');
+    let existing: WishlistGame[] = [];
+    if (saved) {
+      try {
+        existing = JSON.parse(saved);
+      } catch {}
+    }
+    const existingNames = new Set(existing.map(w => w.name.trim().toLowerCase()));
+    const newItems: WishlistGame[] = games
+      .filter(g => !existingNames.has(g.name.trim().toLowerCase()))
+      .map((g, idx) => ({
+        id: `wish-steam-${Date.now()}-${idx}-${Math.random().toString(36).substring(2, 6)}`,
+        name: g.name,
+        genre: g.genre || 'Steam Library',
+        price: 0,
+        addedAt: Date.now()
+      }));
+
+    localStorage.setItem('game_wishlist', JSON.stringify([...newItems, ...existing]));
+    window.dispatchEvent(new Event('app_data_changed'));
+    setToast({
+      message: `Berhasil menambahkan ${newItems.length} game ke Wishlist!`,
+      type: 'success'
+    });
+  };
+
+
   return (
     <div className="w-full max-w-5xl mx-auto py-4">
       {/* Toast Notification */}
@@ -1004,6 +1081,18 @@ export default function GameSpinner() {
         </div>
 
         <div className="flex items-center gap-2 w-full md:w-auto flex-wrap sm:flex-nowrap justify-start sm:justify-end">
+          {/* Steam Import Button */}
+          <button
+            onClick={() => setShowSteamModal(true)}
+            className="px-3.5 py-2 bg-[#1b2838] hover:bg-[#2a475e] dark:bg-[#66c0f4] dark:hover:bg-[#85cdfa] text-white dark:text-[#171a21] border border-[#1b2838] dark:border-[#66c0f4] rounded-[4px] font-display font-bold text-xs uppercase tracking-wider transition-all shadow-tactile-sm cursor-pointer flex items-center gap-2 shrink-0 active:scale-95"
+            title="Hubungkan Steam Library Anda atau impor daftar judul game secara massal"
+          >
+            <svg className="w-3.5 h-3.5 fill-current" viewBox="0 0 24 24">
+              <path d="M11.979 0C5.64 0 .463 4.908.032 11.144l6.095 2.515a3.46 3.46 0 0 1 1.954-.602c.18 0 .356.015.528.043l2.842-4.125a4.846 4.846 0 0 1-.072-.816C11.379 3.655 14.634.4 18.64.4c4.004 0 7.259 3.255 7.259 7.259 0 4.005-3.255 7.26-7.259 7.26-.067 0-.134-.002-.2-.005l-4.1 2.872a3.42 3.42 0 0 1 .059.615c0 1.916-1.554 3.47-3.47 3.47-1.748 0-3.192-1.29-3.434-2.977L1.68 16.48C3.42 20.916 7.733 24 12.78 24 18.977 24 24 18.977 24 12.78S18.977 0 11.979 0zm-3.81 18.94c0-.987.8-1.787 1.787-1.787.986 0 1.786.8 1.786 1.787 0 .986-.8 1.786-1.786 1.786-.987 0-1.787-.8-1.787-1.786zm10.471-13.88c-2.8 0-5.07 2.27-5.07 5.07 0 2.8 2.27 5.07 5.07 5.07 2.8 0 5.07-2.27 5.07-5.07 0-2.8-2.27-5.07-5.07-5.07zm0 1.902c1.75 0 3.169 1.418 3.169 3.168 0 1.75-1.419 3.168-3.169 3.168-1.75 0-3.168-1.418-3.168-3.168 0-1.75 1.418-3.168 3.168-3.168z" />
+            </svg>
+            <span>Impor Steam</span>
+          </button>
+
           {/* Sound toggle button */}
           <button
             onClick={() => setSoundEnabled(!soundEnabled)}
@@ -1305,6 +1394,16 @@ export default function GameSpinner() {
 
                 <div className="mt-8 border-t border-[#d4c9a8]/50 dark:border-[#4b463e]/50 pt-6 flex flex-col sm:flex-row justify-between items-center gap-4">
                   <div className="flex flex-col sm:flex-row items-center gap-2.5 w-full sm:w-auto">
+                    <button
+                      onClick={() => setShowSteamModal(true)}
+                      className="w-full sm:w-auto px-4 py-2.5 bg-[#1b2838] dark:bg-[#66c0f4] hover:bg-[#2a475e] dark:hover:bg-[#85cdfa] text-white dark:text-[#171a21] border border-[#1b2838] dark:border-[#66c0f4] rounded-[4px] font-display font-bold text-xs transition-all flex items-center justify-center gap-2 cursor-pointer shadow-sm"
+                      title="Impor game otomatis dari profil Steam atau tempel daftar judul secara massal"
+                    >
+                      <svg className="w-3.5 h-3.5 fill-current" viewBox="0 0 24 24">
+                        <path d="M11.979 0C5.64 0 .463 4.908.032 11.144l6.095 2.515a3.46 3.46 0 0 1 1.954-.602c.18 0 .356.015.528.043l2.842-4.125a4.846 4.846 0 0 1-.072-.816C11.379 3.655 14.634.4 18.64.4c4.004 0 7.259 3.255 7.259 7.259 0 4.005-3.255 7.26-7.259 7.26-.067 0-.134-.002-.2-.005l-4.1 2.872a3.42 3.42 0 0 1 .059.615c0 1.916-1.554 3.47-3.47 3.47-1.748 0-3.192-1.29-3.434-2.977L1.68 16.48C3.42 20.916 7.733 24 12.78 24 18.977 24 24 18.977 24 12.78S18.977 0 11.979 0zm-3.81 18.94c0-.987.8-1.787 1.787-1.787.986 0 1.786.8 1.786 1.787 0 .986-.8 1.786-1.786 1.786-.987 0-1.787-.8-1.787-1.786zm10.471-13.88c-2.8 0-5.07 2.27-5.07 5.07 0 2.8 2.27 5.07 5.07 5.07 2.8 0 5.07-2.27 5.07-5.07 0-2.8-2.27-5.07-5.07-5.07zm0 1.902c1.75 0 3.169 1.418 3.169 3.168 0 1.75-1.419 3.168-3.169 3.168-1.75 0-3.168-1.418-3.168-3.168 0-1.75 1.418-3.168 3.168-3.168z" />
+                      </svg>
+                      <span>Impor Steam / Massal</span>
+                    </button>
                     <button
                       onClick={handleExportConfig}
                       className="w-full sm:w-auto px-4 py-2.5 bg-[#f2ede3] dark:bg-[#3d3527] hover:bg-[#d4c9a8]/30 border border-[#d4c9a8] dark:border-[#4b463e] text-[#3d3527] dark:text-[#e8dcc4] rounded-[4px] font-display font-bold text-xs transition-all flex items-center justify-center gap-2 cursor-pointer shadow-sm"
@@ -1825,6 +1924,15 @@ export default function GameSpinner() {
           setPendingImportCategories(null);
         }}
       />
+
+      <SteamImportModal
+        isOpen={showSteamModal}
+        onClose={() => setShowSteamModal(false)}
+        categories={categories}
+        onImportToSpinnerCategory={handleImportToCategory}
+        onImportToWishlist={handleImportToWishlist}
+      />
     </div>
   );
 }
+
