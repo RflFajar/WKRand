@@ -14,8 +14,6 @@ import GameSpinner from './components/GameSpinner';
 import MovieTracker from './components/MovieTracker';
 import { ErrorBoundary } from './components/ErrorBoundary';
 import { HelpModal, LicenseModal, ArchiveModal } from './components/FooterModals';
-import { AuthProvider } from './context/AuthContext';
-import UserAccountButton from './components/UserAccountButton';
 
 export const ThemeContext = createContext<{
   theme: 'light' | 'dark';
@@ -29,9 +27,8 @@ export function useTheme() {
   return useContext(ThemeContext);
 }
 
-function MainApp() {
+export default function App() {
   const [activeTab, setActiveTab] = useState<'schedule' | 'game' | 'movies'>('schedule');
-  const [syncVersion, setSyncVersion] = useState(0);
   const [theme, setTheme] = useState<'light' | 'dark'>(() => {
     const saved = localStorage.getItem('theme');
     if (saved === 'light' || saved === 'dark') return saved;
@@ -80,15 +77,6 @@ function MainApp() {
     return () => clearInterval(interval);
   }, []);
 
-  // Listen to cloud sync events to refresh components
-  useEffect(() => {
-    const handleDataSynced = () => {
-      setSyncVersion(v => v + 1);
-    };
-    window.addEventListener('app_data_synced', handleDataSynced);
-    return () => window.removeEventListener('app_data_synced', handleDataSynced);
-  }, []);
-
   return (
     <ThemeContext.Provider value={{ theme, toggleTheme }}>
       <div className="min-h-screen bg-[#f5f0e6] dark:bg-[#221e18] font-sans text-[#3d3527] dark:text-[#e8dcc4] transition-colors duration-300 relative flex flex-col md:flex-row">
@@ -113,7 +101,7 @@ function MainApp() {
                 Dibuat dengan tinta & kertas • 2026
               </p>
             </div>
- 
+
             {/* Sidebar Navigation - Retro Index Card Tabs */}
             <nav className="flex flex-row md:flex-col gap-1.5 md:gap-2.5 w-full mt-5 overflow-x-auto md:overflow-visible pb-2 md:pb-0 scrollbar-none">
               <button
@@ -127,7 +115,7 @@ function MainApp() {
                 <Calendar className="w-3.5 h-3.5" />
                 <span>Harian</span>
               </button>
- 
+
               <button
                 onClick={() => setActiveTab('game')}
                 className={`flex-1 md:flex-initial text-center md:text-left px-3.5 py-2.5 rounded-[4px] font-display font-bold text-xs uppercase tracking-wider transition-all flex items-center justify-center md:justify-start gap-2.5 border cursor-pointer ${
@@ -139,7 +127,7 @@ function MainApp() {
                 <Gamepad2 className="w-3.5 h-3.5" />
                 <span>Game</span>
               </button>
- 
+
               <button
                 onClick={() => setActiveTab('movies')}
                 className={`flex-1 md:flex-initial text-center md:text-left px-3.5 py-2.5 rounded-[4px] font-display font-bold text-xs uppercase tracking-wider transition-all flex items-center justify-center md:justify-start gap-2.5 border cursor-pointer ${
@@ -208,7 +196,7 @@ function MainApp() {
         {/* Right Content Area */}
         <div className="flex-1 flex flex-col min-h-screen overflow-x-hidden relative dotted-bg">
           
-          {/* Subtle Ledger Top Divider Bar with User Account & Sync Control */}
+          {/* Subtle Ledger Top Divider Bar */}
           <header className="border-b border-[#d4c9a8] dark:border-[#4b463e] py-2.5 px-4 md:px-6 bg-[#fdfaf2] dark:bg-[#2d2820] flex items-center justify-between text-xs font-display shrink-0 sticky top-0 z-40 shadow-sm">
             <div className="flex items-center gap-3">
               <span className="tracking-widest uppercase font-bold text-[#3d3527]/80 dark:text-[#e8dcc4]/80 hidden sm:inline-block">
@@ -220,11 +208,6 @@ function MainApp() {
                 <span className={activeTab === 'movies' ? 'text-[#a23b2c] dark:text-[#ff816c] border-b-2 border-[#a23b2c] dark:border-[#ff816c] pb-0.5' : ''}>Film</span>
               </div>
             </div>
-
-            {/* Cloud User Account & Sync Button */}
-            <div className="flex items-center gap-2">
-              <UserAccountButton />
-            </div>
           </header>
 
           {/* Main Content Window */}
@@ -233,7 +216,7 @@ function MainApp() {
               <AnimatePresence mode="wait">
                 {activeTab === 'schedule' ? (
                   <motion.div
-                    key={`schedule-view-${syncVersion}`}
+                    key="schedule-view"
                     initial={{ opacity: 0, y: 15 }}
                     animate={{ opacity: 1, y: 0 }}
                     exit={{ opacity: 0, y: -15 }}
@@ -245,7 +228,7 @@ function MainApp() {
                   </motion.div>
                 ) : activeTab === 'game' ? (
                   <motion.div
-                    key={`game-view-${syncVersion}`}
+                    key="game-view"
                     initial={{ opacity: 0, y: 15 }}
                     animate={{ opacity: 1, y: 0 }}
                     exit={{ opacity: 0, y: -15 }}
@@ -257,7 +240,7 @@ function MainApp() {
                   </motion.div>
                 ) : (
                   <motion.div
-                    key={`movies-view-${syncVersion}`}
+                    key="movies-view"
                     initial={{ opacity: 0, y: 15 }}
                     animate={{ opacity: 1, y: 0 }}
                     exit={{ opacity: 0, y: -15 }}
@@ -294,14 +277,6 @@ function MainApp() {
       <LicenseModal isOpen={isLicenseOpen} onClose={() => setIsLicenseOpen(false)} />
       <ArchiveModal isOpen={isArchiveOpen} onClose={() => setIsArchiveOpen(false)} />
     </ThemeContext.Provider>
-  );
-}
-
-export default function App() {
-  return (
-    <AuthProvider>
-      <MainApp />
-    </AuthProvider>
   );
 }
 
