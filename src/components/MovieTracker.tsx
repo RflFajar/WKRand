@@ -109,6 +109,7 @@ export default function MovieTracker() {
   // Save to LocalStorage
   useEffect(() => {
     localStorage.setItem('watched_movies_hub', JSON.stringify(movies));
+    window.dispatchEvent(new Event('app_data_changed'));
   }, [movies]);
 
   // Form states

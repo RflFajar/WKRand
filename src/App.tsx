@@ -4,16 +4,18 @@ import {
   Sparkles, 
   Calendar, 
   Gamepad2, 
-  Sun,
-  Moon,
-  Activity,
-  Clapperboard
+  Sun, 
+  Moon, 
+  Activity, 
+  Clapperboard 
 } from 'lucide-react';
 import WeeklySchedule from './components/WeeklySchedule';
 import GameSpinner from './components/GameSpinner';
 import MovieTracker from './components/MovieTracker';
 import { ErrorBoundary } from './components/ErrorBoundary';
 import { HelpModal, LicenseModal, ArchiveModal } from './components/FooterModals';
+import { AuthProvider } from './context/AuthContext';
+import UserAccountButton from './components/UserAccountButton';
 
 export const ThemeContext = createContext<{
   theme: 'light' | 'dark';
@@ -27,8 +29,9 @@ export function useTheme() {
   return useContext(ThemeContext);
 }
 
-export default function App() {
+function MainApp() {
   const [activeTab, setActiveTab] = useState<'schedule' | 'game' | 'movies'>('schedule');
+  const [syncVersion, setSyncVersion] = useState(0);
   const [theme, setTheme] = useState<'light' | 'dark'>(() => {
     const saved = localStorage.getItem('theme');
     if (saved === 'light' || saved === 'dark') return saved;
@@ -75,6 +78,15 @@ export default function App() {
     };
     const interval = setInterval(updateRackCode, 30000);
     return () => clearInterval(interval);
+  }, []);
+
+  // Listen to cloud sync events to refresh components
+  useEffect(() => {
+    const handleDataSynced = () => {
+      setSyncVersion(v => v + 1);
+    };
+    window.addEventListener('app_data_synced', handleDataSynced);
+    return () => window.removeEventListener('app_data_synced', handleDataSynced);
   }, []);
 
   return (
@@ -146,7 +158,7 @@ export default function App() {
           <div className="mt-6 md:mt-auto pt-4 border-t border-[#d4c9a8] dark:border-[#4b463e] flex flex-col gap-3">
             <div className="flex items-center justify-between">
               <span className="text-[9px] font-display text-slate-400 dark:text-stone-500 font-bold uppercase tracking-wider">
-                PENERANGAN CABINET:
+                PENERANGAN:
               </span>
               <button
                 onClick={toggleTheme}
@@ -170,7 +182,6 @@ export default function App() {
                              document.getElementById('manage-games-btn');
                 }
 
-                // Fallback search if specific target not found
                 if (!targetEl) {
                   targetEl = document.getElementById('open-add-dialog') || 
                              document.getElementById('manage-activities-btn') || 
@@ -197,15 +208,22 @@ export default function App() {
         {/* Right Content Area */}
         <div className="flex-1 flex flex-col min-h-screen overflow-x-hidden relative dotted-bg">
           
-          {/* Subtle Ledger Top Divider Bar */}
-          <header className="border-b border-[#d4c9a8] dark:border-[#4b463e] py-3.5 px-6 bg-[#fdfaf2] dark:bg-[#2d2820] flex items-center justify-between text-xs font-display shrink-0 sticky top-0 z-40 shadow-sm">
-            <span className="tracking-widest uppercase font-bold text-[#3d3527]/70 dark:text-[#e8dcc4]/70">
-              Koleksi Kartu Pribadi
-            </span>
-            <div className="flex items-center gap-4 text-[10px] font-bold uppercase tracking-wider text-slate-400 dark:text-stone-500">
-              <span className={activeTab === 'schedule' ? 'text-[#a23b2c] dark:text-[#ff816c] border-b-2 border-[#a23b2c] dark:border-[#ff816c] pb-0.5' : ''}>Harian</span>
-              <span className={activeTab === 'game' ? 'text-[#a23b2c] dark:text-[#ff816c] border-b-2 border-[#a23b2c] dark:border-[#ff816c] pb-0.5' : ''}>Game</span>
-              <span className={activeTab === 'movies' ? 'text-[#a23b2c] dark:text-[#ff816c] border-b-2 border-[#a23b2c] dark:border-[#ff816c] pb-0.5' : ''}>Film</span>
+          {/* Subtle Ledger Top Divider Bar with User Account & Sync Control */}
+          <header className="border-b border-[#d4c9a8] dark:border-[#4b463e] py-2.5 px-4 md:px-6 bg-[#fdfaf2] dark:bg-[#2d2820] flex items-center justify-between text-xs font-display shrink-0 sticky top-0 z-40 shadow-sm">
+            <div className="flex items-center gap-3">
+              <span className="tracking-widest uppercase font-bold text-[#3d3527]/80 dark:text-[#e8dcc4]/80 hidden sm:inline-block">
+                Koleksi Kartu Pribadi
+              </span>
+              <div className="flex items-center gap-3 text-[10px] font-bold uppercase tracking-wider text-slate-400 dark:text-stone-500">
+                <span className={activeTab === 'schedule' ? 'text-[#a23b2c] dark:text-[#ff816c] border-b-2 border-[#a23b2c] dark:border-[#ff816c] pb-0.5' : ''}>Harian</span>
+                <span className={activeTab === 'game' ? 'text-[#a23b2c] dark:text-[#ff816c] border-b-2 border-[#a23b2c] dark:border-[#ff816c] pb-0.5' : ''}>Game</span>
+                <span className={activeTab === 'movies' ? 'text-[#a23b2c] dark:text-[#ff816c] border-b-2 border-[#a23b2c] dark:border-[#ff816c] pb-0.5' : ''}>Film</span>
+              </div>
+            </div>
+
+            {/* Cloud User Account & Sync Button */}
+            <div className="flex items-center gap-2">
+              <UserAccountButton />
             </div>
           </header>
 
@@ -215,7 +233,7 @@ export default function App() {
               <AnimatePresence mode="wait">
                 {activeTab === 'schedule' ? (
                   <motion.div
-                    key="schedule-view"
+                    key={`schedule-view-${syncVersion}`}
                     initial={{ opacity: 0, y: 15 }}
                     animate={{ opacity: 1, y: 0 }}
                     exit={{ opacity: 0, y: -15 }}
@@ -227,7 +245,7 @@ export default function App() {
                   </motion.div>
                 ) : activeTab === 'game' ? (
                   <motion.div
-                    key="game-view"
+                    key={`game-view-${syncVersion}`}
                     initial={{ opacity: 0, y: 15 }}
                     animate={{ opacity: 1, y: 0 }}
                     exit={{ opacity: 0, y: -15 }}
@@ -239,7 +257,7 @@ export default function App() {
                   </motion.div>
                 ) : (
                   <motion.div
-                    key="movies-view"
+                    key={`movies-view-${syncVersion}`}
                     initial={{ opacity: 0, y: 15 }}
                     animate={{ opacity: 1, y: 0 }}
                     exit={{ opacity: 0, y: -15 }}
@@ -278,3 +296,12 @@ export default function App() {
     </ThemeContext.Provider>
   );
 }
+
+export default function App() {
+  return (
+    <AuthProvider>
+      <MainApp />
+    </AuthProvider>
+  );
+}
+

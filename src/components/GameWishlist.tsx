@@ -87,6 +87,7 @@ export default function GameWishlist({}: GameWishlistProps) {
   // Local storage synchronization
   useEffect(() => {
     localStorage.setItem('game_wishlist', JSON.stringify(wishlist));
+    window.dispatchEvent(new Event('app_data_changed'));
   }, [wishlist]);
 
   // Form States

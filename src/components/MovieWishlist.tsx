@@ -69,6 +69,7 @@ export default function MovieWishlist() {
   // Local storage synchronization
   useEffect(() => {
     localStorage.setItem('movie_wishlist', JSON.stringify(wishlist));
+    window.dispatchEvent(new Event('app_data_changed'));
   }, [wishlist]);
 
   // Form States

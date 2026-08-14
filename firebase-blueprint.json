@@ -1,0 +1,44 @@
+{
+  "entities": {
+    "User": {
+      "title": "User Profile",
+      "description": "Registered user profile",
+      "type": "object",
+      "properties": {
+        "email": { "type": "string" },
+        "displayName": { "type": "string" },
+        "photoURL": { "type": "string" },
+        "createdAt": { "type": "string" },
+        "lastLogin": { "type": "string" }
+      },
+      "required": ["email"]
+    },
+    "UserData": {
+      "title": "User Application Data",
+      "description": "User synced data across modules",
+      "type": "object",
+      "properties": {
+        "weeklyActivities": { "type": "array" },
+        "weeklyScheduleSlots": { "type": "array" },
+        "gameCategories": { "type": "array" },
+        "spinHistory": { "type": "array" },
+        "gameWishlist": { "type": "array" },
+        "watchedMovies": { "type": "array" },
+        "movieWishlist": { "type": "array" },
+        "settings": { "type": "object" },
+        "updatedAt": { "type": "number" }
+      },
+      "required": ["updatedAt"]
+    }
+  },
+  "firestore": {
+    "/users/{userId}": {
+      "entity": "User",
+      "description": "User profile document"
+    },
+    "/users/{userId}/data/{docId}": {
+      "entity": "UserData",
+      "description": "User specific application state"
+    }
+  }
+}

@@ -323,19 +323,24 @@ export function ArchiveModal({ isOpen, onClose }: ArchiveModalProps) {
   const [showConfirmReset, setShowConfirmReset] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
+  const ALL_STORAGE_KEYS = [
+    'weekly_activities',
+    'weekly_schedule_slots',
+    'game_spinner_categories',
+    'spin_history',
+    'game_wishlist',
+    'watched_movies_hub',
+    'movie_wishlist',
+    'game_spinner_sound_enabled',
+    'theme',
+    'game_spinner_badge_dismissed',
+    'game_spinner_first_visit'
+  ];
+
   // Gathers data from localStorage
   const getDatabaseBackup = () => {
     const backup: Record<string, string | null> = {};
-    const keys = [
-      'weekly_activities',
-      'game_spinner_categories',
-      'spin_history',
-      'watched_movies_hub',
-      'game_spinner_sound_enabled',
-      'theme'
-    ];
-    
-    keys.forEach(key => {
+    ALL_STORAGE_KEYS.forEach(key => {
       backup[key] = localStorage.getItem(key);
     });
 
@@ -375,18 +380,8 @@ export function ArchiveModal({ isOpen, onClose }: ArchiveModalProps) {
           throw new Error('Format arsip tidak valid.');
         }
 
-        // Validate structure - check if at least one of our key stores is present (e.g. weekly_activities or watched_movies_hub)
-        const validKeys = [
-          'weekly_activities',
-          'game_spinner_categories',
-          'spin_history',
-          'watched_movies_hub',
-          'game_spinner_sound_enabled',
-          'theme'
-        ];
-
         let hasValidKey = false;
-        validKeys.forEach(key => {
+        ALL_STORAGE_KEYS.forEach(key => {
           if (key in parsedData) {
             hasValidKey = true;
           }
@@ -397,7 +392,7 @@ export function ArchiveModal({ isOpen, onClose }: ArchiveModalProps) {
         }
 
         // Write keys to localStorage
-        validKeys.forEach(key => {
+        ALL_STORAGE_KEYS.forEach(key => {
           if (parsedData[key] !== undefined && parsedData[key] !== null) {
             localStorage.setItem(key, parsedData[key]);
           }
@@ -427,14 +422,7 @@ export function ArchiveModal({ isOpen, onClose }: ArchiveModalProps) {
   // Handles Complete Database Wipe
   const handleFullReset = () => {
     // Clear all our database keys
-    const keys = [
-      'weekly_activities',
-      'game_spinner_categories',
-      'spin_history',
-      'watched_movies_hub',
-      'game_spinner_sound_enabled'
-    ];
-    keys.forEach(key => localStorage.removeItem(key));
+    ALL_STORAGE_KEYS.forEach(key => localStorage.removeItem(key));
     
     setImportStatus({
       type: 'success',

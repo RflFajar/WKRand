@@ -1,5 +1,6 @@
 {
   "name": "Multi-Spinner Decisions",
-  "description": "Weekly activity schedule generator and custom multi-level game spinner with category selectors.",
-  "requestFramePermissions": []
+  "description": "Weekly activity schedule generator, custom multi-level game spinner with category selectors, and cinema tracker with persistent storage.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
 }

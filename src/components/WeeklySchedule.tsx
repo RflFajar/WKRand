@@ -234,11 +234,32 @@ export default function WeeklySchedule() {
         shadow: act.shadow
       }));
       localStorage.setItem('weekly_activities', JSON.stringify(serialized));
+      window.dispatchEvent(new Event('app_data_changed'));
     }, 500);
     return () => clearTimeout(timer);
   }, [activities]);
 
-  const [schedule, setSchedule] = useState<(Activity | null)[]>(new Array(7).fill(null));
+  const [schedule, setSchedule] = useState<(Activity | null)[]>(() => {
+    const saved = localStorage.getItem('weekly_schedule_slots');
+    if (saved) {
+      try {
+        const parsed = JSON.parse(saved);
+        if (Array.isArray(parsed) && parsed.length === 7) {
+          return parsed.map((act: any) => {
+            if (!act) return null;
+            return {
+              ...act,
+              icon: getIconByName(act.iconName || 'Sparkles')
+            };
+          });
+        }
+      } catch (e) {
+        console.error('Failed to parse weekly_schedule_slots', e);
+      }
+    }
+    return new Array(7).fill(null);
+  });
+
   const [isSpinning, setIsSpinning] = useState(false);
   const [isSpinningSingleDay, setIsSpinningSingleDay] = useState(false);
   const [currentSpinningIndex, setCurrentSpinningIndex] = useState(-1);
@@ -249,6 +270,28 @@ export default function WeeklySchedule() {
   const [showDownloadDropdown, setShowDownloadDropdown] = useState(false);
   const [toast, setToast] = useState<{ message: string; type: 'success' | 'error' } | null>(null);
   const dropdownRef = useRef<HTMLDivElement>(null);
+
+  // Debounced auto-save of weekly schedule slots to localStorage
+  useEffect(() => {
+    if (isSpinning || isSpinningSingleDay) return;
+    const timer = setTimeout(() => {
+      const serialized = schedule.map(s => {
+        if (!s) return null;
+        return {
+          id: s.id,
+          name: s.name,
+          iconName: (s as any).iconName || 'Sparkles',
+          color: s.color,
+          textColor: s.textColor,
+          borderColor: s.borderColor,
+          shadow: s.shadow
+        };
+      });
+      localStorage.setItem('weekly_schedule_slots', JSON.stringify(serialized));
+      window.dispatchEvent(new Event('app_data_changed'));
+    }, 400);
+    return () => clearTimeout(timer);
+  }, [schedule, isSpinning, isSpinningSingleDay]);
 
   const [soundEnabled, setSoundEnabled] = useState<boolean>(() => {
     const saved = localStorage.getItem('game_spinner_sound_enabled');

@@ -299,6 +299,7 @@ export default function GameSpinner() {
     const handler = setTimeout(() => {
       try {
         localStorage.setItem('game_spinner_categories', JSON.stringify(categories));
+        window.dispatchEvent(new Event('app_data_changed'));
       } catch (e) {
         console.error('Gagal menulis ke localStorage:', e);
         setToast({
@@ -801,6 +802,7 @@ export default function GameSpinner() {
         setSpinHistory(prev => {
           const updated = [newResult, ...prev].slice(0, 50);
           localStorage.setItem('spin_history', JSON.stringify(updated));
+          window.dispatchEvent(new Event('app_data_changed'));
           return updated;
         });
       }
@@ -818,12 +820,14 @@ export default function GameSpinner() {
   const handleClearSpinHistory = () => {
     setSpinHistory([]);
     localStorage.removeItem('spin_history');
+    window.dispatchEvent(new Event('app_data_changed'));
   };
 
   const handleDeleteSpinHistoryItem = (id: string) => {
     setSpinHistory(prev => {
       const updated = prev.filter(item => item.id !== id);
       localStorage.setItem('spin_history', JSON.stringify(updated));
+      window.dispatchEvent(new Event('app_data_changed'));
       return updated;
     });
   };
