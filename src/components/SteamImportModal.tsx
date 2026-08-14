@@ -53,10 +53,12 @@ export default function SteamImportModal({
   onImportToSpinnerCategory,
   onImportToWishlist,
 }: SteamImportModalProps) {
-  const [activeTab, setActiveTab] = useState<'steam' | 'bulk'>('steam');
+  const [activeTab, setActiveTab] = useState<'steam' | 'bulk' | 'presets'>('steam');
   
   // Steam Form States
   const [steamInput, setSteamInput] = useState(() => localStorage.getItem('last_steam_input') || '');
+  const [steamApiKey, setSteamApiKey] = useState(() => localStorage.getItem('steam_web_api_key') || '');
+  const [showApiKeyInput, setShowApiKeyInput] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [isPrivateError, setIsPrivateError] = useState(false);
@@ -72,6 +74,10 @@ export default function SteamImportModal({
   const [steamGames, setSteamGames] = useState<SteamGameFetched[]>([]);
   const [selectedAppIds, setSelectedAppIds] = useState<Set<number>>(new Set());
 
+  // Presets State
+  const [selectedPresetGames, setSelectedPresetGames] = useState<Set<string>>(new Set());
+  const [selectedPresetCategory, setSelectedPresetCategory] = useState<string>('all');
+
   // Filter & Search
   const [searchFilter, setSearchFilter] = useState('');
   const [playtimeFilter, setPlaytimeFilter] = useState<'all' | 'played' | 'unplayed' | 'frequent'>('all');
@@ -84,6 +90,48 @@ export default function SteamImportModal({
 
   // Bulk Text State
   const [bulkText, setBulkText] = useState('');
+
+  // Preset Collections
+  const PRESET_GROUPS = useMemo(() => [
+    {
+      id: 'aaa',
+      name: '🔥 AAA & RPG Terlaris',
+      games: [
+        'Elden Ring', 'Baldur\'s Gate 3', 'Cyberpunk 2077', 'The Witcher 3: Wild Hunt',
+        'Red Dead Redemption 2', 'God of War', 'Black Myth: Wukong', 'Hogwarts Legacy',
+        'Monster Hunter: World', 'Grand Theft Auto V', 'Resident Evil 4', 'Sekiro: Shadows Die Twice',
+        'Dark Souls III', 'Final Fantasy VII Remake', 'Horizon Zero Dawn', 'Persona 5 Royal'
+      ]
+    },
+    {
+      id: 'indie',
+      name: '✨ Indie Masterpieces',
+      games: [
+        'Hades II', 'Hollow Knight', 'Balatro', 'Stardew Valley', 'Dead Cells',
+        'Slay the Spire', 'Celeste', 'Dave the Diver', 'Sea of Stars', 'Outer Wilds',
+        'Cult of the Lamb', 'Risk of Rain 2', 'Tunic', 'Ori and the Will of the Wisps',
+        'Disco Elysium', 'Undertale'
+      ]
+    },
+    {
+      id: 'coop',
+      name: '👥 Multiplayer & Co-op Seru',
+      games: [
+        'Helldivers 2', 'Palworld', 'Lethal Company', 'It Takes Two', 'Deep Rock Galactic',
+        'Valheim', 'Overcooked! 2', 'Terraria', 'Phasmophobia', 'Monster Hunter Rise',
+        'Left 4 Dead 2', 'Don\'t Starve Together', 'Raft', 'Peak', 'Content Warning'
+      ]
+    },
+    {
+      id: 'strategy',
+      name: '♟️ Strategi, Simulasi & Santai',
+      games: [
+        'Civilization VI', 'Cities: Skylines', 'Factorio', 'RimWorld', 'Age of Empires IV',
+        'Frostpunk', 'Manor Lords', 'Animal Crossing', 'Planet Zoo', 'The Sims 4',
+        'Dorfromantik', 'Unpacking', 'Euro Truck Simulator 2'
+      ]
+    }
+  ], []);
 
   // Fetch Steam Library from backend
   const handleFetchSteam = async (e?: React.FormEvent) => {
@@ -100,21 +148,41 @@ export default function SteamImportModal({
 
     try {
       localStorage.setItem('last_steam_input', cleanQuery);
-      const res = await fetch(`/api/steam/games?query=${encodeURIComponent(cleanQuery)}`);
-      const data = await res.json();
+      if (steamApiKey.trim()) {
+        localStorage.setItem('steam_web_api_key', steamApiKey.trim());
+      }
+
+      let url = `/api/steam/games?query=${encodeURIComponent(cleanQuery)}`;
+      if (steamApiKey.trim()) {
+        url += `&key=${encodeURIComponent(steamApiKey.trim())}`;
+      }
+
+      const res = await fetch(url);
+      const text = await res.text();
+
+      let data: any;
+      try {
+        data = JSON.parse(text);
+      } catch (parseErr) {
+        console.error('Server returned non-JSON response:', text);
+        setError('Server merespons dalam format tidak terduga. Silakan coba masukkan Steam API Key atau gunakan fitur "Paste Judul Massal".');
+        setLoading(false);
+        return;
+      }
 
       if (!res.ok || data.error) {
         setError(data.error || 'Gagal memuat profil Steam.');
-        if (data.isPrivate) {
+        if (data.isPrivate || data.needApiKey) {
           setIsPrivateError(true);
           setShowPrivacyGuide(true);
+          setShowApiKeyInput(true);
         }
         setFetchedUser(null);
         setSteamGames([]);
         return;
       }
 
-      if (data.games && Array.isArray(data.games)) {
+      if (data.games && Array.isArray(data.games) && data.games.length > 0) {
         setFetchedUser({
           displayName: data.displayName || cleanQuery,
           avatarUrl: data.avatarUrl,
@@ -125,7 +193,7 @@ export default function SteamImportModal({
         // Default select all games
         setSelectedAppIds(new Set(data.games.map((g: SteamGameFetched) => g.appId)));
       } else {
-        setError('Tidak ditemukan daftar game pada profil Steam ini.');
+        setError('Tidak ditemukan daftar game pada profil Steam ini. Pastikan profil Steam dan detail game diatur ke PUBLIK di pengaturan privasi Steam.');
       }
     } catch (err: any) {
       setError('Gagal menghubungi server: ' + (err.message || 'Error jaringan'));
@@ -184,16 +252,22 @@ export default function SteamImportModal({
         return;
       }
       gameNamesToImport = selected.map(g => g.name.trim()).filter(Boolean);
+    } else if (activeTab === 'presets') {
+      if (selectedPresetGames.size === 0) {
+        setError('Pilih minimal 1 game dari katalog preset.');
+        return;
+      }
+      gameNamesToImport = Array.from(selectedPresetGames);
     } else {
       // Bulk text import
       if (!bulkText.trim()) {
         setError('Harap masukkan atau tempel daftar judul game.');
         return;
       }
-      // Split by newlines or commas
+      // Split by newlines or commas and clean numbers/prefixes
       gameNamesToImport = bulkText
         .split(/\r?\n|,/)
-        .map(s => s.trim())
+        .map(s => s.replace(/^[-*•\d.)\s]+/, '').trim())
         .filter(s => s.length > 0);
     }
 
@@ -217,7 +291,7 @@ export default function SteamImportModal({
           .map(n => ({
             id: `wish-${Date.now()}-${Math.random().toString(36).substring(2, 6)}`,
             name: n,
-            genre: 'Steam Library',
+            genre: 'Steam / Game Library',
             price: 0,
             addedAt: Date.now()
           }));
@@ -228,7 +302,7 @@ export default function SteamImportModal({
     } else if (importTarget === 'new_cat') {
       const catId = `cat-steam-${Date.now()}`;
       onImportToSpinnerCategory(catId, gameNamesToImport, {
-        name: newCatName.trim() || 'Koleksi Steam',
+        name: newCatName.trim() || 'Koleksi Game',
         color: newCatColor
       });
     } else {
@@ -251,6 +325,33 @@ export default function SteamImportModal({
     } catch {}
 
     onClose();
+  };
+
+  // Helper for preset selection
+  const allFilteredPresetGames = useMemo(() => {
+    if (selectedPresetCategory === 'all') {
+      return PRESET_GROUPS.flatMap(g => g.games);
+    }
+    const group = PRESET_GROUPS.find(g => g.id === selectedPresetCategory);
+    return group ? group.games : [];
+  }, [PRESET_GROUPS, selectedPresetCategory]);
+
+  const handleTogglePresetGame = (gameName: string) => {
+    const next = new Set(selectedPresetGames);
+    if (next.has(gameName)) {
+      next.delete(gameName);
+    } else {
+      next.add(gameName);
+    }
+    setSelectedPresetGames(next);
+  };
+
+  const handleSelectAllPresets = () => {
+    if (selectedPresetGames.size === allFilteredPresetGames.length && allFilteredPresetGames.length > 0) {
+      setSelectedPresetGames(new Set());
+    } else {
+      setSelectedPresetGames(new Set(allFilteredPresetGames));
+    }
   };
 
   if (!isOpen) return null;
@@ -291,10 +392,10 @@ export default function SteamImportModal({
         </div>
 
         {/* Mode Selector Tabs */}
-        <div className="flex border-b border-[#d4c9a8]/50 dark:border-[#4b463e]/50 px-6 bg-[#fdfaf2] dark:bg-[#2d2820] text-xs font-display font-bold uppercase tracking-wider">
+        <div className="flex border-b border-[#d4c9a8]/50 dark:border-[#4b463e]/50 px-6 bg-[#fdfaf2] dark:bg-[#2d2820] text-xs font-display font-bold uppercase tracking-wider overflow-x-auto scrollbar-none">
           <button
             onClick={() => { setActiveTab('steam'); setError(null); }}
-            className={`py-3 px-4 flex items-center gap-2 border-b-2 transition cursor-pointer ${
+            className={`py-3 px-4 flex items-center gap-2 border-b-2 transition cursor-pointer whitespace-nowrap ${
               activeTab === 'steam'
                 ? 'border-[#a23b2c] dark:border-[#ff816c] text-[#a23b2c] dark:text-[#ff816c]'
                 : 'border-transparent text-stone-500 hover:text-stone-700 dark:hover:text-stone-300'
@@ -305,14 +406,25 @@ export default function SteamImportModal({
           </button>
           <button
             onClick={() => { setActiveTab('bulk'); setError(null); }}
-            className={`py-3 px-4 flex items-center gap-2 border-b-2 transition cursor-pointer ${
+            className={`py-3 px-4 flex items-center gap-2 border-b-2 transition cursor-pointer whitespace-nowrap ${
               activeTab === 'bulk'
                 ? 'border-[#a23b2c] dark:border-[#ff816c] text-[#a23b2c] dark:text-[#ff816c]'
                 : 'border-transparent text-stone-500 hover:text-stone-700 dark:hover:text-stone-300'
             }`}
           >
             <FileText size={14} />
-            <span>Paste Daftar Massal (Teks / CSV)</span>
+            <span>Tempel Daftar (Teks / CSV)</span>
+          </button>
+          <button
+            onClick={() => { setActiveTab('presets'); setError(null); }}
+            className={`py-3 px-4 flex items-center gap-2 border-b-2 transition cursor-pointer whitespace-nowrap ${
+              activeTab === 'presets'
+                ? 'border-[#a23b2c] dark:border-[#ff816c] text-[#a23b2c] dark:text-[#ff816c]'
+                : 'border-transparent text-stone-500 hover:text-stone-700 dark:hover:text-stone-300'
+            }`}
+          >
+            <Sparkles size={14} />
+            <span>Katalog Rekomendasi Game</span>
           </button>
         </div>
 
@@ -324,8 +436,8 @@ export default function SteamImportModal({
               <div className="flex-1 leading-relaxed">
                 <span className="font-bold">{error}</span>
                 {isPrivateError && (
-                  <div className="mt-2 text-[11px] text-rose-700 dark:text-rose-300/90">
-                    💡 Cara cepat: Buka profil Steam Anda &rarr; <strong>Edit Profile</strong> &rarr; <strong>Privacy Settings</strong> &rarr; set <strong>My Profile</strong> dan <strong>Game Details</strong> ke <strong>Public</strong>.
+                  <div className="mt-2 text-[11px] text-rose-700 dark:text-rose-300/90 space-y-1">
+                    <div>💡 <strong>Tips Cepat</strong>: Anda juga dapat menggunakan tab <strong>"Tempel Daftar (Teks / CSV)"</strong> di atas untuk menyalin langsung puluhan game dari Steam tanpa terhalang privasi!</div>
                   </div>
                 )}
               </div>
@@ -378,6 +490,46 @@ export default function SteamImportModal({
                       </>
                     )}
                   </button>
+                </div>
+
+                {/* Steam API Key Optional Collapsible */}
+                <div className="pt-1">
+                  <button
+                    type="button"
+                    onClick={() => setShowApiKeyInput(!showApiKeyInput)}
+                    className="text-[11px] text-stone-500 dark:text-stone-400 hover:text-[#a23b2c] dark:hover:text-[#ff816c] flex items-center gap-1 font-mono cursor-pointer"
+                  >
+                    <span>⚙️ Punya Steam Web API Key? (Opsional / 100% Akurat)</span>
+                    <span className="text-[10px]">{showApiKeyInput ? '▲ Tutup' : '▼ Buka'}</span>
+                  </button>
+
+                  {showApiKeyInput && (
+                    <div className="mt-2 p-3 bg-[#f5f0e6] dark:bg-[#221e18] rounded-[4px] border border-[#d4c9a8] dark:border-[#4b463e] space-y-2 text-xs">
+                      <div className="flex items-center justify-between">
+                        <span className="font-bold text-[11px] font-display uppercase tracking-wider text-stone-600 dark:text-stone-300">
+                          Steam Web API Key
+                        </span>
+                        <a
+                          href="https://steamcommunity.com/dev/apikey"
+                          target="_blank"
+                          rel="noreferrer"
+                          className="text-[#a23b2c] dark:text-[#ff816c] hover:underline text-[10px] flex items-center gap-0.5"
+                        >
+                          Dapatkan Key Gratis di Steam &rarr;
+                        </a>
+                      </div>
+                      <input
+                        type="password"
+                        placeholder="Tempel Steam Web API Key Anda di sini..."
+                        value={steamApiKey}
+                        onChange={(e) => setSteamApiKey(e.target.value)}
+                        className="w-full px-3 py-1.5 bg-[#fdfaf2] dark:bg-[#2d2820] border border-[#d4c9a8] dark:border-[#4b463e] rounded-[3px] text-xs font-mono"
+                      />
+                      <p className="text-[10px] text-stone-400">
+                        Steam Web API Key tersimpan aman di browser Anda dan memungkinkan penarikan data game tanpa batasan scraper Steam.
+                      </p>
+                    </div>
+                  )}
                 </div>
               </form>
 
@@ -560,16 +712,110 @@ export default function SteamImportModal({
                 </div>
               )}
             </div>
+          ) : activeTab === 'presets' ? (
+            /* Presets & Catalog Tab */
+            <div className="space-y-4">
+              <div className="flex flex-wrap items-center justify-between gap-2">
+                <div className="flex flex-wrap gap-1.5">
+                  <button
+                    type="button"
+                    onClick={() => setSelectedPresetCategory('all')}
+                    className={`text-[11px] font-display font-bold uppercase tracking-wider px-3 py-1.5 rounded-[3px] border cursor-pointer ${
+                      selectedPresetCategory === 'all'
+                        ? 'bg-[#3d3527] dark:bg-[#e8dcc4] text-white dark:text-[#221e18] border-[#3d3527]'
+                        : 'bg-transparent text-stone-600 dark:text-stone-400 border-[#d4c9a8] dark:border-[#4b463e]'
+                    }`}
+                  >
+                    Semua ({PRESET_GROUPS.flatMap(g => g.games).length})
+                  </button>
+                  {PRESET_GROUPS.map(g => (
+                    <button
+                      key={g.id}
+                      type="button"
+                      onClick={() => setSelectedPresetCategory(g.id)}
+                      className={`text-[11px] font-display font-bold uppercase tracking-wider px-3 py-1.5 rounded-[3px] border cursor-pointer ${
+                        selectedPresetCategory === g.id
+                          ? 'bg-[#3d3527] dark:bg-[#e8dcc4] text-white dark:text-[#221e18] border-[#3d3527]'
+                          : 'bg-transparent text-stone-600 dark:text-stone-400 border-[#d4c9a8] dark:border-[#4b463e]'
+                      }`}
+                    >
+                      {g.name}
+                    </button>
+                  ))}
+                </div>
+
+                <button
+                  type="button"
+                  onClick={handleSelectAllPresets}
+                  className="text-[11px] font-display font-bold uppercase text-[#a23b2c] dark:text-[#ff816c] hover:underline cursor-pointer flex items-center gap-1"
+                >
+                  {selectedPresetGames.size === allFilteredPresetGames.length && allFilteredPresetGames.length > 0 ? (
+                    <>
+                      <Square size={13} />
+                      <span>Batal Semua</span>
+                    </>
+                  ) : (
+                    <>
+                      <CheckSquare size={13} />
+                      <span>Pilih Semua ({allFilteredPresetGames.length})</span>
+                    </>
+                  )}
+                </button>
+              </div>
+
+              {/* Preset Games Grid */}
+              <div className="border border-[#d4c9a8] dark:border-[#4b463e] rounded-[4px] p-2 bg-[#f5f0e6] dark:bg-[#221e18] max-h-72 overflow-y-auto grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-2">
+                {allFilteredPresetGames.map((gameName) => {
+                  const isSelected = selectedPresetGames.has(gameName);
+                  return (
+                    <div
+                      key={gameName}
+                      onClick={() => handleTogglePresetGame(gameName)}
+                      className={`p-2 rounded-[4px] border transition cursor-pointer flex items-center gap-2.5 select-none ${
+                        isSelected
+                          ? 'bg-[#fdfaf2] dark:bg-[#2d2820] border-[#a23b2c] dark:border-[#ff816c] shadow-xs'
+                          : 'bg-[#fdfaf2]/60 dark:bg-[#2d2820]/40 border-transparent hover:border-[#d4c9a8] opacity-75'
+                      }`}
+                    >
+                      <div className={`w-4 h-4 rounded-[2px] flex items-center justify-center shrink-0 border ${
+                        isSelected 
+                          ? 'bg-[#a23b2c] dark:bg-[#ff816c] border-[#a23b2c] text-white dark:text-[#221e18]' 
+                          : 'border-stone-400 bg-transparent'
+                      }`}>
+                        {isSelected && <Check size={12} />}
+                      </div>
+                      <span className="text-xs font-bold text-[#3d3527] dark:text-[#e8dcc4] truncate" title={gameName}>
+                        {gameName}
+                      </span>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
           ) : (
             /* Bulk Text Import Tab */
             <div className="space-y-4">
+              {/* Quick Steam Copy Guide */}
+              <div className="bg-[#f5f0e6] dark:bg-[#221e18] p-3.5 rounded-[4px] border border-[#d4c9a8] dark:border-[#4b463e] text-xs space-y-1.5 text-stone-600 dark:text-stone-300">
+                <div className="font-display font-bold uppercase text-[10px] text-stone-500 tracking-wider flex items-center gap-1.5">
+                  <Sparkles size={12} className="text-[#a23b2c] dark:text-[#ff816c]" />
+                  <span>Cara Copy Cepat Seluruh Game dari Aplikasi Steam (100% Berhasil):</span>
+                </div>
+                <ol className="list-decimal list-inside space-y-1 text-[11px] leading-relaxed text-stone-600 dark:text-stone-400">
+                  <li>Buka aplikasi <strong>Steam di Komputer</strong> &rarr; pilih tab <strong>Library</strong>.</li>
+                  <li>Ubah tampilan ke <strong>View as List</strong> (ikon baris daftar).</li>
+                  <li>Tekan <span className="font-mono bg-stone-200 dark:bg-stone-800 px-1 rounded">Ctrl + A</span> lalu <span className="font-mono bg-stone-200 dark:bg-stone-800 px-1 rounded">Ctrl + C</span> untuk menyalin daftar nama game.</li>
+                  <li>Tempelkan (<span className="font-mono bg-stone-200 dark:bg-stone-800 px-1 rounded">Ctrl + V</span>) pada kolom di bawah. Sistem akan membersihkan formatnya otomatis!</li>
+                </ol>
+              </div>
+
               <div>
                 <label className="text-[10px] font-display font-bold uppercase tracking-wider text-stone-500 dark:text-stone-400 block mb-1">
                   Tempel Daftar Judul Game (Satu baris per game, atau dipisah koma)
                 </label>
                 <textarea
-                  rows={8}
-                  placeholder={`Contoh:\nElden Ring\nCyberpunk 2077\nHades II\nHollow Knight\nBaldur's Gate 3\nPersona 5 Royal`}
+                  rows={7}
+                  placeholder={`Contoh:\nElden Ring\nCyberpunk 2077\nHades II\nHollow Knight\nBaldur's Gate 3\nPersona 5 Royal\nGrand Theft Auto V`}
                   value={bulkText}
                   onChange={(e) => {
                     setBulkText(e.target.value);
@@ -585,7 +831,7 @@ export default function SteamImportModal({
           )}
 
           {/* Destination Target Configuration */}
-          {(fetchedUser || activeTab === 'bulk') && (
+          {(fetchedUser || activeTab === 'bulk' || activeTab === 'presets') && (
             <div className="bg-[#f5f0e6] dark:bg-[#252019] p-4 rounded-[4px] border border-[#d4c9a8] dark:border-[#4b463e] space-y-4">
               <div className="text-[10px] font-display font-bold uppercase tracking-wider text-stone-500 flex items-center gap-1.5">
                 <FolderPlus size={13} className="text-[#a23b2c] dark:text-[#ff816c]" />
@@ -716,6 +962,7 @@ export default function SteamImportModal({
             onClick={handleExecuteImport}
             disabled={
               (activeTab === 'steam' && selectedAppIds.size === 0) ||
+              (activeTab === 'presets' && selectedPresetGames.size === 0) ||
               (activeTab === 'bulk' && !bulkText.trim())
             }
             className="px-6 py-2.5 bg-[#a23b2c] hover:bg-[#8f3224] dark:bg-[#ff816c] dark:hover:bg-[#f8654d] text-white dark:text-[#171a21] font-display font-bold text-xs uppercase tracking-widest rounded-[4px] border border-[#a23b2c] dark:border-[#ff816c] shadow-sm transition disabled:opacity-40 cursor-pointer flex items-center gap-2"
@@ -724,6 +971,8 @@ export default function SteamImportModal({
             <span>
               {activeTab === 'steam'
                 ? `Impor ${selectedAppIds.size} Game Terpilih`
+                : activeTab === 'presets'
+                ? `Impor ${selectedPresetGames.size} Game Rekomendasi`
                 : 'Impor Daftar Game'}
             </span>
           </button>

@@ -88,12 +88,14 @@ function parseSteamXmlGames(xmlText: string) {
 // Steam API Handler
 app.get('/api/steam/games', async (req: Request, res: Response): Promise<void> => {
   const query = (req.query.id as string || req.query.query as string || '').trim();
+  const userApiKey = (req.query.key as string || req.headers['x-steam-key'] as string || '').trim();
+  const apiKey = userApiKey || process.env.STEAM_API_KEY;
+
   if (!query) {
-    res.status(400).json({ error: 'Harap masukkan Steam ID, URL profil, atau username Steam.' });
+    res.status(400).json({ error: 'Harap masukkan Steam ID, URL profil, atau username Steam Anda.' });
     return;
   }
 
-  const apiKey = process.env.STEAM_API_KEY;
   const target = extractSteamIdentifier(query);
 
   try {
@@ -112,11 +114,11 @@ app.get('/api/steam/games', async (req: Request, res: Response): Promise<void> =
           }
         }
       } catch (err) {
-        console.warn('ResolveVanityURL API failed, trying community XML fallback', err);
+        console.warn('ResolveVanityURL API failed:', err);
       }
     }
 
-    // Step 2: If we have SteamID64 and API key, call GetOwnedGames
+    // Step 2: If we have SteamID64 and API key, call GetOwnedGames directly
     if (steamId64 && apiKey) {
       try {
         const [gamesRes, summaryRes] = await Promise.all([
@@ -155,11 +157,11 @@ app.get('/api/steam/games', async (req: Request, res: Response): Promise<void> =
           }
         }
       } catch (apiErr) {
-        console.warn('Steam Web API call failed, attempting XML community fallback:', apiErr);
+        console.warn('Steam Web API call failed, falling back to XML:', apiErr);
       }
     }
 
-    // Step 3: Community XML Fallback (works for public profiles without requiring API key)
+    // Step 3: Community XML Fallback
     const xmlUrl = target.type === 'steamid'
       ? `https://steamcommunity.com/profiles/${target.value}/games?xml=1`
       : `https://steamcommunity.com/id/${encodeURIComponent(target.value)}/games?xml=1`;
@@ -171,28 +173,33 @@ app.get('/api/steam/games', async (req: Request, res: Response): Promise<void> =
       }
     });
 
-    if (!xmlFetch.ok) {
-      res.status(404).json({
-        error: `Profil Steam "${query}" tidak ditemukan atau server Steam tidak merespons.`
+    const xmlContent = await xmlFetch.text();
+
+    // Check if Steam returned an HTML login or private page
+    if (xmlContent.includes('<!DOCTYPE html>') || xmlContent.includes('<title>Sign In</title>') || xmlContent.includes('The specified profile could not be found')) {
+      res.status(400).json({
+        error: 'Steam membatasi akses profil ini atau profil tidak ditemukan. Pastikan profil Steam & Game Details diatur ke PUBLIK di pengaturan privasi Steam, atau masukkan Steam Web API Key Anda di bawah.',
+        isPrivate: true,
+        needApiKey: true
       });
       return;
     }
 
-    const xmlContent = await xmlFetch.text();
     const parsed = parseSteamXmlGames(xmlContent);
 
     if (parsed.error === 'private') {
       res.status(403).json({
-        error: 'Profil Steam ini disetel ke mode PRIVAT. Harap ubah setelan privasi profil & Game Details di Steam menjadi PUBLIK terlebih dahulu untuk mengimpor library.',
+        error: 'Profil Steam ini disetel ke mode PRIVAT. Harap ubah setelan privasi profil & Game Details di Steam menjadi PUBLIK terlebih dahulu.',
         isPrivate: true
       });
       return;
     }
 
     if (!parsed.games || parsed.games.length === 0) {
-      res.status(404).json({
-        error: 'Tidak ditemukan daftar game pada profil Steam ini. Pastikan profil Steam dan detail game disetel ke PUBLIK di pengaturan privasi Steam.',
-        isPrivate: true
+      res.status(400).json({
+        error: 'Tidak ditemukan daftar game pada profil Steam ini. Pastikan profil Steam dan Game Details diatur ke PUBLIK di pengaturan privasi Steam, atau masukkan Steam Web API Key Anda.',
+        isPrivate: true,
+        needApiKey: true
       });
       return;
     }
@@ -214,7 +221,7 @@ app.get('/api/steam/games', async (req: Request, res: Response): Promise<void> =
   } catch (err: any) {
     console.error('Steam fetching error:', err);
     res.status(500).json({
-      error: 'Terjadi kegagalan saat mengambil data dari Steam: ' + (err.message || 'Error internal server')
+      error: 'Gagal mengambil data dari Steam: ' + (err.message || 'Terjadi kesalahan jaringan')
     });
   }
 });
