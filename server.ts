@@ -9,7 +9,7 @@ app.use(express.json());
 
 // Helper function to extract or resolve Steam ID64
 function extractSteamIdentifier(input: string): { type: 'steamid' | 'vanity'; value: string } {
-  const cleanInput = input.trim();
+  let cleanInput = input.trim().replace(/\/+$/, '');
 
   // Match full profile URL
   const profileUrlMatch = cleanInput.match(/steamcommunity\.com\/profiles\/(\d{17})/i);
@@ -18,18 +18,26 @@ function extractSteamIdentifier(input: string): { type: 'steamid' | 'vanity'; va
   }
 
   // Match vanity URL
-  const vanityUrlMatch = cleanInput.match(/steamcommunity\.com\/id\/([a-zA-Z0-9_-]+)/i);
+  const vanityUrlMatch = cleanInput.match(/steamcommunity\.com\/id\/([a-zA-Z0-9_.-]+)/i);
   if (vanityUrlMatch) {
     return { type: 'vanity', value: vanityUrlMatch[1] };
   }
 
   // Match standalone 17-digit SteamID64
+  const standaloneMatch = cleanInput.match(/\b(7656119\d{10})\b/);
+  if (standaloneMatch) {
+    return { type: 'steamid', value: standaloneMatch[1] };
+  }
   if (/^\d{17}$/.test(cleanInput)) {
     return { type: 'steamid', value: cleanInput };
   }
 
-  // Otherwise assume vanity username
-  return { type: 'vanity', value: cleanInput.replace(/[^a-zA-Z0-9_-]/g, '') };
+  // Otherwise extract clean username
+  const cleanUsername = cleanInput
+    .replace(/^https?:\/\/(www\.)?steamcommunity\.com\/(id\/|profiles\/)?/i, '')
+    .replace(/[^a-zA-Z0-9_.-]/g, '');
+
+  return { type: 'vanity', value: cleanUsername };
 }
 
 // XML parser helper for Steam Community XML

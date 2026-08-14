@@ -1,4 +1,4 @@
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useRef } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { 
   X, 
@@ -15,7 +15,12 @@ import {
   Clock, 
   Sparkles,
   Layers,
-  FileText
+  FileText,
+  Upload,
+  Wand2,
+  Key,
+  ArrowRight,
+  RefreshCw
 } from 'lucide-react';
 import confetti from 'canvas-confetti';
 import { GameCategory, GameItem, WishlistGame } from '../types';
@@ -77,6 +82,7 @@ export default function SteamImportModal({
   // Presets State
   const [selectedPresetGames, setSelectedPresetGames] = useState<Set<string>>(new Set());
   const [selectedPresetCategory, setSelectedPresetCategory] = useState<string>('all');
+  const [presetSearchTerm, setPresetSearchTerm] = useState('');
 
   // Filter & Search
   const [searchFilter, setSearchFilter] = useState('');
@@ -90,6 +96,7 @@ export default function SteamImportModal({
 
   // Bulk Text State
   const [bulkText, setBulkText] = useState('');
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   // Preset Collections
   const PRESET_GROUPS = useMemo(() => [
@@ -157,15 +164,24 @@ export default function SteamImportModal({
         url += `&key=${encodeURIComponent(steamApiKey.trim())}`;
       }
 
-      const res = await fetch(url);
+      let res: Response;
+      try {
+        res = await fetch(url);
+      } catch (fetchErr: any) {
+        setError('Tidak dapat menghubungi server API. Silakan coba metode "Tempel Daftar (Teks / CSV)" atau gunakan "Katalog Rekomendasi Game".');
+        setLoading(false);
+        return;
+      }
+
       const text = await res.text();
 
       let data: any;
       try {
         data = JSON.parse(text);
-      } catch (parseErr) {
-        console.error('Server returned non-JSON response:', text);
-        setError('Server merespons dalam format tidak terduga. Silakan coba masukkan Steam API Key atau gunakan fitur "Paste Judul Massal".');
+      } catch {
+        setError('Server Steam atau jaringan sedang membatasi pengambilan otomatis (karena proteksi privasi Steam). Silakan gunakan tab "Tempel Daftar (Teks / CSV)" atau "Katalog Rekomendasi Game" di atas.');
+        setIsPrivateError(true);
+        setShowApiKeyInput(true);
         setLoading(false);
         return;
       }
@@ -193,10 +209,12 @@ export default function SteamImportModal({
         // Default select all games
         setSelectedAppIds(new Set(data.games.map((g: SteamGameFetched) => g.appId)));
       } else {
-        setError('Tidak ditemukan daftar game pada profil Steam ini. Pastikan profil Steam dan detail game diatur ke PUBLIK di pengaturan privasi Steam.');
+        setError('Tidak ditemukan daftar game pada profil Steam ini. Pastikan profil Steam dan detail game diatur ke PUBLIK di pengaturan privasi Steam, atau masukkan Steam Web API Key Anda.');
+        setIsPrivateError(true);
+        setShowApiKeyInput(true);
       }
     } catch (err: any) {
-      setError('Gagal menghubungi server: ' + (err.message || 'Error jaringan'));
+      setError('Terjadi kendala saat membaca data: Silakan gunakan tab "Tempel Daftar (Teks / CSV)" untuk mengimpor dengan 100% lancar.');
     } finally {
       setLoading(false);
     }
@@ -329,12 +347,20 @@ export default function SteamImportModal({
 
   // Helper for preset selection
   const allFilteredPresetGames = useMemo(() => {
+    let list: string[] = [];
     if (selectedPresetCategory === 'all') {
-      return PRESET_GROUPS.flatMap(g => g.games);
+      list = PRESET_GROUPS.flatMap(g => g.games);
+    } else {
+      const group = PRESET_GROUPS.find(g => g.id === selectedPresetCategory);
+      list = group ? group.games : [];
     }
-    const group = PRESET_GROUPS.find(g => g.id === selectedPresetCategory);
-    return group ? group.games : [];
-  }, [PRESET_GROUPS, selectedPresetCategory]);
+
+    if (presetSearchTerm.trim()) {
+      const term = presetSearchTerm.toLowerCase().trim();
+      list = list.filter(name => name.toLowerCase().includes(term));
+    }
+    return list;
+  }, [PRESET_GROUPS, selectedPresetCategory, presetSearchTerm]);
 
   const handleTogglePresetGame = (gameName: string) => {
     const next = new Set(selectedPresetGames);
@@ -352,6 +378,55 @@ export default function SteamImportModal({
     } else {
       setSelectedPresetGames(new Set(allFilteredPresetGames));
     }
+  };
+
+  // Bulk cleaning & sample helpers
+  const handleCleanBulkText = () => {
+    if (!bulkText.trim()) return;
+    const cleaned = bulkText
+      .split(/\r?\n/)
+      .map(line => {
+        // Strip numbered list e.g. "1.", "1 -", "•", "-", etc.
+        let s = line.replace(/^[-*•\d.)\s]+/, '').trim();
+        // Strip trailing hours or status e.g. "(12.5 hrs)" or "[Installed]"
+        s = s.replace(/\s*\(\d+(\.\d+)?\s*(hrs|jam|hours|minutes|min)?\)\s*$/i, '');
+        s = s.replace(/\s*\[(installed|ready|terpasang)\]\s*$/i, '');
+        return s.trim();
+      })
+      .filter(s => s.length > 0)
+      .join('\n');
+
+    setBulkText(cleaned);
+  };
+
+  const handleInsertSampleGames = () => {
+    const samples = [
+      'Elden Ring',
+      'Cyberpunk 2077',
+      'Baldur\'s Gate 3',
+      'Hades II',
+      'Hollow Knight',
+      'Monster Hunter: World',
+      'Balatro',
+      'Grand Theft Auto V',
+      'Persona 5 Royal',
+      'The Witcher 3: Wild Hunt'
+    ].join('\n');
+    setBulkText(samples);
+  };
+
+  const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    const reader = new FileReader();
+    reader.onload = (event) => {
+      const content = event.target?.result as string;
+      if (content) {
+        setBulkText(content);
+      }
+    };
+    reader.readAsText(file);
   };
 
   if (!isOpen) return null;
@@ -431,15 +506,54 @@ export default function SteamImportModal({
         {/* Scrollable Modal Body */}
         <div className="flex-1 overflow-y-auto p-6 space-y-6">
           {error && (
-            <div className="p-3.5 rounded-[4px] bg-rose-50 dark:bg-rose-950/40 border border-rose-200 dark:border-rose-800 text-rose-800 dark:text-rose-300 text-xs flex items-start gap-2.5">
-              <AlertCircle size={16} className="shrink-0 mt-0.5 text-rose-600 dark:text-rose-400" />
-              <div className="flex-1 leading-relaxed">
-                <span className="font-bold">{error}</span>
-                {isPrivateError && (
-                  <div className="mt-2 text-[11px] text-rose-700 dark:text-rose-300/90 space-y-1">
-                    <div>💡 <strong>Tips Cepat</strong>: Anda juga dapat menggunakan tab <strong>"Tempel Daftar (Teks / CSV)"</strong> di atas untuk menyalin langsung puluhan game dari Steam tanpa terhalang privasi!</div>
-                  </div>
-                )}
+            <div className="p-4 rounded-[4px] bg-rose-50 dark:bg-rose-950/40 border border-rose-200 dark:border-rose-800 text-rose-800 dark:text-rose-300 text-xs space-y-3">
+              <div className="flex items-start gap-2.5">
+                <AlertCircle size={16} className="shrink-0 mt-0.5 text-rose-600 dark:text-rose-400" />
+                <div className="flex-1 leading-relaxed">
+                  <span className="font-bold">{error}</span>
+                  {isPrivateError && (
+                    <div className="mt-1 text-[11px] text-rose-700/90 dark:text-rose-300/80">
+                      Steam membutuhkan pengaturan profil & game publik atau pembatasan jaringan bot. Anda dapat menggunakan metode alternatif di bawah:
+                    </div>
+                  )}
+                </div>
+              </div>
+
+              {/* Quick Tab Jump Buttons */}
+              <div className="flex flex-wrap gap-2 pt-1 border-t border-rose-200/60 dark:border-rose-800/60">
+                <button
+                  type="button"
+                  onClick={() => {
+                    setActiveTab('bulk');
+                    setError(null);
+                  }}
+                  className="px-3 py-1.5 bg-rose-600 hover:bg-rose-700 text-white rounded-[3px] font-display font-bold uppercase text-[10px] tracking-wider flex items-center gap-1 cursor-pointer transition shadow-xs"
+                >
+                  <FileText size={12} />
+                  <span>Gunakan Tempel Daftar (100% Berhasil)</span>
+                  <ArrowRight size={12} />
+                </button>
+                <button
+                  type="button"
+                  onClick={() => {
+                    setActiveTab('presets');
+                    setError(null);
+                  }}
+                  className="px-3 py-1.5 bg-stone-700 hover:bg-stone-800 dark:bg-stone-700 dark:hover:bg-stone-600 text-white rounded-[3px] font-display font-bold uppercase text-[10px] tracking-wider flex items-center gap-1 cursor-pointer transition shadow-xs"
+                >
+                  <Sparkles size={12} />
+                  <span>Pilih dari Rekomendasi Game</span>
+                </button>
+                <button
+                  type="button"
+                  onClick={() => {
+                    setShowApiKeyInput(true);
+                  }}
+                  className="px-3 py-1.5 bg-transparent border border-rose-300 dark:border-rose-700 hover:bg-rose-100 dark:hover:bg-rose-900/30 text-rose-800 dark:text-rose-200 rounded-[3px] font-display font-bold uppercase text-[10px] tracking-wider flex items-center gap-1 cursor-pointer transition"
+                >
+                  <Key size={12} />
+                  <span>Input Steam API Key</span>
+                </button>
               </div>
             </div>
           )}
@@ -715,39 +829,32 @@ export default function SteamImportModal({
           ) : activeTab === 'presets' ? (
             /* Presets & Catalog Tab */
             <div className="space-y-4">
-              <div className="flex flex-wrap items-center justify-between gap-2">
-                <div className="flex flex-wrap gap-1.5">
-                  <button
-                    type="button"
-                    onClick={() => setSelectedPresetCategory('all')}
-                    className={`text-[11px] font-display font-bold uppercase tracking-wider px-3 py-1.5 rounded-[3px] border cursor-pointer ${
-                      selectedPresetCategory === 'all'
-                        ? 'bg-[#3d3527] dark:bg-[#e8dcc4] text-white dark:text-[#221e18] border-[#3d3527]'
-                        : 'bg-transparent text-stone-600 dark:text-stone-400 border-[#d4c9a8] dark:border-[#4b463e]'
-                    }`}
-                  >
-                    Semua ({PRESET_GROUPS.flatMap(g => g.games).length})
-                  </button>
-                  {PRESET_GROUPS.map(g => (
+              <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-2.5">
+                {/* Search in Presets */}
+                <div className="relative flex-1 max-w-xs">
+                  <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-stone-400" />
+                  <input
+                    type="text"
+                    placeholder="Cari judul game di katalog..."
+                    value={presetSearchTerm}
+                    onChange={(e) => setPresetSearchTerm(e.target.value)}
+                    className="w-full pl-8.5 pr-3 py-1.5 bg-[#f5f0e6] dark:bg-[#221e18] border border-[#d4c9a8] dark:border-[#4b463e] rounded-[3px] text-xs font-mono focus:outline-none focus:border-[#a23b2c] dark:focus:border-[#ff816c]"
+                  />
+                  {presetSearchTerm && (
                     <button
-                      key={g.id}
                       type="button"
-                      onClick={() => setSelectedPresetCategory(g.id)}
-                      className={`text-[11px] font-display font-bold uppercase tracking-wider px-3 py-1.5 rounded-[3px] border cursor-pointer ${
-                        selectedPresetCategory === g.id
-                          ? 'bg-[#3d3527] dark:bg-[#e8dcc4] text-white dark:text-[#221e18] border-[#3d3527]'
-                          : 'bg-transparent text-stone-600 dark:text-stone-400 border-[#d4c9a8] dark:border-[#4b463e]'
-                      }`}
+                      onClick={() => setPresetSearchTerm('')}
+                      className="absolute right-2.5 top-1/2 -translate-y-1/2 text-stone-400 hover:text-stone-600 dark:hover:text-stone-200 text-xs"
                     >
-                      {g.name}
+                      ×
                     </button>
-                  ))}
+                  )}
                 </div>
 
                 <button
                   type="button"
                   onClick={handleSelectAllPresets}
-                  className="text-[11px] font-display font-bold uppercase text-[#a23b2c] dark:text-[#ff816c] hover:underline cursor-pointer flex items-center gap-1"
+                  className="text-[11px] font-display font-bold uppercase text-[#a23b2c] dark:text-[#ff816c] hover:underline cursor-pointer flex items-center gap-1.5 self-end sm:self-auto"
                 >
                   {selectedPresetGames.size === allFilteredPresetGames.length && allFilteredPresetGames.length > 0 ? (
                     <>
@@ -763,33 +870,68 @@ export default function SteamImportModal({
                 </button>
               </div>
 
+              {/* Category Badges */}
+              <div className="flex flex-wrap gap-1.5">
+                <button
+                  type="button"
+                  onClick={() => setSelectedPresetCategory('all')}
+                  className={`text-[11px] font-display font-bold uppercase tracking-wider px-3 py-1.5 rounded-[3px] border cursor-pointer transition ${
+                    selectedPresetCategory === 'all'
+                      ? 'bg-[#3d3527] dark:bg-[#e8dcc4] text-white dark:text-[#221e18] border-[#3d3527]'
+                      : 'bg-transparent text-stone-600 dark:text-stone-400 border-[#d4c9a8] dark:border-[#4b463e] hover:bg-stone-200/50'
+                  }`}
+                >
+                  Semua Kategori ({PRESET_GROUPS.flatMap(g => g.games).length})
+                </button>
+                {PRESET_GROUPS.map(g => (
+                  <button
+                    key={g.id}
+                    type="button"
+                    onClick={() => setSelectedPresetCategory(g.id)}
+                    className={`text-[11px] font-display font-bold uppercase tracking-wider px-3 py-1.5 rounded-[3px] border cursor-pointer transition ${
+                      selectedPresetCategory === g.id
+                        ? 'bg-[#3d3527] dark:bg-[#e8dcc4] text-white dark:text-[#221e18] border-[#3d3527]'
+                        : 'bg-transparent text-stone-600 dark:text-stone-400 border-[#d4c9a8] dark:border-[#4b463e] hover:bg-stone-200/50'
+                    }`}
+                  >
+                    {g.name}
+                  </button>
+                ))}
+              </div>
+
               {/* Preset Games Grid */}
               <div className="border border-[#d4c9a8] dark:border-[#4b463e] rounded-[4px] p-2 bg-[#f5f0e6] dark:bg-[#221e18] max-h-72 overflow-y-auto grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-2">
-                {allFilteredPresetGames.map((gameName) => {
-                  const isSelected = selectedPresetGames.has(gameName);
-                  return (
-                    <div
-                      key={gameName}
-                      onClick={() => handleTogglePresetGame(gameName)}
-                      className={`p-2 rounded-[4px] border transition cursor-pointer flex items-center gap-2.5 select-none ${
-                        isSelected
-                          ? 'bg-[#fdfaf2] dark:bg-[#2d2820] border-[#a23b2c] dark:border-[#ff816c] shadow-xs'
-                          : 'bg-[#fdfaf2]/60 dark:bg-[#2d2820]/40 border-transparent hover:border-[#d4c9a8] opacity-75'
-                      }`}
-                    >
-                      <div className={`w-4 h-4 rounded-[2px] flex items-center justify-center shrink-0 border ${
-                        isSelected 
-                          ? 'bg-[#a23b2c] dark:bg-[#ff816c] border-[#a23b2c] text-white dark:text-[#221e18]' 
-                          : 'border-stone-400 bg-transparent'
-                      }`}>
-                        {isSelected && <Check size={12} />}
+                {allFilteredPresetGames.length === 0 ? (
+                  <div className="col-span-full py-8 text-center text-xs text-stone-400 font-mono">
+                    Tidak ditemukan game yang cocok dengan "{presetSearchTerm}".
+                  </div>
+                ) : (
+                  allFilteredPresetGames.map((gameName) => {
+                    const isSelected = selectedPresetGames.has(gameName);
+                    return (
+                      <div
+                        key={gameName}
+                        onClick={() => handleTogglePresetGame(gameName)}
+                        className={`p-2 rounded-[4px] border transition cursor-pointer flex items-center gap-2.5 select-none ${
+                          isSelected
+                            ? 'bg-[#fdfaf2] dark:bg-[#2d2820] border-[#a23b2c] dark:border-[#ff816c] shadow-xs'
+                            : 'bg-[#fdfaf2]/60 dark:bg-[#2d2820]/40 border-transparent hover:border-[#d4c9a8] opacity-75'
+                        }`}
+                      >
+                        <div className={`w-4 h-4 rounded-[2px] flex items-center justify-center shrink-0 border ${
+                          isSelected 
+                            ? 'bg-[#a23b2c] dark:bg-[#ff816c] border-[#a23b2c] text-white dark:text-[#221e18]' 
+                            : 'border-stone-400 bg-transparent'
+                        }`}>
+                          {isSelected && <Check size={12} />}
+                        </div>
+                        <span className="text-xs font-bold text-[#3d3527] dark:text-[#e8dcc4] truncate" title={gameName}>
+                          {gameName}
+                        </span>
                       </div>
-                      <span className="text-xs font-bold text-[#3d3527] dark:text-[#e8dcc4] truncate" title={gameName}>
-                        {gameName}
-                      </span>
-                    </div>
-                  );
-                })}
+                    );
+                  })
+                )}
               </div>
             </div>
           ) : (
@@ -799,20 +941,56 @@ export default function SteamImportModal({
               <div className="bg-[#f5f0e6] dark:bg-[#221e18] p-3.5 rounded-[4px] border border-[#d4c9a8] dark:border-[#4b463e] text-xs space-y-1.5 text-stone-600 dark:text-stone-300">
                 <div className="font-display font-bold uppercase text-[10px] text-stone-500 tracking-wider flex items-center gap-1.5">
                   <Sparkles size={12} className="text-[#a23b2c] dark:text-[#ff816c]" />
-                  <span>Cara Copy Cepat Seluruh Game dari Aplikasi Steam (100% Berhasil):</span>
+                  <span>Cara Salin Cepat Seluruh Library dari Aplikasi Steam di PC (100% Berhasil):</span>
                 </div>
                 <ol className="list-decimal list-inside space-y-1 text-[11px] leading-relaxed text-stone-600 dark:text-stone-400">
-                  <li>Buka aplikasi <strong>Steam di Komputer</strong> &rarr; pilih tab <strong>Library</strong>.</li>
-                  <li>Ubah tampilan ke <strong>View as List</strong> (ikon baris daftar).</li>
-                  <li>Tekan <span className="font-mono bg-stone-200 dark:bg-stone-800 px-1 rounded">Ctrl + A</span> lalu <span className="font-mono bg-stone-200 dark:bg-stone-800 px-1 rounded">Ctrl + C</span> untuk menyalin daftar nama game.</li>
-                  <li>Tempelkan (<span className="font-mono bg-stone-200 dark:bg-stone-800 px-1 rounded">Ctrl + V</span>) pada kolom di bawah. Sistem akan membersihkan formatnya otomatis!</li>
+                  <li>Buka aplikasi <strong>Steam di Komputer</strong> &rarr; buka tab <strong>Library</strong>.</li>
+                  <li>Ubah tampilan library ke <strong>View as List</strong> (ikon baris daftar).</li>
+                  <li>Tekan <span className="font-mono bg-stone-200 dark:bg-stone-800 px-1 rounded">Ctrl + A</span> lalu <span className="font-mono bg-stone-200 dark:bg-stone-800 px-1 rounded">Ctrl + C</span> untuk menyalin seluruh nama game.</li>
+                  <li>Tempelkan (<span className="font-mono bg-stone-200 dark:bg-stone-800 px-1 rounded">Ctrl + V</span>) di bawah, lalu klik tombol <strong>"Bersihkan Format"</strong>!</li>
                 </ol>
               </div>
 
               <div>
-                <label className="text-[10px] font-display font-bold uppercase tracking-wider text-stone-500 dark:text-stone-400 block mb-1">
-                  Tempel Daftar Judul Game (Satu baris per game, atau dipisah koma)
-                </label>
+                <div className="flex flex-wrap items-center justify-between gap-2 mb-1.5">
+                  <label className="text-[10px] font-display font-bold uppercase tracking-wider text-stone-500 dark:text-stone-400 block">
+                    Tempel Daftar Judul Game (Satu baris per judul)
+                  </label>
+                  <div className="flex flex-wrap items-center gap-1.5">
+                    <button
+                      type="button"
+                      onClick={handleInsertSampleGames}
+                      className="text-[10px] font-mono px-2 py-1 bg-stone-200 dark:bg-stone-800 hover:bg-stone-300 dark:hover:bg-stone-700 rounded-[2px] text-stone-700 dark:text-stone-300 flex items-center gap-1 cursor-pointer"
+                    >
+                      <Sparkles size={10} />
+                      <span>Isi Contoh Game</span>
+                    </button>
+                    <button
+                      type="button"
+                      onClick={handleCleanBulkText}
+                      className="text-[10px] font-mono px-2 py-1 bg-amber-100 dark:bg-amber-950/60 hover:bg-amber-200 border border-amber-300 dark:border-amber-800 rounded-[2px] text-amber-800 dark:text-amber-300 flex items-center gap-1 cursor-pointer"
+                    >
+                      <Wand2 size={10} />
+                      <span>Bersihkan Format & Nomor</span>
+                    </button>
+                    <input
+                      ref={fileInputRef}
+                      type="file"
+                      accept=".txt,.csv"
+                      onChange={handleFileUpload}
+                      className="hidden"
+                    />
+                    <button
+                      type="button"
+                      onClick={() => fileInputRef.current?.click()}
+                      className="text-[10px] font-mono px-2 py-1 bg-stone-200 dark:bg-stone-800 hover:bg-stone-300 dark:hover:bg-stone-700 rounded-[2px] text-stone-700 dark:text-stone-300 flex items-center gap-1 cursor-pointer"
+                    >
+                      <Upload size={10} />
+                      <span>Unggah File .txt/.csv</span>
+                    </button>
+                  </div>
+                </div>
+
                 <textarea
                   rows={7}
                   placeholder={`Contoh:\nElden Ring\nCyberpunk 2077\nHades II\nHollow Knight\nBaldur's Gate 3\nPersona 5 Royal\nGrand Theft Auto V`}
@@ -823,8 +1001,17 @@ export default function SteamImportModal({
                   }}
                   className="w-full p-3 bg-[#f5f0e6] dark:bg-[#221e18] border border-[#d4c9a8] dark:border-[#4b463e] rounded-[4px] text-xs font-mono focus:outline-none focus:border-[#a23b2c] dark:focus:border-[#ff816c]"
                 />
-                <div className="text-[11px] text-stone-400 font-mono mt-1">
-                  {bulkText.split(/\r?\n|,/).filter(s => s.trim()).length} game terdeteksi
+                <div className="flex items-center justify-between text-[11px] text-stone-400 font-mono mt-1">
+                  <span>{bulkText.split(/\r?\n|,/).filter(s => s.trim()).length} game terdeteksi</span>
+                  {bulkText && (
+                    <button
+                      type="button"
+                      onClick={() => setBulkText('')}
+                      className="text-rose-600 dark:text-rose-400 hover:underline cursor-pointer"
+                    >
+                      Hapus Teks
+                    </button>
+                  )}
                 </div>
               </div>
             </div>
