@@ -3,15 +3,14 @@ import { motion, AnimatePresence } from 'motion/react';
 import { 
   Sparkles, 
   Calendar, 
-  Gamepad2, 
   Sun, 
   Moon, 
-  Activity, 
-  Clapperboard 
+  HelpCircle,
+  Archive,
+  FileText,
+  ListTodo
 } from 'lucide-react';
 import WeeklySchedule from './components/WeeklySchedule';
-import GameSpinner from './components/GameSpinner';
-import MovieTracker from './components/MovieTracker';
 import { ErrorBoundary } from './components/ErrorBoundary';
 import { HelpModal, LicenseModal, ArchiveModal } from './components/FooterModals';
 
@@ -28,7 +27,6 @@ export function useTheme() {
 }
 
 export default function App() {
-  const [activeTab, setActiveTab] = useState<'schedule' | 'game' | 'movies'>('schedule');
   const [theme, setTheme] = useState<'light' | 'dark'>(() => {
     const saved = localStorage.getItem('theme');
     if (saved === 'light' || saved === 'dark') return saved;
@@ -91,53 +89,52 @@ export default function App() {
                   Rak {rackCode}
                 </span>
                 <span className="text-[9px] font-display text-slate-400 dark:text-stone-500 font-bold tracking-widest">
-                  CATALOG CABINET
+                  AKTIVITAS HARIAN
                 </span>
               </div>
               <h2 className="text-md font-display font-bold tracking-tight text-[#3d3527] dark:text-[#e8dcc4] mt-2 uppercase">
-                Katalog Kehidupan
+                Perencana Aktivitas
               </h2>
               <p className="text-[10px] font-display text-slate-400 dark:text-stone-500 leading-tight">
-                Dibuat dengan tinta & kertas • 2026
+                Jadwal & Pengacak Rutinitas Harian • 2026
               </p>
             </div>
 
-            {/* Sidebar Navigation - Retro Index Card Tabs */}
-            <nav className="flex flex-row md:flex-col gap-1.5 md:gap-2.5 w-full mt-5 overflow-x-auto md:overflow-visible pb-2 md:pb-0 scrollbar-none">
+            {/* Sidebar Quick Navigation & Actions */}
+            <nav className="flex flex-col gap-2 w-full mt-5">
+              <div className="px-3.5 py-2.5 rounded-[4px] font-display font-bold text-xs uppercase tracking-wider bg-[#3d3527] dark:bg-[#e8dcc4] text-[#fdfaf2] dark:text-[#221e18] border-[#3d3527] dark:border-[#e8dcc4] border-l-[4px] border-l-[#a23b2c] dark:border-l-[#ff816c] shadow-xs flex items-center gap-2.5">
+                <Calendar className="w-4 h-4 text-[#ff816c] dark:text-[#a23b2c]" />
+                <span>Jadwal Aktivitas</span>
+              </div>
+
               <button
-                onClick={() => setActiveTab('schedule')}
-                className={`flex-1 md:flex-initial text-center md:text-left px-3.5 py-2.5 rounded-[4px] font-display font-bold text-xs uppercase tracking-wider transition-all flex items-center justify-center md:justify-start gap-2.5 border cursor-pointer ${
-                  activeTab === 'schedule'
-                    ? 'bg-[#3d3527] dark:bg-[#e8dcc4] text-[#fdfaf2] dark:text-[#221e18] border-[#3d3527] dark:border-[#e8dcc4] border-l-[4px] border-l-[#a23b2c] dark:border-l-[#ff816c] shadow-xs'
-                    : 'bg-transparent text-slate-600 dark:text-stone-400 border-transparent hover:bg-[#f2ede3]/60 dark:hover:bg-[#32302a]/60'
-                }`}
+                onClick={() => {
+                  const targetEl = document.getElementById('manage-activities-btn');
+                  if (targetEl) {
+                    targetEl.click();
+                    targetEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                  }
+                }}
+                className="text-left px-3.5 py-2.5 rounded-[4px] font-display font-bold text-xs uppercase tracking-wider text-slate-600 dark:text-stone-400 hover:bg-[#f2ede3]/60 dark:hover:bg-[#32302a]/60 border border-transparent transition cursor-pointer flex items-center gap-2.5"
               >
-                <Calendar className="w-3.5 h-3.5" />
-                <span>Harian</span>
+                <ListTodo className="w-3.5 h-3.5" />
+                <span>Kelola Aktivitas</span>
               </button>
 
               <button
-                onClick={() => setActiveTab('game')}
-                className={`flex-1 md:flex-initial text-center md:text-left px-3.5 py-2.5 rounded-[4px] font-display font-bold text-xs uppercase tracking-wider transition-all flex items-center justify-center md:justify-start gap-2.5 border cursor-pointer ${
-                  activeTab === 'game'
-                    ? 'bg-[#3d3527] dark:bg-[#e8dcc4] text-[#fdfaf2] dark:text-[#221e18] border-[#3d3527] dark:border-[#e8dcc4] border-l-[4px] border-l-[#a23b2c] dark:border-l-[#ff816c] shadow-xs'
-                    : 'bg-transparent text-slate-600 dark:text-stone-400 border-transparent hover:bg-[#f2ede3]/60 dark:hover:bg-[#32302a]/60'
-                }`}
+                onClick={() => setIsArchiveOpen(true)}
+                className="text-left px-3.5 py-2.5 rounded-[4px] font-display font-bold text-xs uppercase tracking-wider text-slate-600 dark:text-stone-400 hover:bg-[#f2ede3]/60 dark:hover:bg-[#32302a]/60 border border-transparent transition cursor-pointer flex items-center gap-2.5"
               >
-                <Gamepad2 className="w-3.5 h-3.5" />
-                <span>Game</span>
+                <Archive className="w-3.5 h-3.5" />
+                <span>Pusat Cadangan</span>
               </button>
 
               <button
-                onClick={() => setActiveTab('movies')}
-                className={`flex-1 md:flex-initial text-center md:text-left px-3.5 py-2.5 rounded-[4px] font-display font-bold text-xs uppercase tracking-wider transition-all flex items-center justify-center md:justify-start gap-2.5 border cursor-pointer ${
-                  activeTab === 'movies'
-                    ? 'bg-[#3d3527] dark:bg-[#e8dcc4] text-[#fdfaf2] dark:text-[#221e18] border-[#3d3527] dark:border-[#e8dcc4] border-l-[4px] border-l-[#a23b2c] dark:border-l-[#ff816c] shadow-xs'
-                    : 'bg-transparent text-slate-600 dark:text-stone-400 border-transparent hover:bg-[#f2ede3]/60 dark:hover:bg-[#32302a]/60'
-                }`}
+                onClick={() => setIsHelpOpen(true)}
+                className="text-left px-3.5 py-2.5 rounded-[4px] font-display font-bold text-xs uppercase tracking-wider text-slate-600 dark:text-stone-400 hover:bg-[#f2ede3]/60 dark:hover:bg-[#32302a]/60 border border-transparent transition cursor-pointer flex items-center gap-2.5"
               >
-                <Clapperboard className="w-3.5 h-3.5" />
-                <span>Film</span>
+                <HelpCircle className="w-3.5 h-3.5" />
+                <span>Buku Panduan</span>
               </button>
             </nav>
           </div>
@@ -160,35 +157,15 @@ export default function App() {
             {/* Vintage Rubber Stamp Button */}
             <button
               onClick={() => {
-                let targetEl: HTMLElement | null = null;
-                if (activeTab === 'movies') {
-                  targetEl = document.getElementById('open-add-dialog');
-                } else if (activeTab === 'schedule') {
-                  targetEl = document.getElementById('manage-activities-btn');
-                } else if (activeTab === 'game') {
-                  targetEl = document.getElementById('add-wishlist-btn') || 
-                             document.getElementById('manage-games-btn');
-                }
-
-                if (!targetEl) {
-                  targetEl = document.getElementById('open-add-dialog') || 
-                             document.getElementById('manage-activities-btn') || 
-                             document.getElementById('manage-games-btn') ||
-                             document.querySelector('input[placeholder*="Interstellar"]');
-                }
-
+                const targetEl = document.getElementById('manage-activities-btn');
                 if (targetEl) {
-                  if (targetEl.tagName === 'INPUT') {
-                    (targetEl as HTMLInputElement).focus();
-                  } else {
-                    (targetEl as HTMLButtonElement).click();
-                  }
+                  targetEl.click();
                   targetEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
                 }
               }}
-              className="w-full py-2.5 bg-[#a23b2c] hover:bg-[#8f3224] dark:bg-[#ff816c] dark:hover:bg-[#f8654d] text-white dark:text-[#221e18] font-display font-bold text-xs uppercase tracking-widest rounded-[4px] border border-[#a23b2c] dark:border-[#ff816c] shadow-[2px_2px_0px_#3d3527] dark:shadow-[2px_2px_0px_#11100d] transition duration-200 hover:translate-y-0.5 active:translate-y-1 active:shadow-none"
+              className="w-full py-2.5 bg-[#a23b2c] hover:bg-[#8f3224] dark:bg-[#ff816c] dark:hover:bg-[#f8654d] text-white dark:text-[#221e18] font-display font-bold text-xs uppercase tracking-widest rounded-[4px] border border-[#a23b2c] dark:border-[#ff816c] shadow-[2px_2px_0px_#3d3527] dark:shadow-[2px_2px_0px_#11100d] transition duration-200 hover:translate-y-0.5 active:translate-y-1 active:shadow-none cursor-pointer"
             >
-              {activeTab === 'schedule' ? 'KELOLA AKTIVITAS' : activeTab === 'game' ? 'KELOLA GAME' : 'TAMBAH KARTU'}
+              KELOLA AKTIVITAS
             </button>
           </div>
         </aside>
@@ -199,59 +176,21 @@ export default function App() {
           {/* Subtle Ledger Top Divider Bar */}
           <header className="border-b border-[#d4c9a8] dark:border-[#4b463e] py-2.5 px-4 md:px-6 bg-[#fdfaf2] dark:bg-[#2d2820] flex items-center justify-between text-xs font-display shrink-0 sticky top-0 z-40 shadow-sm">
             <div className="flex items-center gap-3">
-              <span className="tracking-widest uppercase font-bold text-[#3d3527]/80 dark:text-[#e8dcc4]/80 hidden sm:inline-block">
-                Koleksi Kartu Pribadi
+              <span className="tracking-widest uppercase font-bold text-[#3d3527]/80 dark:text-[#e8dcc4]/80">
+                Jadwal & Pengacak Aktivitas Harian
               </span>
-              <div className="flex items-center gap-3 text-[10px] font-bold uppercase tracking-wider text-slate-400 dark:text-stone-500">
-                <span className={activeTab === 'schedule' ? 'text-[#a23b2c] dark:text-[#ff816c] border-b-2 border-[#a23b2c] dark:border-[#ff816c] pb-0.5' : ''}>Harian</span>
-                <span className={activeTab === 'game' ? 'text-[#a23b2c] dark:text-[#ff816c] border-b-2 border-[#a23b2c] dark:border-[#ff816c] pb-0.5' : ''}>Game</span>
-                <span className={activeTab === 'movies' ? 'text-[#a23b2c] dark:text-[#ff816c] border-b-2 border-[#a23b2c] dark:border-[#ff816c] pb-0.5' : ''}>Film</span>
-              </div>
+            </div>
+            <div className="flex items-center gap-2">
+              <span className="text-[10px] font-mono text-slate-400 dark:text-stone-500 font-bold">
+                SENIN — MINGGU
+              </span>
             </div>
           </header>
 
           {/* Main Content Window */}
           <main className="flex-1 p-4 md:p-8 max-w-6xl w-full mx-auto relative z-10">
-            <ErrorBoundary errorMessage="Gagal memuat konten utama aplikasi Multi-Spinner Hub. Silakan reload atau bersihkan sisa cache data lokal Anda.">
-              <AnimatePresence mode="wait">
-                {activeTab === 'schedule' ? (
-                  <motion.div
-                    key="schedule-view"
-                    initial={{ opacity: 0, y: 15 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0, y: -15 }}
-                    transition={{ duration: 0.25, ease: 'easeInOut' }}
-                  >
-                    <ErrorBoundary errorMessage="Terjadi kesalahan saat memuat modul Jadwal Mingguan kegiatan. Silakan muat ulang halaman.">
-                      <WeeklySchedule />
-                    </ErrorBoundary>
-                  </motion.div>
-                ) : activeTab === 'game' ? (
-                  <motion.div
-                    key="game-view"
-                    initial={{ opacity: 0, y: 15 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0, y: -15 }}
-                    transition={{ duration: 0.25, ease: 'easeInOut' }}
-                  >
-                    <ErrorBoundary errorMessage="Terjadi kesalahan saat memuat modul Game Spinner Bertingkat. Silakan muat ulang halaman atau kosongkan data lokal.">
-                      <GameSpinner />
-                    </ErrorBoundary>
-                  </motion.div>
-                ) : (
-                  <motion.div
-                    key="movies-view"
-                    initial={{ opacity: 0, y: 15 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0, y: -15 }}
-                    transition={{ duration: 0.25, ease: 'easeInOut' }}
-                  >
-                    <ErrorBoundary errorMessage="Terjadi kesalahan saat memuat modul Buku Sinema Pribadi. Silakan muat ulang halaman atau kosongkan data lokal.">
-                      <MovieTracker />
-                    </ErrorBoundary>
-                  </motion.div>
-                )}
-              </AnimatePresence>
+            <ErrorBoundary errorMessage="Terjadi kesalahan saat memuat modul Jadwal Aktivitas Harian. Silakan muat ulang halaman.">
+              <WeeklySchedule />
             </ErrorBoundary>
           </main>
 
@@ -259,14 +198,14 @@ export default function App() {
           <footer className="max-w-6xl w-full mx-auto px-6 py-8 mt-auto text-center text-slate-400 dark:text-stone-500 text-[10px] font-display">
             <div className="h-px bg-dashed border-t border-[#d4c9a8] dark:border-[#4b463e] mb-5" />
             <p className="uppercase tracking-widest">
-              Dikatalogkan: 2026 • No. Rak: {rackCode} • Dibuat dengan tinta dan kertas
+              Dikatalogkan: 2026 • No. Rak: {rackCode} • Perencana Aktivitas Harian
             </p>
             <div className="flex justify-center gap-4 mt-2 font-bold text-slate-400/80 dark:text-stone-500/80 uppercase tracking-widest text-[9px]">
               <a href="#" onClick={(e) => { e.preventDefault(); setIsHelpOpen(true); }} className="hover:text-[#a23b2c] dark:hover:text-[#ff816c] transition">Bantuan</a>
               <span>•</span>
               <a href="#" onClick={(e) => { e.preventDefault(); setIsLicenseOpen(true); }} className="hover:text-[#a23b2c] dark:hover:text-[#ff816c] transition">Lisensi</a>
               <span>•</span>
-              <a href="#" onClick={(e) => { e.preventDefault(); setIsArchiveOpen(true); }} className="hover:text-[#a23b2c] dark:hover:text-[#ff816c] transition">Arsip Digital</a>
+              <a href="#" onClick={(e) => { e.preventDefault(); setIsArchiveOpen(true); }} className="hover:text-[#a23b2c] dark:hover:text-[#ff816c] transition">Arsip Cadangan</a>
             </div>
           </footer>
         </div>
@@ -279,4 +218,5 @@ export default function App() {
     </ThemeContext.Provider>
   );
 }
+
 

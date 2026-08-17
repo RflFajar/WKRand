@@ -88,13 +88,13 @@ interface HelpModalProps {
 }
 
 export function HelpModal({ isOpen, onClose }: HelpModalProps) {
-  const [activeGuide, setActiveGuide] = useState<'harian' | 'game' | 'film' | 'fitur'>('harian');
+  const [activeGuide, setActiveGuide] = useState<'harian' | 'fitur'>('harian');
 
   return (
     <BaseModal 
       isOpen={isOpen} 
       onClose={onClose} 
-      title="Buku Panduan Penggunaan" 
+      title="Buku Panduan Aktivitas Harian" 
       icon={<HelpCircle className="w-5 h-5" />}
     >
       {/* Tabs */}
@@ -108,29 +108,7 @@ export function HelpModal({ isOpen, onClose }: HelpModalProps) {
           }`}
         >
           <Calendar className="w-3.5 h-3.5" />
-          Harian (Aktivitas)
-        </button>
-        <button
-          onClick={() => setActiveGuide('game')}
-          className={`py-2 px-3 text-[10px] font-display font-bold border-b-2 transition-all whitespace-nowrap cursor-pointer flex items-center gap-1.5 ${
-            activeGuide === 'game'
-              ? 'border-[#a23b2c] dark:border-[#ff816c] text-[#a23b2c] dark:text-[#ff816c]'
-              : 'border-transparent text-stone-400 dark:text-stone-500 hover:text-[#3d3527] dark:hover:text-[#e8dcc4]'
-          }`}
-        >
-          <Gamepad2 className="w-3.5 h-3.5" />
-          Game (Spinner)
-        </button>
-        <button
-          onClick={() => setActiveGuide('film')}
-          className={`py-2 px-3 text-[10px] font-display font-bold border-b-2 transition-all whitespace-nowrap cursor-pointer flex items-center gap-1.5 ${
-            activeGuide === 'film'
-              ? 'border-[#a23b2c] dark:border-[#ff816c] text-[#a23b2c] dark:text-[#ff816c]'
-              : 'border-transparent text-stone-400 dark:text-stone-500 hover:text-[#3d3527] dark:hover:text-[#e8dcc4]'
-          }`}
-        >
-          <Clapperboard className="w-3.5 h-3.5" />
-          Film (Koleksi)
+          Jadwal & Spinner Aktivitas
         </button>
         <button
           onClick={() => setActiveGuide('fitur')}
@@ -141,7 +119,7 @@ export function HelpModal({ isOpen, onClose }: HelpModalProps) {
           }`}
         >
           <Volume2 className="w-3.5 h-3.5" />
-          Fitur Tambahan
+          Ekspor & Pengaturan
         </button>
       </div>
 
@@ -151,79 +129,23 @@ export function HelpModal({ isOpen, onClose }: HelpModalProps) {
           <div className="space-y-3">
             <h4 className="text-xs font-display font-bold text-[#3d3527] dark:text-[#e8dcc4] uppercase tracking-wide flex items-center gap-1.5">
               <Calendar className="w-4 h-4 text-[#a23b2c] dark:text-[#ff816c]" />
-              Panduan Weekly Activity Planner
+              Panduan Perencana Aktivitas Harian & Mingguan
             </h4>
             <p>
-              Modul ini dirancang agar Anda dapat mengalokasikan aktivitas hiburan harian secara adil dan menyenangkan.
+              Aplikasi ini dirancang untuk memudahkan Anda merencanakan dan mengalokasikan aktivitas harian sepanjang minggu (Senin hingga Minggu) dengan roda pengacak (spinner) taktil atau pemilihan manual.
             </p>
             <div className="bg-[#f2ede3]/50 dark:bg-[#3d3527]/40 border border-[#d4c9a8]/60 dark:border-[#4b463e]/60 p-4 rounded-[4px] space-y-2.5">
               <div className="flex gap-2">
                 <span className="font-mono font-bold text-[#a23b2c] dark:text-[#ff816c] shrink-0">1.</span>
-                <p><strong>Kelola Aktivitas:</strong> Klik tombol <span className="underline">Kelola Aktivitas</span> untuk menambah, mengedit, atau menghapus aktivitas kustom yang ingin dimainkan sepanjang minggu.</p>
+                <p><strong>Putar Acak / Pilih Manual:</strong> Klik tombol <em>Putar Acak</em> di setiap hari atau gunakan tombol <em>Isi Semua Hari Otomatis</em> untuk mengacak jadwal seluruh pekan secara berimbang.</p>
               </div>
               <div className="flex gap-2">
                 <span className="font-mono font-bold text-[#a23b2c] dark:text-[#ff816c] shrink-0">2.</span>
-                <p><strong>Isi Acak / Manual:</strong> Anda bisa memutar roda secara otomatis untuk memilih aktivitas di hari tertentu, atau memasukkannya secara manual ke slot jadwal.</p>
+                <p><strong>Kelola Aktivitas:</strong> Klik <em>Kelola Aktivitas</em> untuk menambah aktivitas baru, memilih ikon (Buku, Game, Musik, Coding, Olahraga, dll.), dan mengatur palet warna kustom.</p>
               </div>
               <div className="flex gap-2">
                 <span className="font-mono font-bold text-[#a23b2c] dark:text-[#ff816c] shrink-0">3.</span>
-                <p><strong>Ekspor Jadwal:</strong> Simpan jadwal yang telah dibuat menjadi file teks ringkas, gambar <strong>PNG beresolusi tinggi</strong> untuk dipajang di media sosial, atau bagikan langsung!</p>
-              </div>
-            </div>
-          </div>
-        )}
-
-        {activeGuide === 'game' && (
-          <div className="space-y-3">
-            <h4 className="text-xs font-display font-bold text-[#3d3527] dark:text-[#e8dcc4] uppercase tracking-wide flex items-center gap-1.5">
-              <Gamepad2 className="w-4 h-4 text-[#a23b2c] dark:text-[#ff816c]" />
-              Panduan Nested Spinner Game
-            </h4>
-            <p>
-              Bingung mau main game apa? Gunakan sistem dua putaran (Nested Spinner) yang dinamis untuk menentukan game pilihan Anda secara adil.
-            </p>
-            <div className="bg-[#f2ede3]/50 dark:bg-[#3d3527]/40 border border-[#d4c9a8]/60 dark:border-[#4b463e]/60 p-4 rounded-[4px] space-y-2.5">
-              <div className="flex gap-2">
-                <span className="font-mono font-bold text-[#a23b2c] dark:text-[#ff816c] shrink-0">1.</span>
-                <p><strong>Putaran Pertama:</strong> Sistem akan mengacak kategori game (misalnya PC, Mobile, Retro, atau Konsol). Anda hanya perlu menekan tombol <span className="underline">PUTAR KATEGORI</span>.</p>
-              </div>
-              <div className="flex gap-2">
-                <span className="font-mono font-bold text-[#a23b2c] dark:text-[#ff816c] shrink-0">2.</span>
-                <p><strong>Putaran Kedua:</strong> Setelah kategori terpilih, roda spinner otomatis berganti isi dengan daftar game yang terdaftar di dalam kategori tersebut. Tekan <span className="underline">PUTAR GAME!</span> untuk menentukan game akhir.</p>
-              </div>
-              <div className="flex gap-2">
-                <span className="font-mono font-bold text-[#a23b2c] dark:text-[#ff816c] shrink-0">3.</span>
-                <p><strong>Kelola Kategori:</strong> Masuk ke panel pengelola untuk menambah kategori baru, menyusun game baru, dan menyesuaikan warna tema roda spinner sesuka hati.</p>
-              </div>
-              <div className="flex gap-2">
-                <span className="font-mono font-bold text-[#a23b2c] dark:text-[#ff816c] shrink-0">4.</span>
-                <p><strong>Riwayat & Statistik:</strong> Gulir ke bawah roda spinner untuk melihat riwayat putaran sebelumnya dan analisis statistik kegemaran game Anda.</p>
-              </div>
-            </div>
-          </div>
-        )}
-
-        {activeGuide === 'film' && (
-          <div className="space-y-3">
-            <h4 className="text-xs font-display font-bold text-[#3d3527] dark:text-[#e8dcc4] uppercase tracking-wide flex items-center gap-1.5">
-              <Clapperboard className="w-4 h-4 text-[#a23b2c] dark:text-[#ff816c]" />
-              Panduan Buku Sinema Pribadi
-            </h4>
-            <p>
-              Buat perpustakaan digital untuk film, serial, anime, atau dokumenter yang telah selesai Anda tonton sebagai kenang-kenangan.
-            </p>
-            <div className="bg-[#f2ede3]/50 dark:bg-[#3d3527]/40 border border-[#d4c9a8]/60 dark:border-[#4b463e]/60 p-4 rounded-[4px] space-y-2.5">
-              <div className="flex gap-2">
-                <span className="font-mono font-bold text-[#a23b2c] dark:text-[#ff816c] shrink-0">1.</span>
-                <p><strong>Catat Tontonan:</strong> Isi judul film, berikan rating bintang (1-5), tulis ulasan pribadi Anda yang jujur, pilih platform menonton (Netflix, Bioskop, Disney+, dll.), dan atur tanggal tonton.</p>
-              </div>
-              <div className="flex gap-2">
-                <span className="font-mono font-bold text-[#a23b2c] dark:text-[#ff816c] shrink-0">2.</span>
-                <p><strong>Filter & Cari:</strong> Gunakan kotak pencarian judul, filter genre, atau urutan rating untuk menemukan catatan sinema Anda dengan sekejap.</p>
-              </div>
-              <div className="flex gap-2">
-                <span className="font-mono font-bold text-[#a23b2c] dark:text-[#ff816c] shrink-0">3.</span>
-                <p><strong>Analisis Ringkas:</strong> Di bagian atas tab Film, sistem menyajikan statistik total tontonan, rata-rata rating, dan genre film yang paling sering Anda saksikan.</p>
+                <p><strong>Checklist & Progres:</strong> Tandai aktivitas yang sudah diselesaikan pada hari terkait untuk melacak penyelesaian target harian Anda.</p>
               </div>
             </div>
           </div>
@@ -233,23 +155,23 @@ export function HelpModal({ isOpen, onClose }: HelpModalProps) {
           <div className="space-y-3">
             <h4 className="text-xs font-display font-bold text-[#3d3527] dark:text-[#e8dcc4] uppercase tracking-wide flex items-center gap-1.5">
               <Volume2 className="w-4 h-4 text-[#a23b2c] dark:text-[#ff816c]" />
-              Panduan Audio & Kustomisasi Tema
+              Panduan Ekspor, Suara & Tema
             </h4>
             <p>
-              Bentuk aplikasi yang nyaman di mata dan telinga demi menjaga estetika retro "katalog kartu perpustakaan" yang taktil.
+              Fasilitas tambahan untuk mengabadikan dan membagikan jadwal aktivitas Anda:
             </p>
             <div className="bg-[#f2ede3]/50 dark:bg-[#3d3527]/40 border border-[#d4c9a8]/60 dark:border-[#4b463e]/60 p-4 rounded-[4px] space-y-2.5">
               <div className="flex gap-2">
                 <span className="font-mono font-bold text-[#a23b2c] dark:text-[#ff816c] shrink-0">●</span>
-                <p><strong>Pengendali Suara (Header):</strong> Tekan tombol speaker di bagian atas layar untuk mengaktifkan atau mematikan efek suara retro saat spinner berputar dan musik latar instrumen yang santai.</p>
+                <p><strong>Ekspor Gambar PNG / PDF:</strong> Unduh jadwal mingguan Anda dalam format poster bergambar retro jernih resolusi tinggi untuk dicetak atau dijadikan wallpaper.</p>
               </div>
               <div className="flex gap-2">
                 <span className="font-mono font-bold text-[#a23b2c] dark:text-[#ff816c] shrink-0">●</span>
-                <p><strong>Tema Gelap & Terang:</strong> Klik tombol bulan/matahari di bagian atas untuk beralih antara tema "Kertas Tua Klasik" (terang) atau tema "Meja Kayu Redup" (gelap).</p>
+                <p><strong>Efek Suara Spinner:</strong> Aktifkan/nonaktifkan audio taktil putaran roda melalui tombol suara di bagian kontrol atas.</p>
               </div>
               <div className="flex gap-2">
                 <span className="font-mono font-bold text-[#a23b2c] dark:text-[#ff816c] shrink-0">●</span>
-                <p><strong>Kode Rak Dinamis:</strong> Kode rak katalog perpustakaan di pojok kiri atas berganti secara dinamis menyesuaikan bulan dan tanggal hari ini (misalnya "JN-27") untuk menandai pencatatan arsip harian.</p>
+                <p><strong>Tema Terang & Gelap:</strong> Sesuaikan tampilan antara nuansa kertas arsip klasik (terang) atau papan kayu redup (gelap).</p>
               </div>
             </div>
           </div>
